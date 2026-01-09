@@ -59,7 +59,11 @@ title: DIPS - Sport & Fitness iOS App
     </section>
 
     <div class="cta-section">
-      <a href="https://apps.apple.com" class="btn-primary btn-large" target="_blank">Download on App Store</a>
+      <div class="coming-soon-container">
+        <div class="coming-soon-icon">🚧</div>
+        <h3>Coming Soon</h3>
+        <p>DIPS is currently in development and will be available on the App Store soon. Stay tuned for updates!</p>
+      </div>
     </div>
   </div>
 </div>

@@ -733,6 +733,61 @@ p {
   border-top: 2px solid var(--border-color);
 }
 
+.feature-category-title {
+  color: var(--primary-green);
+  font-size: 1.8rem;
+  margin: 3rem 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+  text-align: center;
+}
+
+.coming-soon-container {
+  background: var(--bg-darker);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.coming-soon-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 255, 0, 0.05) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.coming-soon-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
+}
+
+.coming-soon-container h3 {
+  color: var(--primary-green);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.coming-soon-container p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
 /* Contact Page */
 .contact-page {
   max-width: 800px;

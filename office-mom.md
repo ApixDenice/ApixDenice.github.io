@@ -21,34 +21,217 @@ title: Office Mom - Water & Steps Tracking macOS App
 
     <section class="feature-section">
       <h2>Key Features</h2>
+      
+      <h3 class="feature-category-title">💧 Water Tracking</h3>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon-container">
-            <div class="feature-icon">💧</div>
+            <div class="feature-icon">🎯</div>
           </div>
-          <h3>Water Tracking</h3>
-          <p>Log your daily water intake with quick, one-click entries. Set daily goals and receive gentle reminders.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-container">
-            <div class="feature-icon">🚶</div>
-          </div>
-          <h3>Steps Counter</h3>
-          <p>Monitor your daily steps and activity levels directly from your Mac.</p>
+          <h3>Smart Daily Goal Calculation</h3>
+          <p>Automatically calculates your daily water intake based on your weight (30ml per kg)</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon-container">
             <div class="feature-icon">📊</div>
           </div>
-          <h3>Daily Statistics</h3>
-          <p>View comprehensive statistics and trends to understand your habits better.</p>
+          <h3>Progress Visualization</h3>
+          <p>Beautiful circular progress indicator showing your daily water consumption</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon-container">
-            <div class="feature-icon">🔔</div>
+            <div class="feature-icon">⚡</div>
+          </div>
+          <h3>Quick Add Buttons</h3>
+          <p>One-tap water logging with preset amounts (0.25L, 0.5L, 1.0L)</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🧠</div>
           </div>
           <h3>Smart Reminders</h3>
-          <p>Get personalized notifications to help you stay on track throughout the day.</p>
+          <p>Intelligent notifications that adapt to your progress throughout the day</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🎉</div>
+          </div>
+          <h3>Goal Achievement Celebration</h3>
+          <p>Visual celebration when you reach your daily water goal</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">📈</div>
+          </div>
+          <h3>Excess Tracking</h3>
+          <p>Shows how much extra water you've consumed beyond your goal</p>
+        </div>
+      </div>
+
+      <h3 class="feature-category-title">🚶 Movement Tracking</h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🎯</div>
+          </div>
+          <h3>Step Goal Management</h3>
+          <p>Set custom daily step goals with minimum recommendations</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">📊</div>
+          </div>
+          <h3>Interactive Progress Bar</h3>
+          <p>Drag-to-adjust progress visualization with real-time feedback</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🎯</div>
+          </div>
+          <h3>Multiple Goal Targets</h3>
+          <p>Afternoon target (3,000 steps by 1 PM), minimum goal (7,000 steps), and custom daily goal</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">✏️</div>
+          </div>
+          <h3>Manual Step Entry</h3>
+          <p>Add steps manually when needed</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🎉</div>
+          </div>
+          <h3>Goal Achievement Celebration</h3>
+          <p>Celebrate when you reach your step goals</p>
+        </div>
+      </div>
+
+      <h3 class="feature-category-title">🪑 Stand-Up Timer</h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">⏱️</div>
+          </div>
+          <h3>20-8-2 Rule Support</h3>
+          <p>Built-in timer for the popular 20-8-2 rule (20 min sitting, 8 min standing, 2 min moving)</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">⚙️</div>
+          </div>
+          <h3>Customizable Rules</h3>
+          <p>Choose from different stand-up patterns</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🎨</div>
+          </div>
+          <h3>Visual State Indicators</h3>
+          <p>Color-coded states (sitting, standing, moving)</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🔄</div>
+          </div>
+          <h3>Automatic Transitions</h3>
+          <p>Seamless state transitions with notifications</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">💾</div>
+          </div>
+          <h3>Timer Persistence</h3>
+          <p>Timer state persists across app restarts</p>
+        </div>
+      </div>
+
+      <h3 class="feature-category-title">⚙️ Settings & Preferences</h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">👤</div>
+          </div>
+          <h3>User Profile Management</h3>
+          <p>Store height, weight, and step goals</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🚀</div>
+          </div>
+          <h3>Auto-Start on Login</h3>
+          <p>Launch Office Mom automatically when your Mac starts</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">📋</div>
+          </div>
+          <h3>Scrollable Settings</h3>
+          <p>Clean, organized settings interface ready for future features</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">💾</div>
+          </div>
+          <h3>Data Persistence</h3>
+          <p>All your data is safely stored and persists across sessions</p>
+        </div>
+      </div>
+
+      <h3 class="feature-category-title">📊 Menu Bar Integration</h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">💡</div>
+          </div>
+          <h3>Quick Stats Tooltip</h3>
+          <p>Hover over the menu bar icon to see your current progress (Water: 2.5/3.0L, Steps: 8500/10000)</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🔄</div>
+          </div>
+          <h3>Dynamic Icon</h3>
+          <p>Icon changes based on active features (water tracking, stand-up timer)</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🖱️</div>
+          </div>
+          <h3>Easy Access</h3>
+          <p>Click to open the main dashboard, right-click for quick actions</p>
+        </div>
+      </div>
+
+      <h3 class="feature-category-title">🔔 Smart Notifications</h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">💧</div>
+          </div>
+          <h3>Water Reminders</h3>
+          <p>Intelligent reminders based on time-based targets (deadline: 8 PM)</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🚶</div>
+          </div>
+          <h3>Movement Reminders</h3>
+          <p>Notifications for afternoon targets and minimum goals</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🪑</div>
+          </div>
+          <h3>Stand-Up Reminders</h3>
+          <p>Alerts when it's time to change positions</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">⏸️</div>
+          </div>
+          <h3>Cooldown System</h3>
+          <p>Prevents notification spam with smart cooldown intervals</p>
         </div>
       </div>
     </section>
