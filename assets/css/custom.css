@@ -361,6 +361,10 @@ p {
   justify-content: center;
   align-items: center;
   min-height: 80px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--bg-darker);
+  padding: 8px;
 }
 
 .app-logo {
@@ -369,6 +373,7 @@ p {
   width: auto;
   height: auto;
   object-fit: contain;
+  border-radius: 16px;
   filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
   transition: all 0.3s ease;
   animation: float 3s ease-in-out infinite;
@@ -532,6 +537,11 @@ p {
   justify-content: center;
   align-items: center;
   min-height: 100px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--bg-darker);
+  padding: 10px;
+  border: 2px solid rgba(0, 255, 0, 0.2);
 }
 
 .app-logo-header {
@@ -540,7 +550,7 @@ p {
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 20px;
+  border-radius: 18px;
   filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
   transition: all 0.3s ease;
   animation: float 3s ease-in-out infinite;
