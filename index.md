@@ -15,7 +15,7 @@ title: Home
 <div class="apps-showcase">
   <div class="app-card" data-app="dips">
     <div class="app-logo-container">
-      <img src="{{ "/assets/images/dips-logo.png" | relative_url }}" alt="DIPS Logo" class="app-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <img src="{{ "/assets/images/Dips .png" | relative_url }}" alt="DIPS Logo" class="app-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
       <div class="app-icon" style="display: none;">💪</div>
     </div>
     <h2>DIPS</h2>
@@ -25,7 +25,7 @@ title: Home
 
   <div class="app-card" data-app="office-mom">
     <div class="app-logo-container">
-      <img src="{{ "/assets/images/office-mom-logo.png" | relative_url }}" alt="Office Mom Logo" class="app-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <img src="{{ "/assets/images/Office Mom.png" | relative_url }}" alt="Office Mom Logo" class="app-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
       <div class="app-icon" style="display: none;">💧</div>
     </div>
     <h2>Office Mom</h2>

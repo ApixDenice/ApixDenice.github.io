@@ -5,7 +5,10 @@ title: Office Mom - Water & Steps Tracking macOS App
 
 <div class="app-page">
   <div class="app-header">
-    <div class="app-icon-large">💧</div>
+    <div class="app-logo-header-container">
+      <img src="{{ "/assets/images/Office Mom.png" | relative_url }}" alt="Office Mom Logo" class="app-logo-header" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <div class="app-icon-large" style="display: none;">💧</div>
+    </div>
     <h1>Office Mom</h1>
     <p class="app-tagline">Stay Hydrated & Active Throughout Your Day</p>
   </div>

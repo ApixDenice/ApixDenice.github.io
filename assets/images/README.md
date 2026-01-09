@@ -1,10 +1,16 @@
 # App Logos
 
-Please add your app logos to this directory:
+App logos for the website:
 
-- `dips-logo.png` - DIPS app logo (recommended size: 240x240px or higher resolution)
-- `office-mom-logo.png` - Office Mom app logo (recommended size: 240x240px or higher resolution)
+- `Dips .png` - DIPS app logo ✅ Active
+- `Office Mom.png` - Office Mom app logo ✅ Active
 
-The logos will be automatically displayed on the home page. If the images are not found, emoji fallbacks will be used.
+**Current Status:**
+- ✅ DIPS logo: Active and displayed on home page and app detail page
+- ✅ Office Mom logo: Active and displayed on home page and app detail page
 
-Supported formats: PNG, JPG, SVG (PNG recommended for best quality)
+The logos are automatically displayed on:
+- Home page: In the app showcase cards
+- App detail pages: In the app header section
+
+**Supported formats:** PNG, JPG, SVG (PNG recommended for best quality)

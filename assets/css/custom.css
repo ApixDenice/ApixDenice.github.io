@@ -526,6 +526,25 @@ p {
   margin-bottom: 3rem;
 }
 
+.app-logo-header-container {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+}
+
+.app-logo-header {
+  max-width: 150px;
+  max-height: 150px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
+  transition: all 0.3s ease;
+  animation: float 3s ease-in-out infinite;
+}
+
 .app-icon-large {
   font-size: 6rem;
   margin-bottom: 1rem;
