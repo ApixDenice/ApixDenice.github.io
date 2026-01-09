@@ -23,22 +23,30 @@ title: Office Mom - Water & Steps Tracking macOS App
       <h2>Key Features</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">💧</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">💧</div>
+          </div>
           <h3>Water Tracking</h3>
           <p>Log your daily water intake with quick, one-click entries. Set daily goals and receive gentle reminders.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🚶</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">🚶</div>
+          </div>
           <h3>Steps Counter</h3>
           <p>Monitor your daily steps and activity levels directly from your Mac.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">📊</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">📊</div>
+          </div>
           <h3>Daily Statistics</h3>
           <p>View comprehensive statistics and trends to understand your habits better.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🔔</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">🔔</div>
+          </div>
           <h3>Smart Reminders</h3>
           <p>Get personalized notifications to help you stay on track throughout the day.</p>
         </div>

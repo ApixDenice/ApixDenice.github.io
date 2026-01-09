@@ -23,22 +23,30 @@ title: DIPS - Sport & Fitness iOS App
       <h2>Key Features</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">📊</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">📊</div>
+          </div>
           <h3>Progress Tracking</h3>
           <p>Monitor your fitness journey with detailed analytics and progress reports.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🏋️</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">🏋️</div>
+          </div>
           <h3>Workout Plans</h3>
           <p>Access personalized workout routines tailored to your fitness level.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">📈</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">📈</div>
+          </div>
           <h3>Performance Metrics</h3>
           <p>Track your strength, endurance, and overall performance over time.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🎯</div>
+          <div class="feature-icon-container">
+            <div class="feature-icon">🎯</div>
+          </div>
           <h3>Goal Setting</h3>
           <p>Set and achieve fitness goals with smart reminders and motivation.</p>
         </div>
