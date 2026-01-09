@@ -267,6 +267,9 @@ title: Office Mom - Water & Steps Tracking macOS App
 
     <div class="cta-section">
       <a href="https://apps.apple.com" class="btn-primary btn-large" target="_blank">Download on Mac App Store</a>
+      <div class="privacy-link-section">
+        <a href="{{ "/office-mom-privacy" | relative_url }}" class="privacy-link">🔒 Privacy Policy</a>
+      </div>
     </div>
   </div>
 </div>
