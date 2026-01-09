@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ site.description | default: site.github.project_tagline }}">
+
+    {% seo %}
+    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" href="{{ "/assets/css/custom.css" | relative_url }}">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <nav class="main-nav">
+          <div class="nav-container">
+            <a href="{{ "/" | relative_url }}" class="nav-logo">
+              <span class="glitch" data-text="ApixDenice">ApixDenice</span>
+            </a>
+            <ul class="nav-menu">
+              <li><a href="{{ "/" | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">Home</a></li>
+              <li><a href="{{ "/dips" | relative_url }}" class="nav-link {% if page.url == '/dips' or page.url == '/dips/' %}active{% endif %}">DIPS</a></li>
+              <li><a href="{{ "/office-mom" | relative_url }}" class="nav-link {% if page.url == '/office-mom' or page.url == '/office-mom/' %}active{% endif %}">Office Mom</a></li>
+              <li><a href="{{ "/contact" | relative_url }}" class="nav-link {% if page.url == '/contact' or page.url == '/contact/' %}active{% endif %}">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        {{ content }}
+      </main>
+
+      <footer>
+        <p class="footer-text">
+          <small>© {{ 'now' | date: "%Y" }} ApixDenice. Built with Jekyll & Hacker Theme</small>
+        </p>
+      </footer>
+    </div>
+
+    <script src="{{ "/assets/js/main.js" | relative_url }}"></script>
+  </body>
+</html>

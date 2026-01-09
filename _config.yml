@@ -1,0 +1,28 @@
+# Site settings
+title: ApixDenice
+description: iOS & macOS Developer - DIPS & Office Mom Apps
+email: dennishasselbusch@icloud.com
+baseurl: ""
+url: "https://apixdenice.github.io"
+
+# Theme configuration
+remote_theme: pages-themes/hacker@v0.2.0
+plugins:
+  - jekyll-remote-theme
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: DIPS
+    url: /dips
+  - title: Office Mom
+    url: /office-mom
+  - title: Contact
+    url: /contact
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
