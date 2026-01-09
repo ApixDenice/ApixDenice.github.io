@@ -360,12 +360,12 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 120px;
+  min-height: 80px;
 }
 
 .app-logo {
-  max-width: 120px;
-  max-height: 120px;
+  max-width: 80px;
+  max-height: 80px;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -531,12 +531,12 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 150px;
+  min-height: 100px;
 }
 
 .app-logo-header {
-  max-width: 150px;
-  max-height: 150px;
+  max-width: 100px;
+  max-height: 100px;
   width: auto;
   height: auto;
   object-fit: contain;

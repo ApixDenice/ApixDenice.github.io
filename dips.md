@@ -6,7 +6,7 @@ title: DIPS - Sport & Fitness iOS App
 <div class="app-page">
   <div class="app-header">
     <div class="app-logo-header-container">
-      <img src="{{ "/assets/images/Dips .png" | relative_url }}" alt="DIPS Logo" class="app-logo-header" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <img src="{{ '/assets/images/Dips .png' | relative_url }}" alt="DIPS Logo" class="app-logo-header" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
       <div class="app-icon-large" style="display: none;">💪</div>
     </div>
     <h1>DIPS</h1>
