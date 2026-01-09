@@ -34,13 +34,37 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Intersection Observer for scroll animations
+  // Enhanced Intersection Observer for scroll animations
   const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px -100px 0px'
   };
 
-  const observer = new IntersectionObserver(function(entries) {
+  const scrollObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Remove observer after animation to improve performance
+        scrollObserver.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Add scroll animation classes to elements
+  document.querySelectorAll('.app-card, .feature-card, .tech-badge, .tech-stack, .apps-showcase, .feature-section, .contact-info').forEach((el, index) => {
+    // Alternate animation directions for visual interest
+    if (index % 3 === 0) {
+      el.classList.add('scroll-fade-in');
+    } else if (index % 3 === 1) {
+      el.classList.add('scroll-fade-left');
+    } else {
+      el.classList.add('scroll-fade-right');
+    }
+    scrollObserver.observe(el);
+  });
+
+  // Legacy support for elements without classes
+  const legacyObserver = new IntersectionObserver(function(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.style.opacity = '1';
@@ -49,70 +73,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, observerOptions);
 
-  // Observe elements for animation
+  // Observe legacy elements
   document.querySelectorAll('.app-card, .feature-card, .tech-badge').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
+    if (!el.classList.contains('scroll-fade-in') && 
+        !el.classList.contains('scroll-fade-left') && 
+        !el.classList.contains('scroll-fade-right')) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      legacyObserver.observe(el);
+    }
   });
 
-  // Contact Form Handling
-  const contactForm = document.getElementById('contact-form');
-  const formStatus = document.getElementById('form-status');
-
-  if (contactForm) {
-    contactForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const submitButton = contactForm.querySelector('button[type="submit"]');
-      const btnText = submitButton.querySelector('.btn-text');
-      const btnLoader = submitButton.querySelector('.btn-loader');
-      
-      // Show loading state
-      btnText.style.display = 'none';
-      btnLoader.style.display = 'inline';
-      submitButton.disabled = true;
-      formStatus.style.display = 'none';
-
-      // Get form data
-      const formData = new FormData(contactForm);
-      
-      // Set reply-to from email field
-      const emailField = contactForm.querySelector('#email');
-      if (emailField && emailField.value) {
-        formData.set('_replyto', emailField.value);
-      }
-      
-      try {
-        const response = await fetch(contactForm.action, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          formStatus.textContent = 'Message sent successfully! I\'ll get back to you soon.';
-          formStatus.className = 'form-status success';
-          formStatus.style.display = 'block';
-          contactForm.reset();
-        } else {
-          throw new Error('Form submission failed');
-        }
-      } catch (error) {
-        formStatus.textContent = 'Oops! There was an error sending your message. Please try again or email me directly.';
-        formStatus.className = 'form-status error';
-        formStatus.style.display = 'block';
-      } finally {
-        // Reset button state
-        btnText.style.display = 'inline';
-        btnLoader.style.display = 'none';
-        submitButton.disabled = false;
-      }
+  // Contact link animations
+  document.querySelectorAll('.contact-link').forEach(link => {
+    link.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateX(10px) scale(1.02)';
     });
-  }
+    
+    link.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateX(0) scale(1)';
+    });
+  });
 
   // App Card Click Animation
   document.querySelectorAll('.app-card').forEach(card => {
@@ -185,10 +167,135 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // Particle Effects
+  initParticles();
+
   // Console easter egg
   console.log('%c👋 Hey there!', 'color: #00ff00; font-size: 20px; font-weight: bold;');
   console.log('%cInterested in the code? Check out the repository!', 'color: #8b949e; font-size: 12px;');
 });
+
+// Particle Effects System
+function initParticles() {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'particles-canvas';
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  let animationId;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // Particle class
+  class Particle {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2 + 0.5;
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.speedY = (Math.random() - 0.5) * 0.5;
+      this.opacity = Math.random() * 0.5 + 0.2;
+      this.life = Math.random() * 100 + 50;
+      this.maxLife = this.life;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.life--;
+
+      // Wrap around edges
+      if (this.x < 0) this.x = canvas.width;
+      if (this.x > canvas.width) this.x = 0;
+      if (this.y < 0) this.y = canvas.height;
+      if (this.y > canvas.height) this.y = 0;
+
+      // Reset when life expires
+      if (this.life <= 0) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      const alpha = (this.life / this.maxLife) * this.opacity;
+      ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Add glow effect
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = 'rgba(0, 255, 0, 0.5)';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  // Create particles
+  const particles = [];
+  const particleCount = Math.min(50, Math.floor((canvas.width * canvas.height) / 15000));
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+  }
+
+  // Connect nearby particles with lines
+  function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 150) {
+          const opacity = (1 - distance / 150) * 0.2;
+          ctx.strokeStyle = `rgba(0, 255, 0, ${opacity})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Animation loop
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
+    });
+
+    drawConnections();
+    
+    animationId = requestAnimationFrame(animate);
+  }
+
+  // Start animation
+  animate();
+
+  // Pause on tab visibility change for performance
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      cancelAnimationFrame(animationId);
+    } else {
+      animate();
+    }
+  });
+}
 
 // Add ripple effect styles dynamically
 const style = document.createElement('style');

@@ -8,29 +8,36 @@ Personal website showcasing iOS and macOS applications built with Jekyll and the
 - **Responsive**: Works perfectly on all devices
 - **Navigation**: Easy access to all sections via top menu bar
 - **App Showcases**: Dedicated pages for DIPS and Office Mom apps
-- **Contact Form**: Integrated contact form for inquiries
+- **Contact Links**: Direct links to email, LinkedIn, and GitHub
 
 ## 📋 Setup Instructions
 
-### 1. Contact Form Setup
+### 1. Add App Logos
 
-The contact form uses Formspree to send emails. To set it up:
+Add your app logos to the `assets/images/` directory:
 
-1. Sign up for a free account at [Formspree.io](https://formspree.io)
-2. Create a new form
-3. Set the recipient email to: `dennishasselbusch@icloud.com`
-4. Set the subject to: `Website request`
-5. Copy your form endpoint URL (e.g., `https://formspree.io/f/xxxxxxxxxx`)
-6. Open `contact.md` and replace `YOUR_FORM_ID` in the form action URL with your Formspree form ID
+- `dips-logo.png` - DIPS app logo (recommended: 240x240px or higher, PNG format)
+- `office-mom-logo.png` - Office Mom app logo (recommended: 240x240px or higher, PNG format)
 
-### 2. GitHub Pages Deployment
+The logos will automatically display on the home page. If images are not found, emoji fallbacks will be used.
+
+### 2. Contact Page
+
+The contact page includes direct links to:
+- Email: dennishasselbusch@icloud.com
+- LinkedIn: https://www.linkedin.com/in/dennis-hasselbusch-7512391b5/
+- GitHub: https://github.com/ApixDenice
+
+No additional setup required for the contact page.
+
+### 3. GitHub Pages Deployment
 
 1. Push all files to your `ApixDenice.github.io` repository
 2. Go to repository Settings → Pages
 3. Select the main branch as the source
 4. GitHub Pages will automatically build and deploy your site
 
-### 3. Local Development
+### 4. Local Development
 
 To test locally:
 
@@ -57,12 +64,15 @@ bundle exec jekyll serve
 ├── assets/
 │   ├── css/
 │   │   └── custom.css   # Custom styles and animations
+│   ├── images/
+│   │   ├── dips-logo.png        # DIPS app logo (add your image)
+│   │   └── office-mom-logo.png  # Office Mom app logo (add your image)
 │   └── js/
 │       └── main.js      # Interactive JavaScript
 ├── index.md             # Home page
 ├── dips.md              # DIPS app page
 ├── office-mom.md        # Office Mom app page
-└── contact.md           # Contact page with form
+└── contact.md           # Contact page with social links
 ```
 
 ## 🎨 Customization
@@ -91,9 +101,12 @@ The theme uses a green-on-black hacker aesthetic. You can customize colors in `a
 
 - **Jekyll**: Static site generator
 - **Hacker Theme**: GitHub Pages theme
-- **Formspree**: Contact form backend
 - **Vanilla JavaScript**: For interactions and animations
 - **CSS3**: Modern animations and responsive design
+
+## 📝 Design Recommendations
+
+See `DESIGN_RECOMMENDATIONS.md` for comprehensive design improvement suggestions and enhancements.
 
 ## 📝 License
 
@@ -101,4 +114,4 @@ This project is open source and available under the MIT License.
 
 ## 📧 Contact
 
-For questions or suggestions, reach out via the contact form on the website or email: dennishasselbusch@icloud.com
+For questions or suggestions, reach out via the contact page or email: dennishasselbusch@icloud.com

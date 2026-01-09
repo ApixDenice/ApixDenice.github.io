@@ -20,8 +20,54 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-primary);
   font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
-  line-height: 1.6;
+  line-height: 1.8;
   overflow-x: hidden;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+/* Animated Background Pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-move 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes grid-move {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+/* Particle Canvas Container */
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+/* Wrapper - Ensure content appears above background */
+.wrapper {
+  position: relative;
+  z-index: 2;
 }
 
 /* Navigation Styles */
@@ -187,6 +233,32 @@ body {
   pointer-events: none;
 }
 
+/* Typography Improvements */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+h1 {
+  letter-spacing: 2px;
+  line-height: 1.3;
+}
+
+h2 {
+  letter-spacing: 1.5px;
+  line-height: 1.35;
+}
+
+h3 {
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+p {
+  letter-spacing: 0.3px;
+  line-height: 1.8;
+}
+
 .hero-content {
   position: relative;
   z-index: 1;
@@ -197,16 +269,24 @@ body {
   color: var(--primary-green);
   text-shadow: 0 0 20px var(--glow-color);
   margin-bottom: 1rem;
-  animation: typewriter 2s steps(20) 1s both;
   overflow: hidden;
   white-space: nowrap;
   border-right: 3px solid var(--primary-green);
-  animation: typewriter 2s steps(20) 1s both, blink-cursor 0.75s step-end infinite;
+  animation: typewriter 3s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both, blink-cursor 0.75s step-end infinite;
 }
 
 @keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
+  from { 
+    width: 0;
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  to { 
+    width: 100%;
+    opacity: 1;
+  }
 }
 
 @keyframes blink-cursor {
@@ -275,6 +355,30 @@ body {
   box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
 }
 
+.app-logo-container {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+}
+
+.app-logo {
+  max-width: 120px;
+  max-height: 120px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
+  transition: all 0.3s ease;
+  animation: float 3s ease-in-out infinite;
+}
+
+.app-card:hover .app-logo {
+  filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.6));
+  transform: scale(1.05);
+}
+
 .app-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
@@ -298,23 +402,24 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* Buttons */
+/* Buttons - Enhanced Styles */
 .btn-primary {
   display: inline-block;
   padding: 0.75rem 2rem;
   background: var(--primary-green);
   color: var(--bg-dark);
   text-decoration: none;
-  border: none;
+  border: 2px solid var(--primary-green);
   border-radius: 4px;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
+  letter-spacing: 2px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
   font-family: inherit;
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
 }
 
 .btn-primary::before {
@@ -325,21 +430,43 @@ body {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.4);
   transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
 }
 
 .btn-primary:hover::before {
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
+}
+
+.btn-primary:hover::after {
+  left: 100%;
 }
 
 .btn-primary:hover {
   background: var(--accent-yellow);
+  border-color: var(--accent-yellow);
   color: var(--bg-dark);
-  box-shadow: 0 0 20px var(--accent-yellow);
-  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(255, 255, 0, 0.6), 0 0 40px rgba(255, 255, 0, 0.4);
+  transform: scale(1.08) translateY(-2px);
+  letter-spacing: 3px;
+}
+
+.btn-primary:active {
+  transform: scale(1.02) translateY(0);
+  box-shadow: 0 4px 15px rgba(255, 255, 0, 0.4);
 }
 
 .btn-large {
@@ -563,44 +690,80 @@ body {
 
 .contact-info {
   text-align: center;
-  padding: 2rem;
+  padding: 3rem 2rem;
   background: var(--bg-darker);
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: 8px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .contact-info h3 {
   color: var(--primary-green);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
 }
 
 .contact-links {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .contact-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.5rem;
   color: var(--text-primary);
   text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
   transition: all 0.3s ease;
+  background: var(--bg-darker);
 }
 
 .contact-link:hover {
   border-color: var(--primary-green);
   color: var(--primary-green);
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+  transform: translateX(10px);
+  background: rgba(0, 255, 0, 0.05);
+}
+
+.contact-link-large {
+  padding: 2rem;
 }
 
 .contact-icon {
-  font-size: 1.2rem;
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.contact-link-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.contact-link-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.contact-link-value {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.contact-link:hover .contact-link-value {
+  color: var(--primary-green);
 }
 
 /* Footer */
@@ -670,16 +833,94 @@ footer {
   }
 }
 
-/* Scroll Animations */
+/* Scroll Animations - Enhanced */
 @keyframes slideInFromBottom {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(50px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scroll animation classes */
+.scroll-fade-in {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-fade-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-fade-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-fade-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-fade-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-scale-in.visible {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .app-card,
