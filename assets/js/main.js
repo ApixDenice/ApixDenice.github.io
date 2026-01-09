@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, observerOptions);
 
-  // Add scroll animation classes to elements
-  document.querySelectorAll('.app-card, .feature-card, .tech-badge, .tech-stack, .apps-showcase, .feature-section, .contact-info').forEach((el, index) => {
+  // Add scroll animation classes to elements (excluding feature cards on app pages)
+  document.querySelectorAll('.app-card, .tech-badge, .tech-stack, .apps-showcase, .feature-section, .contact-info').forEach((el, index) => {
     // Alternate animation directions for visual interest
     if (index % 3 === 0) {
       el.classList.add('scroll-fade-in');
@@ -61,6 +61,49 @@ document.addEventListener('DOMContentLoaded', function() {
       el.classList.add('scroll-fade-right');
     }
     scrollObserver.observe(el);
+  });
+
+  // Feature cards on app pages should be visible immediately (no scroll animation)
+  document.querySelectorAll('.app-page .feature-card').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
+
+  // Expandable feature categories for Office Mom
+  const expandableCategories = document.querySelectorAll('.expandable-category');
+  
+  // Expand first category by default
+  if (expandableCategories.length > 0) {
+    const firstCategory = expandableCategories[0];
+    const firstCategoryId = firstCategory.getAttribute('data-category');
+    const firstContent = document.querySelector(`.category-content[data-content="${firstCategoryId}"]`);
+    
+    if (firstContent) {
+      firstContent.classList.add('expanded');
+      firstCategory.classList.add('active');
+    }
+  }
+  
+  // Add click handlers to all categories
+  expandableCategories.forEach(category => {
+    category.addEventListener('click', function() {
+      const categoryId = this.getAttribute('data-category');
+      const content = document.querySelector(`.category-content[data-content="${categoryId}"]`);
+      
+      if (content) {
+        const isExpanded = content.classList.contains('expanded');
+        
+        if (isExpanded) {
+          // Collapse
+          content.classList.remove('expanded');
+          this.classList.remove('active');
+        } else {
+          // Expand
+          content.classList.add('expanded');
+          this.classList.add('active');
+        }
+      }
+    });
   });
 
   // Legacy support for elements without classes

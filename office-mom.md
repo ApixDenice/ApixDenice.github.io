@@ -22,8 +22,12 @@ title: Office Mom - Water & Steps Tracking macOS App
     <section class="feature-section">
       <h2>Key Features</h2>
       
-      <h3 class="feature-category-title">💧 Water Tracking</h3>
-      <div class="features-grid">
+      <h3 class="feature-category-title expandable-category" data-category="water">
+        <span class="category-icon">💧</span>
+        <span class="category-text">Water Tracking</span>
+        <span class="expand-icon">▼</span>
+      </h3>
+      <div class="features-grid category-content" data-content="water">
         <div class="feature-card">
           <div class="feature-icon-container">
             <div class="feature-icon">🎯</div>
@@ -68,8 +72,12 @@ title: Office Mom - Water & Steps Tracking macOS App
         </div>
       </div>
 
-      <h3 class="feature-category-title">🚶 Movement Tracking</h3>
-      <div class="features-grid">
+      <h3 class="feature-category-title expandable-category" data-category="movement">
+        <span class="category-icon">🚶</span>
+        <span class="category-text">Movement Tracking</span>
+        <span class="expand-icon">▼</span>
+      </h3>
+      <div class="features-grid category-content" data-content="movement">
         <div class="feature-card">
           <div class="feature-icon-container">
             <div class="feature-icon">🎯</div>
@@ -107,8 +115,12 @@ title: Office Mom - Water & Steps Tracking macOS App
         </div>
       </div>
 
-      <h3 class="feature-category-title">🪑 Stand-Up Timer</h3>
-      <div class="features-grid">
+      <h3 class="feature-category-title expandable-category" data-category="standup">
+        <span class="category-icon">🪑</span>
+        <span class="category-text">Stand-Up Timer</span>
+        <span class="expand-icon">▼</span>
+      </h3>
+      <div class="features-grid category-content" data-content="standup">
         <div class="feature-card">
           <div class="feature-icon-container">
             <div class="feature-icon">⏱️</div>
@@ -146,8 +158,12 @@ title: Office Mom - Water & Steps Tracking macOS App
         </div>
       </div>
 
-      <h3 class="feature-category-title">⚙️ Settings & Preferences</h3>
-      <div class="features-grid">
+      <h3 class="feature-category-title expandable-category" data-category="settings">
+        <span class="category-icon">⚙️</span>
+        <span class="category-text">Settings & Preferences</span>
+        <span class="expand-icon">▼</span>
+      </h3>
+      <div class="features-grid category-content" data-content="settings">
         <div class="feature-card">
           <div class="feature-icon-container">
             <div class="feature-icon">👤</div>
@@ -178,8 +194,12 @@ title: Office Mom - Water & Steps Tracking macOS App
         </div>
       </div>
 
-      <h3 class="feature-category-title">📊 Menu Bar Integration</h3>
-      <div class="features-grid">
+      <h3 class="feature-category-title expandable-category" data-category="menubar">
+        <span class="category-icon">📊</span>
+        <span class="category-text">Menu Bar Integration</span>
+        <span class="expand-icon">▼</span>
+      </h3>
+      <div class="features-grid category-content" data-content="menubar">
         <div class="feature-card">
           <div class="feature-icon-container">
             <div class="feature-icon">💡</div>
@@ -203,8 +223,12 @@ title: Office Mom - Water & Steps Tracking macOS App
         </div>
       </div>
 
-      <h3 class="feature-category-title">🔔 Smart Notifications</h3>
-      <div class="features-grid">
+      <h3 class="feature-category-title expandable-category" data-category="notifications">
+        <span class="category-icon">🔔</span>
+        <span class="category-text">Smart Notifications</span>
+        <span class="expand-icon">▼</span>
+      </h3>
+      <div class="features-grid category-content" data-content="notifications">
         <div class="feature-card">
           <div class="feature-icon-container">
             <div class="feature-icon">💧</div>
