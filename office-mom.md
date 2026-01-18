@@ -201,17 +201,10 @@ title: Office Mom - Water & Steps Tracking macOS App
         </div>
         <div class="feature-card">
           <div class="feature-icon-container">
-            <div class="feature-icon">📋</div>
-          </div>
-          <h3>Responsive Settings UI</h3>
-          <p>Scrollable, adaptive settings interface with always-visible save button</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-container">
             <div class="feature-icon">💾</div>
           </div>
-          <h3>Data Persistence</h3>
-          <p>All your data is safely stored locally and persists across sessions</p>
+          <h3>Data Persistence & Privacy</h3>
+          <p>All data stored locally on your Mac. GDPR/DSGVO compliant - no external servers, no tracking</p>
         </div>
       </div>
 
@@ -299,18 +292,11 @@ title: Office Mom - Water & Steps Tracking macOS App
           <h3>Cooldown System</h3>
           <p>Prevents notification spam with smart 1-hour cooldown intervals</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon-container">
-            <div class="feature-icon">🔕</div>
-          </div>
-          <h3>Non-Intrusive</h3>
-          <p>Notifications won't reopen the app - stay focused on your work</p>
-        </div>
       </div>
 
       <h3 class="feature-category-title expandable-category" data-category="history">
         <span class="category-icon">📈</span>
-        <span class="category-text">Historical Data & Analytics</span>
+        <span class="category-text">Data Management</span>
         <span class="expand-icon">▼</span>
       </h3>
       <div class="features-grid category-content" data-content="history">
@@ -323,24 +309,10 @@ title: Office Mom - Water & Steps Tracking macOS App
         </div>
         <div class="feature-card">
           <div class="feature-icon-container">
-            <div class="feature-icon">📅</div>
-          </div>
-          <h3>90-Day History Storage</h3>
-          <p>Track your progress over the last 3 months with detailed records</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-container">
-            <div class="feature-icon">🎯</div>
-          </div>
-          <h3>Goal Context</h3>
-          <p>Historical data includes your daily goals for accurate comparison</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-container">
             <div class="feature-icon">🔒</div>
           </div>
           <h3>Privacy-First</h3>
-          <p>All history stored locally on your Mac - never leaves your device</p>
+          <p>All data stored locally on your Mac - never leaves your device</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon-container">
