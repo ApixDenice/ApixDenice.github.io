@@ -24,12 +24,13 @@ title: Home
   </div>
 
   <div class="app-card" data-app="office-mom">
-    <div class="app-logo-container">
-      <img src="{{ '/assets/images/Office Mom.png' | relative_url }}" alt="Office Mom Logo" class="app-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    <div class="app-logo-container app-logo-dual">
+      <img src="{{ '/assets/images/Office Mom.png' | relative_url }}" alt="Office Mom app icon" class="app-logo app-logo-dual-item" onerror="this.style.display='none';">
+      <img src="{{ '/assets/images/iOffice Mom.png' | relative_url }}" alt="iOffice Mom app icon" class="app-logo app-logo-dual-item" onerror="this.style.display='none';">
       <div class="app-icon" style="display: none;">💧</div>
     </div>
-    <h2>Office Mom</h2>
-    <p>Water & Steps Tracking macOS App</p>
+    <h2>Office Mom &amp; iOffice Mom</h2>
+    <p>Water, steps &amp; 20-8-2 rhythm — Mac menu bar &amp; iPhone</p>
     <a href="{{ "/office-mom" | relative_url }}" class="btn-primary">Learn More →</a>
   </div>
 </div>
