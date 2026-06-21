@@ -4,49 +4,81 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ site.description | default: site.github.project_tagline }}">
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    <meta name="theme-color" content="#0BA000">
 
     {% seo %}
-    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ "/assets/css/custom.css" | relative_url }}">
-    <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <canvas id="particles-canvas"></canvas>
-    <div class="wrapper">
-      <header>
-        <nav class="main-nav">
-          <div class="nav-container">
-            <a href="{{ "/" | relative_url }}" class="nav-logo">
-              <span class="glitch" data-text="ApixDenice">ApixDenice</span>
-            </a>
-            <ul class="nav-menu">
-              <li><a href="{{ "/" | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">Home</a></li>
-              <li><a href="{{ "/dips" | relative_url }}" class="nav-link {% if page.url == '/dips' or page.url == '/dips/' %}active{% endif %}">DIPS</a></li>
-              <li><a href="{{ "/office-mom" | relative_url }}" class="nav-link {% if page.url == '/office-mom' or page.url == '/office-mom/' %}active{% endif %}">Office Mom</a></li>
-              <li><a href="{{ "/contact" | relative_url }}" class="nav-link {% if page.url == '/contact' or page.url == '/contact/' %}active{% endif %}">Contact</a></li>
-            </ul>
-            <div class="hamburger">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <div class="nav-inner">
+          <a href="{{ "/" | relative_url }}" class="brand">
+            <span class="brand-mark" aria-hidden="true">A</span>
+            <span class="brand-name">ApixDenice</span>
+          </a>
+
+          <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">
+            <span></span><span></span><span></span>
+          </button>
+
+          <ul class="nav-menu" id="nav-menu">
+            <li><a href="{{ "/" | relative_url }}" class="nav-link {% if page.url == '/' %}is-active{% endif %}">Home</a></li>
+
+            <li class="nav-dropdown">
+              <button class="nav-link nav-dropdown-toggle {% if page.url contains '/dips' %}is-active{% endif %}" aria-expanded="false" aria-haspopup="true">
+                DIPS
+                <svg class="caret" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <ul class="nav-dropdown-menu">
+                <li>
+                  <a href="{{ "/dips" | relative_url }}">
+                    <span class="dd-title">Overview</span>
+                    <span class="dd-sub">What DIPS is &amp; how it works</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ "/dips/events" | relative_url }}">
+                    <span class="dd-title">Manage events</span>
+                    <span class="dd-sub">Sign in &amp; create events for the app</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li><a href="{{ "/office-mom" | relative_url }}" class="nav-link {% if page.url contains '/office-mom' %}is-active{% endif %}">Office Mom</a></li>
+            <li><a href="{{ "/contact" | relative_url }}" class="nav-link {% if page.url contains '/contact' %}is-active{% endif %}">Contact</a></li>
+            <li class="nav-cta-item"><a href="{{ "/dips/events" | relative_url }}" class="nav-cta">Manage events</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      {{ content }}
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <span>ApixDenice</span>
+        </div>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="{{ "/" | relative_url }}">Home</a>
+          <a href="{{ "/dips" | relative_url }}">DIPS</a>
+          <a href="{{ "/dips/events" | relative_url }}">Manage events</a>
+          <a href="{{ "/office-mom" | relative_url }}">Office Mom</a>
+          <a href="{{ "/contact" | relative_url }}">Contact</a>
         </nav>
-      </header>
-
-      <main>
-        {{ content }}
-      </main>
-
-      <footer>
-        <p class="footer-text">
-          <small>© {{ 'now' | date: "%Y" }} ApixDenice. Built with Jekyll & Hacker Theme</small>
-        </p>
-      </footer>
-    </div>
+        <p class="footer-copy"><small>© {{ 'now' | date: "%Y" }} ApixDenice · Built for fitness, on Apple platforms</small></p>
+      </div>
+    </footer>
 
     <script src="{{ "/assets/js/main.js" | relative_url }}"></script>
   </body>

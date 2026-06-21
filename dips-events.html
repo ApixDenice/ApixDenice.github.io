@@ -1,0 +1,147 @@
+---
+layout: default
+title: Manage Events — DIPS
+description: Sign in with your DIPS account to create and manage sport events from the web.
+permalink: /dips/events/
+---
+
+<div class="events-page">
+  <div class="events-hero reveal">
+    <span class="eyebrow">DIPS · Manage events</span>
+    <h1>Create events from the web</h1>
+    <p>Sign in with your DIPS account to add and manage sport events. Everything you create here syncs straight into the DIPS app.</p>
+  </div>
+
+  <!-- Sign-in card -->
+  <div class="auth-card reveal" id="auth-card">
+    <h2>Sign in</h2>
+    <p class="sub">Use the same email and password as the DIPS app.</p>
+
+    <form id="login-form" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary" id="login-btn">Sign in</button>
+    </form>
+
+    <div class="auth-msg" id="auth-msg" role="status" aria-live="polite"></div>
+    <p class="auth-foot">No account yet? Create one in the DIPS app — the same login works here.</p>
+  </div>
+
+  <!-- Signed-in placeholder -->
+  <div class="signed-in" id="signed-in">
+    <div class="account-badge">
+      <span class="avatar" id="avatar">D</span>
+      <div class="who">
+        <b id="who-email">—</b>
+        <span>Signed in to DIPS</span>
+      </div>
+    </div>
+
+    <div class="placeholder-box">
+      <div class="big">🛠️</div>
+      <h3>Event manager is coming soon</h3>
+      <p>You're signed in. The tools to create and manage your DIPS events from the web are being built and will appear right here.</p>
+    </div>
+
+    <p style="text-align:center;">
+      <button class="link-btn" id="logout-btn">Sign out</button>
+    </p>
+  </div>
+</div>
+
+<!--
+  Firebase web login for the DIPS project ("hilsports").
+  Uses the same Email/Password accounts as the iOS app.
+
+  BEFORE THIS WORKS IN PRODUCTION, verify in the Firebase console:
+   1. Authentication → Sign-in method → Email/Password is enabled.
+   2. Authentication → Settings → Authorized domains includes:
+        apixdenice.github.io   (and localhost for testing)
+   3. Register a Web App (Project settings → Your apps → Web) and, if the
+      values below differ, replace firebaseConfig with the web app's config.
+      The apiKey is a public client identifier — safe to commit.
+-->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth, setPersistence, browserLocalPersistence,
+    signInWithEmailAndPassword, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCMmyksVRzJ6yUOLAwJsTe77rBkZL7po30",
+    authDomain: "hilsports.firebaseapp.com",
+    projectId: "hilsports",
+    storageBucket: "hilsports.appspot.com",
+    messagingSenderId: "552572655098"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  setPersistence(auth, browserLocalPersistence).catch(() => {});
+
+  const authCard  = document.getElementById("auth-card");
+  const signedIn  = document.getElementById("signed-in");
+  const form      = document.getElementById("login-form");
+  const loginBtn  = document.getElementById("login-btn");
+  const msg       = document.getElementById("auth-msg");
+  const whoEmail  = document.getElementById("who-email");
+  const avatar    = document.getElementById("avatar");
+
+  function showMsg(text, kind) {
+    msg.textContent = text;
+    msg.className = "auth-msg " + kind;
+  }
+  function clearMsg() { msg.textContent = ""; msg.className = "auth-msg"; }
+
+  const friendlyError = (code) => ({
+    "auth/invalid-email": "That email address looks invalid.",
+    "auth/invalid-credential": "Email or password is incorrect.",
+    "auth/wrong-password": "Email or password is incorrect.",
+    "auth/user-not-found": "No account found for that email.",
+    "auth/too-many-requests": "Too many attempts. Please try again in a moment.",
+    "auth/network-request-failed": "Network error. Check your connection and try again.",
+    "auth/unauthorized-domain": "This domain isn't authorized in Firebase yet."
+  }[code] || "Couldn't sign in. Please try again.");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearMsg();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    if (!email || !password) { showMsg("Please enter your email and password.", "error"); return; }
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Signing in…";
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      showMsg(friendlyError(err.code), "error");
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Sign in";
+    }
+  });
+
+  document.getElementById("logout-btn").addEventListener("click", () => signOut(auth));
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      whoEmail.textContent = user.email || "Signed in";
+      avatar.textContent = (user.email || "D").charAt(0).toUpperCase();
+      authCard.style.display = "none";
+      signedIn.classList.add("show");
+      clearMsg();
+      form.reset();
+    } else {
+      authCard.style.display = "";
+      signedIn.classList.remove("show");
+    }
+  });
+</script>

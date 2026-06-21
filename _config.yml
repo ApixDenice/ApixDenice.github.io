@@ -1,6 +1,6 @@
 # Site settings
 title: ApixDenice
-description: iOS & macOS Developer - DIPS & Office Mom Apps
+description: DIPS & Office Mom — iOS & macOS apps for fitness and healthy habits
 email: dennishasselbusch@icloud.com
 baseurl: ""
 url: "https://apixdenice.github.io"
@@ -8,19 +8,16 @@ url: "https://apixdenice.github.io"
 # iOffice Mom (iPhone): paste your App Store product URL from App Store Connect when ready.
 ioffice_mom_app_store_url: "https://apps.apple.com/search?term=iOffice%20Mom"
 
-# Theme configuration
-remote_theme: pages-themes/hacker@v0.2.0
+# Plugins (no remote theme — the site uses its own layout + stylesheet)
 plugins:
-  - jekyll-remote-theme
   - jekyll-feed
   - jekyll-seo-tag
 
-# Navigation
+# Navigation (Home, Office Mom, Contact are simple links;
+# DIPS is rendered as a dropdown in the layout)
 navigation:
   - title: Home
     url: /
-  - title: DIPS
-    url: /dips
   - title: Office Mom
     url: /office-mom
   - title: Contact
@@ -29,3 +26,10 @@ navigation:
 # Build settings
 markdown: kramdown
 highlighter: rouge
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - DESIGN_RECOMMENDATIONS.md
+  - vendor
