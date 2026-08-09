@@ -49,11 +49,11 @@ description: DIPS connects fitness enthusiasts through real sport events near yo
       <div class="app-card reveal" data-app="office-mom">
         <div class="app-logo-container app-logo-dual">
           <img src="{{ '/assets/images/Office Mom.png' | relative_url }}" alt="Office Mom app icon" class="app-logo app-logo-dual-item" onerror="this.style.display='none';">
-          <img src="{{ '/assets/images/iOffice Mom.png' | relative_url }}" alt="iOffice Mom app icon" class="app-logo app-logo-dual-item" onerror="this.style.display='none';">
+          <img src="{{ '/assets/images/iOffice Mom.png' | relative_url }}" alt="Office Mom app icon" class="app-logo app-logo-dual-item" onerror="this.style.display='none';">
           <div class="app-icon" style="display:none;">💧</div>
         </div>
-        <h2>Office Mom &amp; iOffice Mom</h2>
-        <p>Water, steps and a healthy 20-8-2 sit/stand/move rhythm — a Mac menu-bar companion plus its iPhone sibling.</p>
+        <h2>Office Mom</h2>
+        <p>Water, steps and a healthy 20-8-2 sit/stand/move rhythm — on iPhone, plus mOffice Mom in your Mac menu bar.</p>
         <a href="{{ "/office-mom" | relative_url }}" class="btn btn-primary">Learn more</a>
       </div>
 

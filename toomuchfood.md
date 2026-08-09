@@ -88,17 +88,52 @@ permalink: /toomuchfood/
 
     <section class="feature-section reveal" id="screenshots">
       <h2>Screenshots</h2>
-      <p>A look at Frank in action, plus the progression that keeps you coming back.</p>
-      <p class="shots-hint">Swipe to see more →</p>
-      <div class="shots">
-        <figure><img src="{{ '/assets/images/toomuchfood/01-grab-the-food.png' | relative_url }}" alt="Gameplay over a city skyline: score 2860, a 41-hit combo at 5x multiplier, with fries and burgers to collect." loading="lazy"></figure>
-        <figure><img src="{{ '/assets/images/toomuchfood/02-one-thumb.png' | relative_url }}" alt="Gameplay over green hills: score 1247 at level 8 with a 22-hit combo and hazards to dodge." loading="lazy"></figure>
-        <figure><img src="{{ '/assets/images/toomuchfood/03-four-worlds.png' | relative_url }}" alt="The Cold Snap world at level 21, a snowy landscape with score 4180." loading="lazy"></figure>
-        <figure><img src="{{ '/assets/images/toomuchfood/04-race-the-ghost.png' | relative_url }}" alt="Night city run at level 18 showing the ghost of a previous best run and an Ahead! indicator." loading="lazy"></figure>
-        <figure><img src="{{ '/assets/images/toomuchfood/05-daily-challenge.png' | relative_url }}" alt="TooMuchFood home screen with Play, the daily challenge, Food Pass, league standing and waiting crates." loading="lazy"></figure>
-        <figure><img src="{{ '/assets/images/toomuchfood/06-weekly-league.png' | relative_url }}" alt="Gold League leaderboard showing the player in fourth place with 339 trophies." loading="lazy"></figure>
-        <figure><img src="{{ '/assets/images/toomuchfood/07-food-pass.png' | relative_url }}" alt="Food Pass season 3 at tier 11, showing free and premium reward tracks with crates, coins and skins." loading="lazy"></figure>
-        <figure><img src="{{ '/assets/images/toomuchfood/08-franks-shop.png' | relative_url }}" alt="The shop screen with unlockable Frank skins including Retro, Beach and Chef Frank." loading="lazy"></figure>
+      <p>A look at Frank in action, plus the progression that keeps you coming back. Use the arrows or thumbnails to browse, and click any shot to enlarge it.</p>
+
+      <div class="carousel" data-carousel>
+        <div class="carousel-stage">
+          <button class="carousel-btn carousel-prev" type="button" aria-label="Previous screenshot">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <div class="carousel-track" aria-live="polite">
+            <div class="carousel-slide is-active" data-caption="Grab the food. Dodge the poo.">
+              <img src="{{ '/assets/images/toomuchfood/01-grab-the-food.png' | relative_url }}" alt="Gameplay over a city skyline: score 2860, a 41-hit combo at 5x multiplier, with fries and burgers to collect.">
+            </div>
+            <div class="carousel-slide" data-caption="One thumb. One hit. No mercy.">
+              <img src="{{ '/assets/images/toomuchfood/02-one-thumb.png' | relative_url }}" alt="Gameplay over green hills: score 1247 at level 8 with a 22-hit combo and hazards to dodge." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Four worlds. One appetite.">
+              <img src="{{ '/assets/images/toomuchfood/03-four-worlds.png' | relative_url }}" alt="The Cold Snap world at level 21, a snowy landscape with score 4180." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Race the ghost of your best run">
+              <img src="{{ '/assets/images/toomuchfood/04-race-the-ghost.png' | relative_url }}" alt="Night city run at level 18 showing the ghost of a previous best run and an Ahead! indicator." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="A new challenge every single day">
+              <img src="{{ '/assets/images/toomuchfood/05-daily-challenge.png' | relative_url }}" alt="TooMuchFood home screen with Play, the daily challenge, Food Pass, league standing and waiting crates." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Climb the weekly league">
+              <img src="{{ '/assets/images/toomuchfood/06-weekly-league.png' | relative_url }}" alt="Gold League leaderboard showing the player in fourth place with 339 trophies." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="30 tiers of rewards every season">
+              <img src="{{ '/assets/images/toomuchfood/07-food-pass.png' | relative_url }}" alt="Food Pass season 3 at tier 11, showing free and premium reward tracks with crates, coins and skins." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="13 Franks to unlock">
+              <img src="{{ '/assets/images/toomuchfood/08-franks-shop.png' | relative_url }}" alt="The shop screen with unlockable Frank skins including Retro, Beach and Chef Frank." loading="lazy">
+            </div>
+          </div>
+
+          <button class="carousel-btn carousel-next" type="button" aria-label="Next screenshot">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="carousel-meta">
+          <span class="carousel-caption" data-carousel-caption>Grab the food. Dodge the poo.</span>
+          <span class="carousel-count" data-carousel-count>1 / 8</span>
+        </div>
+
+        <div class="carousel-thumbs" data-carousel-thumbs></div>
       </div>
     </section>
 

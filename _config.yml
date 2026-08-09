@@ -5,8 +5,11 @@ email: dennishasselbusch@icloud.com
 baseurl: ""
 url: "https://apixdenice.github.io"
 
-# iPhone Office Mom product page (App Store ID 6760966448)
-ioffice_mom_app_store_url: "https://apps.apple.com/de/app/office-mom-water-breaks/id6760966448?l=en-GB"
+# App Store links.
+# The short /app/idNNNN form is storefront-neutral: Apple redirects each
+# visitor to their own country's store automatically.
+office_mom_ios_url: "https://apps.apple.com/app/id6760966448"
+office_mom_mac_url: "https://apps.apple.com/app/id6757431484"
 
 # Plugins (no remote theme — the site uses its own layout + stylesheet)
 plugins:
