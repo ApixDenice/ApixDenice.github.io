@@ -32,8 +32,8 @@ description: DIPS connects fitness enthusiasts through real sport events near yo
 <section class="section">
   <div class="container">
     <div class="section-head reveal">
-      <h2>Two apps, one focus: a healthier you</h2>
-      <p>Built natively for Apple platforms, designed to fit naturally into your day.</p>
+      <h2>Apps built for Apple platforms</h2>
+      <p>Three products, made with the same care: get people moving, keep them healthy, and have some fun along the way.</p>
     </div>
     <div class="apps-grid">
       <div class="app-card reveal" data-app="dips">
@@ -55,6 +55,16 @@ description: DIPS connects fitness enthusiasts through real sport events near yo
         <h2>Office Mom &amp; iOffice Mom</h2>
         <p>Water, steps and a healthy 20-8-2 sit/stand/move rhythm — a Mac menu-bar companion plus its iPhone sibling.</p>
         <a href="{{ "/office-mom" | relative_url }}" class="btn btn-primary">Learn more</a>
+      </div>
+
+      <div class="app-card reveal" data-app="toomuchfood">
+        <div class="app-logo-container">
+          <img src="{{ '/assets/images/toomuchfood/icon.png' | relative_url }}" alt="TooMuchFood app icon" class="app-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="app-icon" style="display:none;">🍟</div>
+        </div>
+        <h2>TooMuchFood</h2>
+        <p>An endless arcade snack-'em-up for iPhone. Grab the food, dodge the poo, chase combos across four worlds — and climb the weekly league.</p>
+        <a href="{{ "/toomuchfood" | relative_url }}" class="btn btn-primary">Learn more</a>
       </div>
     </div>
   </div>

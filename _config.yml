@@ -5,8 +5,8 @@ email: dennishasselbusch@icloud.com
 baseurl: ""
 url: "https://apixdenice.github.io"
 
-# iOffice Mom (iPhone): paste your App Store product URL from App Store Connect when ready.
-ioffice_mom_app_store_url: "https://apps.apple.com/search?term=iOffice%20Mom"
+# iPhone Office Mom product page (App Store ID 6760966448)
+ioffice_mom_app_store_url: "https://apps.apple.com/de/app/office-mom-water-breaks/id6760966448?l=en-GB"
 
 # Plugins (no remote theme — the site uses its own layout + stylesheet)
 plugins:

@@ -363,6 +363,59 @@ section { position: relative; }
 .link-btn { background:none; border:none; color: var(--green-dark); font-weight:600; cursor:pointer; font-family: inherit; font-size: 0.95rem; padding: 0; }
 .link-btn:hover { text-decoration: underline; }
 
+/* ---------------- TooMuchFood (amber accent scope) ---------------- */
+.tmf {
+  --green: #E8890C;          /* amber primary, scoped override */
+  --green-dark: #C7710A;
+  --green-deep: #4A2A05;
+  --green-soft: #FDF1DF;
+  --green-soft-2: #FAE3C0;
+}
+.tmf .hero {
+  background:
+    radial-gradient(1200px 480px at 80% -10%, var(--green-soft) 0%, transparent 60%),
+    linear-gradient(180deg, #FFFDFA 0%, #FEF7EC 100%);
+}
+.tmf .btn-primary { box-shadow: 0 6px 16px rgba(232,137,12,.24); }
+.tmf .btn-primary:hover { box-shadow: 0 10px 22px rgba(232,137,12,.3); }
+.tmf .field input:focus { box-shadow: 0 0 0 3px rgba(232,137,12,.18); }
+.tmf .app-logo-header, .tmf .app-card .app-logo { border-radius: 22px; }
+
+/* Screenshot gallery */
+.shots {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 232px; gap: 1rem;
+  overflow-x: auto; padding: 0.5rem 0 1.25rem; margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
+}
+.shots::-webkit-scrollbar { height: 8px; }
+.shots::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+.shots::-webkit-scrollbar-track { background: transparent; }
+.shots figure { margin: 0; scroll-snap-align: start; }
+.shots img {
+  display: block; width: 100%; height: auto; border-radius: 18px;
+  border: 1px solid var(--border); box-shadow: var(--shadow-md); background: var(--bg-soft);
+}
+.shots figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 0.6rem; text-align: center; }
+.shots-hint { font-size: 0.85rem; color: var(--muted); text-align: center; margin-top: -0.25rem; }
+
+@media (min-width: 861px) {
+  .shots {
+    grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); grid-auto-columns: auto;
+    overflow: visible; margin: 0; padding-left: 0; padding-right: 0; gap: 1.25rem;
+  }
+  .shots-hint { display: none; }
+}
+
+/* Game stat strip */
+.stat-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+.stat {
+  background: var(--green-soft); border: 1px solid var(--green-soft-2);
+  border-radius: var(--radius); padding: 1.1rem 1rem; text-align: center;
+}
+.stat b { display: block; font-size: 1.7rem; color: var(--green-deep); line-height: 1.1; }
+.stat span { font-size: 0.86rem; color: var(--muted); }
+
 /* ---------------- Footer ---------------- */
 .site-footer { background: var(--green-deep); color: #D9E7DF; margin-top: 4rem; }
 .footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 2.5rem 1.5rem; display:flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
