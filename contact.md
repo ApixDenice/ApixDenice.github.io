@@ -12,11 +12,11 @@ title: Contact
   <div class="contact-content">
     <div class="contact-info">
       <div class="contact-links">
-        <a href="mailto:dennishasselbusch@icloud.com" class="contact-link contact-link-large">
+        <a href="mailto:dennishasselbusch@googlemail.com" class="contact-link contact-link-large">
           <span class="contact-icon">✉️</span>
           <div class="contact-link-content">
             <span class="contact-link-label">Email</span>
-            <span class="contact-link-value">dennishasselbusch@icloud.com</span>
+            <span class="contact-link-value">dennishasselbusch@googlemail.com</span>
           </div>
         </a>
         

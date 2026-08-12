@@ -323,6 +323,18 @@ section { position: relative; }
 .privacy-section h2 { font-size: 1.15rem; margin-bottom: 0.5rem; }
 .privacy-section p { color: var(--muted); margin: 0 0 0.6rem; }
 .privacy-section p:last-child { margin-bottom: 0; }
+.privacy-section ul { margin: 0 0 0.8rem; padding-left: 1.1rem; color: var(--muted); }
+.privacy-section ul:last-child { margin-bottom: 0; }
+.privacy-section li { margin-bottom: 0.4rem; line-height: 1.55; }
+.privacy-section li:last-child { margin-bottom: 0; }
+.privacy-section strong { color: var(--green-deep); }
+.privacy-section a { color: var(--green-dark); font-weight: 500; word-break: break-word; }
+.privacy-header .eyebrow { display: inline-block; margin-bottom: 0.75rem; }
+.privacy-lang-switch { margin-top: 0.75rem; font-size: 0.92rem; }
+.privacy-lang-switch a { color: var(--green-dark); font-weight: 500; }
+.contact-details { margin-top: 0.75rem; }
+.contact-details p { margin-bottom: 0.6rem; line-height: 1.6; }
+.privacy-footer { text-align: center; margin-top: 2rem; }
 
 /* ---------------- 404 ---------------- */
 .error-page { display:flex; justify-content:center; align-items:center; min-height: 60vh; text-align:center; padding: 3rem 1.5rem; }

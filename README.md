@@ -24,7 +24,7 @@ The logos will automatically display on the home page. If images are not found, 
 ### 2. Contact Page
 
 The contact page includes direct links to:
-- Email: dennishasselbusch@icloud.com
+- Email: dennishasselbusch@googlemail.com
 - LinkedIn: https://www.linkedin.com/in/dennis-hasselbusch-7512391b5/
 - GitHub: https://github.com/ApixDenice
 
@@ -114,4 +114,4 @@ This project is open source and available under the MIT License.
 
 ## 📧 Contact
 
-For questions or suggestions, reach out via the contact page or email: dennishasselbusch@icloud.com
+For questions or suggestions, reach out via the contact page or email: dennishasselbusch@googlemail.com

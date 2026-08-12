@@ -149,6 +149,9 @@ permalink: /toomuchfood/
       <div class="cta-button-row">
         <a href="{{ "/contact" | relative_url }}" class="btn btn-primary btn-large">Get launch updates</a>
       </div>
+      <div class="privacy-link-section">
+        <p><a href="{{ "/toomuchfood/privacy" | relative_url }}" class="privacy-link">Privacy Policy</a> · <a href="{{ "/toomuchfood/datenschutz" | relative_url }}" class="privacy-link">Datenschutzerklärung</a></p>
+      </div>
     </div>
 
   </div>
