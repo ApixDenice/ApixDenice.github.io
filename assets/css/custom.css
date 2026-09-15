@@ -393,6 +393,45 @@ section { position: relative; }
 .tmf .field input:focus { box-shadow: 0 0 0 3px rgba(232,137,12,.18); }
 .tmf .app-logo-header, .tmf .app-card .app-logo { border-radius: 22px; }
 
+/* ---------------- Office Mom (blue accent scope) ----------------
+   Same page structure as TooMuchFood; only the accent changes, so each app
+   keeps its own colour: DIPS green (site default), TooMuchFood amber,
+   Office Mom blue — taken from the app icon and ThemeColor.water. */
+.om {
+  --green: #2F6FDB;          /* blue primary, scoped override */
+  --green-dark: #2458B5;
+  --green-deep: #0F2A57;
+  --green-soft: #EAF2FD;
+  --green-soft-2: #D5E5FB;
+}
+.om .hero {
+  background:
+    radial-gradient(1200px 480px at 80% -10%, var(--green-soft) 0%, transparent 60%),
+    linear-gradient(180deg, #FAFCFF 0%, #EEF4FD 100%);
+}
+.om .btn-primary { box-shadow: 0 6px 16px rgba(47,111,219,.24); }
+.om .btn-primary:hover { box-shadow: 0 10px 22px rgba(47,111,219,.3); }
+.om .btn-primary.btn-secondary-outline { box-shadow: none; }
+.om .carousel-btn:focus-visible { box-shadow: 0 0 0 3px rgba(47,111,219,.35); }
+.om-mac-inner { display: grid; grid-template-columns: 120px 1fr; gap: 2rem; align-items: start; }
+.om-mac-icon { width: 120px; height: 120px; border-radius: 26px; box-shadow: var(--shadow-md); }
+.om-mac .eyebrow { margin-bottom: 0.75rem; }
+@media (max-width: 720px) {
+  .om-mac-inner { grid-template-columns: 1fr; text-align: center; }
+  .om-mac-icon { margin: 0 auto; width: 96px; height: 96px; }
+  .om-mac .office-mom-feature-list { text-align: left; }
+}
+
+/* ---------------- One accent per app on the home cards ---------------- */
+.app-card[data-app] { border-top: 4px solid var(--card-accent, var(--green)); }
+.app-card[data-app="dips"] { --card-accent: #0BA000; }
+.app-card[data-app="office-mom"] { --card-accent: #2F6FDB; }
+.app-card[data-app="toomuchfood"] { --card-accent: #E8890C; }
+.app-card[data-app="office-mom"] .btn-primary { background: #2F6FDB; box-shadow: 0 6px 16px rgba(47,111,219,.22); }
+.app-card[data-app="office-mom"] .btn-primary:hover { background: #2458B5; }
+.app-card[data-app="toomuchfood"] .btn-primary { background: #E8890C; box-shadow: 0 6px 16px rgba(232,137,12,.22); }
+.app-card[data-app="toomuchfood"] .btn-primary:hover { background: #C7710A; }
+
 /* ---- Screenshot carousel ---- */
 .carousel { margin-top: 1.5rem; }
 .carousel-stage {

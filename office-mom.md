@@ -4,87 +4,180 @@ title: Office Mom — Water, Steps & Breaks for iPhone & Mac
 description: Office Mom is your hydration, stand-up and movement companion — on iPhone and in the Mac menu bar, with Apple Health sync and zero data collection.
 ---
 
-<div class="app-page app-page-office-mom">
-  <header class="app-header app-header-suite">
-    <h1>Office Mom</h1>
-    <p class="app-tagline">Water, steps, and a healthy sit/stand/move rhythm — on iPhone and Mac</p>
-  </header>
+<div class="om">
 
-  <div class="app-content">
-    <div class="office-mom-split">
-      <section class="office-mom-platform-card" aria-labelledby="office-mom-iphone-heading">
-        <div class="office-mom-platform-header">
-          <div class="app-logo-header-container office-mom-platform-logo">
-            <img src="{{ '/assets/images/iOffice Mom.png' | relative_url }}" alt="Office Mom app icon" class="app-logo-header" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <div class="app-icon-large" style="display: none;" aria-hidden="true">💧</div>
-          </div>
-          <h2 id="office-mom-iphone-heading">Office Mom</h2>
-          <p class="office-mom-platform-badge">iPhone</p>
-        </div>
-        <p class="office-mom-elevator">Your smart hydration, stand-up and movement companion. Hit your water and movement goals without breaking focus — with zero data collection.</p>
-        <ul class="office-mom-feature-list">
-          <li><strong>Smart hydration</strong> — auto-calculated daily goal, one-tap logging, non-intrusive reminders</li>
-          <li><strong>5 movement routines</strong> — including the evidence-based 20-8-2 rule, or build your own intervals</li>
-          <li><strong>Steps &amp; goals</strong> — custom daily targets with clear, motivating progress blocks</li>
-          <li><strong>Live Activities</strong> — track your standing timer and water from the Lock Screen</li>
-          <li><strong>Apple Health sync</strong> — hydration and activity flow into your wider health picture</li>
-        </ul>
-        <p class="office-mom-requirements">iPhone · Requires iOS 26.2 or later · ~10&nbsp;MB · English &amp; German</p>
-        <div class="office-mom-cta">
-          <a href="{{ site.office_mom_ios_url }}" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
-          <p class="version-info">Version 2.1 · Free</p>
-        </div>
-      </section>
-
-      <section class="office-mom-platform-card" aria-labelledby="office-mom-mac-heading">
-        <div class="office-mom-platform-header">
-          <div class="app-logo-header-container office-mom-platform-logo">
-            <img src="{{ '/assets/images/Office Mom.png' | relative_url }}" alt="mOffice Mom app icon" class="app-logo-header" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <div class="app-icon-large" style="display: none;" aria-hidden="true">💧</div>
-          </div>
-          <h2 id="office-mom-mac-heading">mOffice Mom</h2>
-          <p class="office-mom-platform-badge">macOS</p>
-        </div>
-        <p class="office-mom-elevator">The Mac companion: log water and steps, run the stand-up timer, and see live progress right in the menu bar without breaking focus.</p>
-        <ul class="office-mom-feature-list">
-          <li><strong>Water</strong> — auto-calculated goal, menu-bar quick-add, smart reminders</li>
-          <li><strong>Stand-up</strong> — 20-8-2 routine with fully customizable intervals</li>
-          <li><strong>Steps</strong> — custom goals, multiple goal blocks per day, clear progress bars</li>
-          <li><strong>Menu bar native</strong> — live progress indicator, one-click access, runs quietly in the background</li>
-          <li><strong>Apple Health sync</strong> — the same hydration and activity data, on your desk</li>
-        </ul>
-        <p class="office-mom-requirements">Requires macOS 26.1 or later · ~2&nbsp;MB · notifications optional</p>
-        <div class="office-mom-cta">
-          <a href="{{ site.office_mom_mac_url }}" class="btn btn-primary btn-large btn-secondary-outline" target="_blank" rel="noopener noreferrer">Download on the Mac App Store</a>
-          <p class="version-info">Version 1.7 · Free</p>
-        </div>
-      </section>
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy reveal">
+      <span class="eyebrow">iPhone &amp; Mac · Health &amp; wellness</span>
+      <h1>Drink water. Stand up. Keep moving.</h1>
+      <p class="hero-lead">Your desk mom has your back. Office Mom tracks hydration, steps and a healthy sit/stand/move rhythm — with gentle reminders instead of noisy spam.</p>
+      <div class="hero-actions">
+        <a href="{{ site.office_mom_ios_url }}" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
+        <a href="#screenshots" class="btn btn-outline btn-large">See the app</a>
+      </div>
+      <p class="hero-note">Free · Zero data collection · English &amp; German</p>
     </div>
+    <div class="hero-visual reveal">
+      <img src="{{ '/assets/images/officemom/icon.png' | relative_url }}" alt="Office Mom app icon" style="width:190px;height:190px;border-radius:42px;box-shadow:var(--shadow-lg);">
+    </div>
+  </div>
+</section>
 
-    <section class="feature-section feature-section-compact">
-      <h2>At a glance</h2>
-      <p><strong>Office Mom</strong> on iPhone keeps your habits with you all day, with Live Activities and Lock Screen widgets. <strong>mOffice Mom</strong> lives in the Mac menu bar for deep desk-work integration. Pick one or use both — same philosophy: stay hydrated, keep moving, and respect the 20-8-2 pattern without noisy spam.</p>
+<div class="app-page">
+  <div class="app-content">
+
+    <section class="feature-section reveal">
+      <h2>About the app</h2>
+      <p>Long desk days make it easy to forget the basics: a glass of water, a short walk, getting out of your chair. Office Mom quietly keeps track for you — a personal water goal based on your body, a stand-up timer built on the evidence-based 20-8-2 rule, and step goals that sync with Apple Health.</p>
+      <p>Everything stays on your device. No accounts, no tracking, no ads — just a friendly nudge when you need one.</p>
+      <div class="stat-strip" style="margin-top:1.5rem;">
+        <div class="stat"><b>20-8-2</b><span>Sit, stand &amp; move rhythm</span></div>
+        <div class="stat"><b>5</b><span>Movement routines</span></div>
+        <div class="stat"><b>29</b><span>Trophies to earn</span></div>
+        <div class="stat"><b>0</b><span>Data collected</span></div>
+      </div>
     </section>
 
-    <section class="feature-section feature-section-compact">
+    <section class="feature-section reveal">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">💧</div>
+          <h3>Smart hydration</h3>
+          <p>A daily goal calculated from your profile, one-tap logging and a pace target that tells you if you're on track.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🪑</div>
+          <h3>Stand-up timer</h3>
+          <p>Sit 20, stand 8, move 2 — or pick one of five routines, like 50-10 or quick micro-breaks.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚶</div>
+          <h3>Steps &amp; Apple Health</h3>
+          <p>Steps flow in from your iPhone automatically, with an afternoon target and a clear daily goal.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Live Activities &amp; widgets</h3>
+          <p>Follow your stand-up timer on the Lock Screen and Dynamic Island, and log water from a widget.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Reminders with personality</h3>
+          <p>Choose a caring, witty or strict mom. Quiet hours keep evenings and weekends calm.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔥</div>
+          <h3>Streaks &amp; levels</h3>
+          <p>Build a streak, level up with XP — and an automatic weekly streak freeze saves the odd missed day.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏆</div>
+          <h3>Trophies</h3>
+          <p>29 trophies across hydration, movement, streaks and days where you hit every goal.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3>Weekly &amp; monthly recaps</h3>
+          <p>A shareable card that sums up your water, steps and stand-ups — made for your story.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section reveal" id="screenshots">
+      <h2>Screenshots</h2>
+      <p>A look at Office Mom on iPhone. Use the arrows or thumbnails to browse, and click any shot to enlarge it.</p>
+
+      <div class="carousel" data-carousel>
+        <div class="carousel-stage">
+          <button class="carousel-btn carousel-prev" type="button" aria-label="Previous screenshot">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <div class="carousel-track" aria-live="polite">
+            <div class="carousel-slide is-active" data-caption="Water, steps &amp; breaks. All in one glance.">
+              <img src="{{ '/assets/images/officemom/01-dashboard.png' | relative_url }}" alt="Office Mom dashboard with a running sitting timer, water at 69 percent of 2.40 litres, steps and stand-up rings, the weekly recap and quick actions.">
+            </div>
+            <div class="carousel-slide" data-caption="Stay hydrated without thinking">
+              <img src="{{ '/assets/images/officemom/02-water.png' | relative_url }}" alt="Water screen with a tank filled to 69 percent, quick add buttons, a pace target and today's water logs." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Sit 20. Stand 8. Move 2.">
+              <img src="{{ '/assets/images/officemom/03-standup.png' | relative_url }}" alt="Stand-up timer showing 12:24 minutes of sitting left in the 20-8-2 routine, with Next and Stop buttons." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Every step counts toward your goal">
+              <img src="{{ '/assets/images/officemom/04-movement.png' | relative_url }}" alt="Movement screen with 6,842 of 8,000 steps, an Add Steps button, step targets and a HealthKit import." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Your break timer on the Lock Screen">
+              <img src="{{ '/assets/images/officemom/05-lock.png' | relative_url }}" alt="iPhone Lock Screen with the Office Mom stand-up Live Activity and a hydration reminder from Mom." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Watch your habits add up">
+              <img src="{{ '/assets/images/officemom/06-progress.png' | relative_url }}" alt="Progress screen with level, current and longest streak, and a seven-day water history chart." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Earn trophies for healthy habits">
+              <img src="{{ '/assets/images/officemom/07-trophies.png' | relative_url }}" alt="Trophy collection with 14 of 29 trophies unlocked across hydration and streaks." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Share your week. Brag a little.">
+              <img src="{{ '/assets/images/officemom/08-recap.png' | relative_url }}" alt="Weekly recap card: 15.8 litres hydrated, 52.4 thousand steps and 23 stand-ups." loading="lazy">
+            </div>
+          </div>
+
+          <button class="carousel-btn carousel-next" type="button" aria-label="Next screenshot">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="carousel-meta">
+          <span class="carousel-caption" data-carousel-caption>Water, steps &amp; breaks. All in one glance.</span>
+          <span class="carousel-count" data-carousel-count>1 / 8</span>
+        </div>
+
+        <div class="carousel-thumbs" data-carousel-thumbs></div>
+      </div>
+    </section>
+
+    <section class="feature-section reveal om-mac">
+      <div class="om-mac-inner">
+        <img src="{{ '/assets/images/Office Mom.png' | relative_url }}" alt="mOffice Mom app icon" class="om-mac-icon">
+        <div>
+          <span class="eyebrow">macOS · Menu bar</span>
+          <h2>mOffice Mom on your Mac</h2>
+          <p>The Mac companion lives in your menu bar: log water and steps, run the stand-up timer and see live progress without breaking focus.</p>
+          <ul class="office-mom-feature-list">
+            <li><strong>Water</strong> — auto-calculated goal, menu-bar quick-add, smart reminders</li>
+            <li><strong>Stand-up</strong> — 20-8-2 routine with fully customizable intervals</li>
+            <li><strong>Steps</strong> — custom goals and clear progress bars</li>
+            <li><strong>Menu bar native</strong> — one-click access, runs quietly in the background</li>
+          </ul>
+          <a href="{{ site.office_mom_mac_url }}" class="btn btn-primary btn-large btn-secondary-outline" target="_blank" rel="noopener noreferrer">Download on the Mac App Store</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section feature-section-compact reveal">
       <h2>Privacy first</h2>
       <p>Office Mom collects <strong>no data at all</strong>. Everything you log stays on your device, syncing only to Apple Health if you allow it. No accounts, no tracking, no advertising identifiers.</p>
     </section>
 
-    <section class="feature-section feature-section-compact">
-      <h2>Technology</h2>
-      <p>Both apps are built with <strong>Swift</strong> and <strong>SwiftUI</strong>, using local persistence, <strong>HealthKit</strong> sync and system notifications where you allow them. mOffice Mom adds menu bar integration and <strong>Combine</strong>-driven state on macOS.</p>
+    <section class="feature-section feature-section-compact reveal">
+      <h2>Built with</h2>
+      <p>Office Mom is a native app built in <strong>Swift</strong> and <strong>SwiftUI</strong>, with <strong>HealthKit</strong>, <strong>WidgetKit</strong> and <strong>Live Activities</strong>. mOffice Mom brings the same habits to the macOS menu bar.</p>
     </section>
 
-    <div class="cta-section cta-section-duo">
+    <div class="cta-section reveal">
+      <div class="coming-soon-icon">💧</div>
+      <h3>Out now on the App Store</h3>
+      <p>Office Mom is free on iPhone and Mac. Your back, your kidneys and your focus will thank you.</p>
       <div class="cta-button-row">
         <a href="{{ site.office_mom_ios_url }}" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">iPhone App Store</a>
         <a href="{{ site.office_mom_mac_url }}" class="btn btn-primary btn-large btn-secondary-outline" target="_blank" rel="noopener noreferrer">Mac App Store</a>
       </div>
-      <p class="version-info version-info-duo">Office Mom 2.1 · mOffice Mom 1.7</p>
       <div class="privacy-link-section">
-        <a href="{{ "/office-mom-privacy" | relative_url }}" class="privacy-link">🔒 Privacy Policy</a>
+        <p><a href="{{ "/office-mom-privacy" | relative_url }}" class="privacy-link">Privacy Policy</a> · <a href="{{ "/impressum" | relative_url }}" class="privacy-link">Impressum</a></p>
       </div>
     </div>
+
   </div>
+</div>
+
 </div>
