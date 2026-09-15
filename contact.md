@@ -36,6 +36,7 @@ title: Contact
           </div>
         </a>
       </div>
+      <p class="privacy-link-section"><a href="{{ "/impressum" | relative_url }}" class="privacy-link">Impressum · Legal notice</a></p>
     </div>
   </div>
 </div>
