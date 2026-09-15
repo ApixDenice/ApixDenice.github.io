@@ -30,6 +30,11 @@ navigation:
 markdown: kramdown
 highlighter: rouge
 
+# Jekyll skips dot-folders by default. iOS fetches the universal-link
+# association file for Too Much Food duel links from /.well-known/.
+include:
+  - .well-known
+
 exclude:
   - Gemfile
   - Gemfile.lock

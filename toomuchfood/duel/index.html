@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Duel · Too Much Food</title>
+<meta name="description" content="You've been challenged. Race your friend's ghost on the same course in Too Much Food.">
+<meta property="og:title" content="You've been challenged in Too Much Food 👻🍟">
+<meta property="og:description" content="Same course. Their ghost. Beat their score.">
+<meta name="apple-itunes-app" content="app-id=6749512460">
+<style>
+  :root { --ink:#281E16; --gold:#FFC93C; --cream:#FFF6E6; --green:#5FBE4A; --green-edge:#3E8C2E; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; min-height:100%; }
+  body {
+    font-family: "Avenir Next", -apple-system, system-ui, sans-serif;
+    color:#fff; text-align:center;
+    background: linear-gradient(180deg, #FF9E3D 0%, #D93D6B 100%) fixed;
+    display:flex; align-items:center; justify-content:center;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  }
+  main { width:100%; max-width:420px; }
+  .brand { font-weight:900; letter-spacing:.04em; font-size:22px; opacity:.95; margin:0 0 28px; }
+  .brand b { color:var(--gold); }
+  .kicker { font-weight:900; font-size:52px; line-height:1; margin:0; color:var(--gold);
+            text-shadow:0 4px 0 rgba(0,0,0,.25); }
+  .who { font-weight:800; font-size:20px; margin:14px 0 26px; text-shadow:0 2px 0 rgba(0,0,0,.25); }
+  .score { font-weight:900; font-size:96px; line-height:1; margin:0; text-shadow:0 6px 0 rgba(0,0,0,.25); }
+  .sub { font-weight:700; font-size:14px; letter-spacing:.06em; opacity:.85; margin:8px 0 34px; }
+  .btn { display:block; width:100%; padding:18px 20px; margin:0 0 14px; border-radius:30px;
+         font-weight:900; font-size:21px; text-decoration:none; }
+  .primary { background:var(--green); color:#fff; box-shadow:0 6px 0 var(--green-edge); }
+  .secondary { background:rgba(255,255,255,.18); color:#fff; box-shadow:0 6px 0 rgba(0,0,0,.18); }
+  .btn:active { transform:translateY(4px); box-shadow:none; }
+  .help { font-size:14px; line-height:1.45; opacity:.9; margin:22px 4px 0; }
+</style>
+</head>
+<body>
+<main>
+  <p class="brand">TOO MUCH <b>FOOD</b></p>
+  <p class="kicker">DUEL!</p>
+  <p class="who" id="who">A friend challenges you</p>
+  <p class="score" id="score">?</p>
+  <p class="sub">TO BEAT · SAME COURSE · RACE THEIR GHOST</p>
+
+  <a class="btn primary" id="open" href="toomuchfood://duel">Open in Too Much Food</a>
+  <a class="btn secondary" href="https://apps.apple.com/app/id6749512460">Get the game</a>
+
+  <p class="help">New to the game? Install it, then come back to this page and tap
+    <b>Open in Too Much Food</b> to start the duel.</p>
+</main>
+<script>
+// Everything shown here is read from the link itself; nothing is sent anywhere.
+// Format mirrors GhostCodec in Duel.swift (container byte, then "TM", version 1).
+(function () {
+  var params = new URLSearchParams(location.search);
+  var token = params.get("d");
+  if (!token && location.hash.indexOf("#d=") === 0) token = location.hash.slice(3);
+  if (!token || token.length > 1400000) return;
+
+  document.getElementById("open").href = "toomuchfood://duel?d=" + encodeURIComponent(token);
+
+  function fromBase64URL(s) {
+    s = s.replace(/-/g, "+").replace(/_/g, "/");
+    while (s.length % 4) s += "=";
+    var bin = atob(s), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  async function body(bytes) {
+    if (bytes[0] === 0) return bytes.subarray(1);
+    if (bytes[0] !== 1 || typeof DecompressionStream === "undefined") return null;
+    var stream = new Blob([bytes.subarray(1)]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+
+  function parse(b) {
+    var o = 0;
+    function need(n) { if (o + n > b.length) throw new Error("short"); }
+    function u8() { need(1); return b[o++]; }
+    function varint() {
+      var result = 0, mul = 1;
+      for (var i = 0; i < 10; i++) {
+        var byte = u8();
+        result += (byte & 0x7f) * mul;
+        if (!(byte & 0x80)) return result;
+        mul *= 128;
+      }
+      throw new Error("varint");
+    }
+    if (u8() !== 0x54 || u8() !== 0x4d || u8() !== 1) throw new Error("format");
+    need(8); o += 8;                  // seed
+    var score = varint();
+    need(2); o += 2;                  // interval
+    var count = varint();
+    need(count); o += count;          // ghost heights
+    for (var i = 0; i < count; i++) varint();   // score deltas
+    var len = u8(); need(len);
+    var name = new TextDecoder().decode(b.subarray(o, o + len));
+    return { score: score, name: name };
+  }
+
+  render();
+  async function render() {
+    try {
+      var raw = await body(fromBase64URL(token));
+      if (!raw) return;
+      var duel = parse(raw);
+      var name = (duel.name || "").replace(/[^A-Z0-9 _.\-]/gi, "").slice(0, 14).toUpperCase() || "A FRIEND";
+      document.getElementById("who").textContent = name + " challenges you";
+      document.getElementById("score").textContent = String(duel.score);
+    } catch (e) { /* keep the generic copy */ }
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["UL8QYY28QS.Ashtari.TooMuchFood"],
+        "components": [
+          { "/": "/toomuchfood/duel/*", "comment": "Ghost duel challenges" }
+        ]
+      }
+    ]
+  }
+}
