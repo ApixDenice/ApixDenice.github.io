@@ -1,5 +1,6 @@
 ---
 layout: default
+<<<<<<< HEAD
 title: Too Much Food — Datenschutzerklärung
 description: How the Too Much Food iPhone game handles personal data.
 permalink: /toomuchfood/datenschutz
@@ -23,12 +24,47 @@ permalink: /toomuchfood/datenschutz
         Deutschland</p>
       <p>E-Mail: <a href="mailto:dennishasselbusch@googlemail.com" class="privacy-email-link">dennishasselbusch@googlemail.com</a><br>
         Website: <a href="https://apixdenice.github.io/contact">https://apixdenice.github.io/contact</a></p>
+=======
+title: TooMuchFood — Datenschutzerklärung
+description: Datenschutzerklärung für das iOS-Spiel Too Much Food — welche Daten Google AdMob verarbeitet, Einwilligung zur Game-Center-Bestenliste und Ihre Rechte nach der DSGVO.
+permalink: /toomuchfood/datenschutz/
+lang: de-DE
+---
+
+<div class="privacy-policy-page">
+  <div class="privacy-header">
+    <span class="eyebrow">Too Much Food</span>
+    <h1>🔒 Datenschutzerklärung</h1>
+    <p class="last-updated">Stand: 12. August 2026</p>
+    <p class="privacy-lang-switch">
+      <a href="{{ "/toomuchfood/privacy" | relative_url }}">Read this page in English →</a>
+    </p>
+  </div>
+
+  <div class="privacy-content">
+
+    <section class="privacy-section">
+      <h2>1. Verantwortlicher</h2>
+      <p>Verantwortlicher für die Datenverarbeitung im Zusammenhang mit der mobilen Anwendung „Too Much Food“ (die „App“) ist:</p>
+      <div class="contact-details">
+        <p><strong>Dennis Hasselbusch</strong><br>
+        Gartenstraße 22<br>
+        38268 Lengede<br>
+        Deutschland</p>
+        <p>E-Mail: <a href="mailto:dennishasselbusch@googlemail.com" class="privacy-email-link">dennishasselbusch@googlemail.com</a><br>
+        Website: <a href="{{ "/contact" | relative_url }}">apixdenice.github.io/contact</a></p>
+      </div>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
     </section>
 
     <section class="privacy-section">
       <h2>2. Überblick</h2>
       <p>Too Much Food ist ein Einzelspieler-Arcadespiel. Es gibt keine Benutzerkonten und keine eigenen Server. Ihr Spielfortschritt — Highscores, Münzen, freigeschaltete Inhalte, Einstellungen — wird <strong>ausschließlich auf Ihrem Gerät</strong> gespeichert und niemals an uns übertragen.</p>
+<<<<<<< HEAD
       <p>Personenbezogene Daten werden nur im Zusammenhang mit der in der App angezeigten Werbung verarbeitet, sofern Sie gesondert einwilligen, bei der Veröffentlichung eines Punktestands in der Game-Center-Bestenliste, sowie wenn Sie selbst einen Herausforderungs-Link an eine andere Person senden.</p>
+=======
+      <p>Personenbezogene Daten werden nur im Zusammenhang mit der in der App angezeigten Werbung verarbeitet sowie, sofern Sie gesondert einwilligen, bei der Veröffentlichung eines Punktestands in der Game-Center-Bestenliste.</p>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
     </section>
 
     <section class="privacy-section">
@@ -45,8 +81,13 @@ permalink: /toomuchfood/datenschutz
       <p>Die Verarbeitung erfolgt zur Anzeige personalisierter oder nicht personalisierter Werbung, zur Messung der Werbeleistung sowie zur Erkennung und Verhinderung von Betrug.</p>
       <p>Weitere Informationen:</p>
       <ul>
+<<<<<<< HEAD
         <li>Wie Google Daten aus Apps verwendet, die Google-Dienste nutzen: <a href="https://policies.google.com/technologies/partner-sites">https://policies.google.com/technologies/partner-sites</a></li>
         <li>Datenschutzerklärung von Google: <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a></li>
+=======
+        <li><a href="https://policies.google.com/technologies/partner-sites" rel="noopener" target="_blank">Wie Google Daten aus Apps verwendet, die Google-Dienste nutzen</a></li>
+        <li><a href="https://policies.google.com/privacy" rel="noopener" target="_blank">Datenschutzerklärung von Google</a></li>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
       </ul>
       <p>Eine Übermittlung an Server außerhalb des Europäischen Wirtschaftsraums ist möglich. Google stützt solche Übermittlungen auf die EU-Standardvertragsklauseln sowie das EU-US Data Privacy Framework.</p>
     </section>
@@ -54,6 +95,7 @@ permalink: /toomuchfood/datenschutz
     <section class="privacy-section">
       <h2>4. Game-Center-Bestenliste (nur mit Ihrer Einwilligung)</h2>
       <p>Die App bietet eine optionale weltweite Bestenliste, die von Apple über Game Center betrieben wird. <strong>Ohne Ihre ausdrückliche Einwilligung wird nichts übertragen.</strong> Die App fragt Sie einmalig; Sie können Ihre Entscheidung jederzeit in der App unter Einstellungen ▸ Leaderboard ändern.</p>
+<<<<<<< HEAD
       <p>Bei erteilter Einwilligung werden Ihr Punktestand und Ihr Game-Center-Nickname an Apple übermittelt und für andere Spielerinnen und Spieler öffentlich sichtbar. Verantwortlich für Game-Center-Daten ist Apple: <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></p>
     </section>
 
@@ -73,16 +115,30 @@ permalink: /toomuchfood/datenschutz
 
     <section class="privacy-section">
       <h2>6. Rechtsgrundlagen</h2>
+=======
+      <p>Bei erteilter Einwilligung werden Ihr Punktestand und Ihr Game-Center-Nickname an Apple übermittelt und für andere Spielerinnen und Spieler öffentlich sichtbar. Verantwortlich für Game-Center-Daten ist Apple: <a href="https://www.apple.com/legal/privacy/" rel="noopener" target="_blank">apple.com/legal/privacy</a>.</p>
+    </section>
+
+    <section class="privacy-section">
+      <h2>5. Rechtsgrundlagen</h2>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
       <ul>
         <li><strong>Werbung und die damit verbundenen Kennungen:</strong> Ihre Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO, eingeholt über den Einwilligungsdialog beim ersten Start der App sowie über die App-Tracking-Transparenz-Abfrage von Apple.</li>
         <li><strong>Veröffentlichung von Punkteständen in der Bestenliste:</strong> Ihre Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO.</li>
         <li><strong>Technische Auslieferung nicht personalisierter Werbung:</strong> unser berechtigtes Interesse an der Finanzierung der App gemäß Art. 6 Abs. 1 lit. f DSGVO.</li>
+<<<<<<< HEAD
         <li><strong>Auslieferung der Landingpage für Herausforderungen:</strong> unser berechtigtes Interesse daran, eingeladenen Personen das Öffnen einer Herausforderung zu ermöglichen, gemäß Art. 6 Abs. 1 lit. f DSGVO.</li>
+=======
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
       </ul>
     </section>
 
     <section class="privacy-section">
+<<<<<<< HEAD
       <h2>7. Widerruf der Einwilligung</h2>
+=======
+      <h2>6. Widerruf der Einwilligung</h2>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
       <p>Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen:</p>
       <ul>
         <li><strong>Werbeeinwilligung (EWR/UK/Schweiz):</strong> in der App unter Einstellungen ▸ Privacy Options.</li>
@@ -93,12 +149,21 @@ permalink: /toomuchfood/datenschutz
     </section>
 
     <section class="privacy-section">
+<<<<<<< HEAD
       <h2>8. Speicherung und Speicherdauer</h2>
       <p>Wir betreiben keine eigenen Server und speichern selbst keine personenbezogenen Daten. Sämtliche Werbedaten werden von Google auf eigener Infrastruktur und nach den Speicherfristen von Google verarbeitet. Spielfortschritt und empfangene Herausforderungen verbleiben auf Ihrem Gerät und werden mit dem Löschen der App entfernt.</p>
     </section>
 
     <section class="privacy-section">
       <h2>9. Ihre Rechte</h2>
+=======
+      <h2>7. Speicherung und Speicherdauer</h2>
+      <p>Wir betreiben keine eigenen Server und speichern selbst keine personenbezogenen Daten. Sämtliche Werbedaten werden von Google auf eigener Infrastruktur und nach den Speicherfristen von Google verarbeitet. Der Spielfortschritt verbleibt auf Ihrem Gerät und wird mit dem Löschen der App entfernt.</p>
+    </section>
+
+    <section class="privacy-section">
+      <h2>8. Ihre Rechte</h2>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
       <p>Nach der DSGVO haben Sie das Recht auf:</p>
       <ul>
         <li><strong>Auskunft</strong> über die zu Ihrer Person verarbeiteten Daten (Art. 15)</li>
@@ -111,21 +176,43 @@ permalink: /toomuchfood/datenschutz
       </ul>
       <p>Zur Ausübung dieser Rechte wenden Sie sich an die oben genannte Adresse. Da wir selbst keine personenbezogenen Daten speichern, sind Anfragen zu Werbedaten in der Regel unmittelbar an Google zu richten.</p>
       <p>Ihnen steht zudem ein Beschwerderecht bei einer Aufsichtsbehörde zu. Zuständig ist für uns:</p>
+<<<<<<< HEAD
       <p><strong>Die Landesbeauftragte für den Datenschutz Niedersachsen</strong> Prinzenstraße 5, 30159 Hannover <a href="https://www.lfd.niedersachsen.de">https://www.lfd.niedersachsen.de</a></p>
     </section>
 
     <section class="privacy-section">
       <h2>10. Kinder</h2>
+=======
+      <div class="contact-details">
+        <p><strong>Die Landesbeauftragte für den Datenschutz Niedersachsen</strong><br>
+        Prinzenstraße 5, 30159 Hannover<br>
+        <a href="https://www.lfd.niedersachsen.de" rel="noopener" target="_blank">lfd.niedersachsen.de</a></p>
+      </div>
+    </section>
+
+    <section class="privacy-section">
+      <h2>9. Kinder</h2>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
       <p>Die App richtet sich nicht an Kinder unter 13 Jahren (unter 16 Jahren im Europäischen Wirtschaftsraum). Wir erheben wissentlich keine personenbezogenen Daten von Kindern. Sollten Sie Kenntnis davon erlangen, dass ein Kind uns personenbezogene Daten übermittelt hat, kontaktieren Sie uns bitte; wir löschen diese umgehend.</p>
     </section>
 
     <section class="privacy-section">
+<<<<<<< HEAD
       <h2>11. Änderungen</h2>
+=======
+      <h2>10. Änderungen</h2>
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
       <p>Wir können diese Datenschutzerklärung anpassen. Die jeweils aktuelle Fassung ist stets unter dieser Adresse abrufbar; das Datum der letzten Aktualisierung ist oben angegeben.</p>
     </section>
 
     <div class="privacy-footer">
+<<<<<<< HEAD
       <a href="{{ "/toomuchfood/" | relative_url }}" class="btn-primary">← Zurück zu Too Much Food</a>
     </div>
+=======
+      <a href="{{ "/toomuchfood" | relative_url }}" class="btn btn-primary">← Zurück zu TooMuchFood</a>
+    </div>
+
+>>>>>>> 520240bd258f4d5e0bf38b1a0a779076595d58f1
   </div>
 </div>

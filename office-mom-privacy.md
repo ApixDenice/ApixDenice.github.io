@@ -70,8 +70,8 @@ title: Office Mom - Privacy Policy
       <div class="contact-details">
         <p><strong>Dennis Hasselbusch</strong></p>
         <p>
-          <a href="mailto:dennishasselbusch@icloud.com" class="privacy-email-link">
-            dennishasselbusch@icloud.com
+          <a href="mailto:dennishasselbusch@googlemail.com" class="privacy-email-link">
+            dennishasselbusch@googlemail.com
           </a>
         </p>
       </div>
