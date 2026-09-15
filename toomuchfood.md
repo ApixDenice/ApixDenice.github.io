@@ -14,8 +14,8 @@ permalink: /toomuchfood/
       <h1>Grab the food. Dodge the poo.</h1>
       <p class="hero-lead">Frank loves food. A lot. Swipe through endless waves of fries, burgers and pizza — and keep him clear of the hazards. The more you eat, the faster it gets.</p>
       <div class="hero-actions">
-        <a href="#screenshots" class="btn btn-primary btn-large">See the game</a>
-        <a href="{{ "/contact" | relative_url }}" class="btn btn-outline btn-large">Get launch updates</a>
+        <a href="{{ site.toomuchfood_url }}" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
+        <a href="#screenshots" class="btn btn-outline btn-large">See the game</a>
       </div>
       <p class="hero-note">Free · Offline playable · One-thumb controls</p>
     </div>
@@ -139,15 +139,15 @@ permalink: /toomuchfood/
 
     <section class="feature-section feature-section-compact reveal">
       <h2>Built with</h2>
-      <p>TooMuchFood is a native iOS game built in <strong>Swift</strong> and <strong>SwiftUI</strong>, with <strong>Game Center</strong> leaderboards and full offline play.</p>
+      <p>TooMuchFood is a native iOS game built in <strong>Swift</strong> and <strong>SpriteKit</strong>, with <strong>Game Center</strong> leaderboards and full offline play.</p>
     </section>
 
     <div class="cta-section reveal">
       <div class="coming-soon-icon">🍟</div>
-      <h3>Coming soon to the App Store</h3>
-      <p>TooMuchFood is in the final stretch before release. Want a nudge the moment Frank goes live? Get in touch and I'll let you know.</p>
+      <h3>Out now on the App Store</h3>
+      <p>TooMuchFood is free on iPhone. Grab the food, dodge the poo — and find out how long Frank can keep going.</p>
       <div class="cta-button-row">
-        <a href="{{ "/contact" | relative_url }}" class="btn btn-primary btn-large">Get launch updates</a>
+        <a href="{{ site.toomuchfood_url }}" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
       </div>
       <div class="privacy-link-section">
         <p><a href="{{ "/toomuchfood/privacy" | relative_url }}" class="privacy-link">Privacy Policy</a> · <a href="{{ "/toomuchfood/datenschutz" | relative_url }}" class="privacy-link">Datenschutzerklärung</a></p>
