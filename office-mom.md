@@ -2,6 +2,11 @@
 layout: default
 title: Office Mom — Water, Steps & Breaks for iPhone & Mac
 description: Office Mom is your hydration, stand-up and movement companion — on iPhone and in the Mac menu bar, with Apple Health sync and zero data collection.
+permalink: /office-mom/
+redirect_from:
+  - /office-mom.html
+app_store_id: "6760966448"
+image: /assets/images/og/office-mom.jpg
 ---
 
 <div class="om">
@@ -13,13 +18,13 @@ description: Office Mom is your hydration, stand-up and movement companion — o
       <h1>Drink water. Stand up. Keep moving.</h1>
       <p class="hero-lead">Your desk mom has your back. Office Mom tracks hydration, steps and a healthy sit/stand/move rhythm — with gentle reminders instead of noisy spam.</p>
       <div class="hero-actions">
-        <a href="{{ site.office_mom_ios_url }}" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
+        {% include app-store-badge.html url=site.office_mom_ios_url platform="ios" size="lg" %}
         <a href="#screenshots" class="btn btn-outline btn-large">See the app</a>
       </div>
       <p class="hero-note">Free · Zero data collection · English &amp; German</p>
     </div>
     <div class="hero-visual reveal">
-      <img src="{{ '/assets/images/officemom/icon.png' | relative_url }}" alt="Office Mom app icon" style="width:190px;height:190px;border-radius:42px;box-shadow:var(--shadow-lg);">
+      <img src="{{ '/assets/images/apps/office-mom-384.webp' | relative_url }}" width="368" height="800" alt="Office Mom app icon" class="hero-app-icon" width="190" height="190">
     </div>
   </div>
 </section>
@@ -31,7 +36,7 @@ description: Office Mom is your hydration, stand-up and movement companion — o
       <h2>About the app</h2>
       <p>Long desk days make it easy to forget the basics: a glass of water, a short walk, getting out of your chair. Office Mom quietly keeps track for you — a personal water goal based on your body, a stand-up timer built on the evidence-based 20-8-2 rule, and step goals that sync with Apple Health.</p>
       <p>Everything stays on your device. No accounts, no tracking, no ads — just a friendly nudge when you need one.</p>
-      <div class="stat-strip" style="margin-top:1.5rem;">
+      <div class="stat-strip stat-strip--spaced">
         <div class="stat"><b>20-8-2</b><span>Sit, stand &amp; move rhythm</span></div>
         <div class="stat"><b>5</b><span>Movement routines</span></div>
         <div class="stat"><b>29</b><span>Trophies to earn</span></div>
@@ -97,28 +102,28 @@ description: Office Mom is your hydration, stand-up and movement companion — o
 
           <div class="carousel-track" aria-live="polite">
             <div class="carousel-slide is-active" data-caption="Water, steps &amp; breaks. All in one glance.">
-              <img src="{{ '/assets/images/officemom/01-dashboard.png' | relative_url }}" alt="Office Mom dashboard with a running sitting timer, water at 69 percent of 2.40 litres, steps and stand-up rings, the weekly recap and quick actions.">
+              <img src="{{ '/assets/images/officemom/01-dashboard.webp' | relative_url }}" width="368" height="800" alt="Office Mom dashboard with a running sitting timer, water at 69 percent of 2.40 litres, steps and stand-up rings, the weekly recap and quick actions.">
             </div>
             <div class="carousel-slide" data-caption="Stay hydrated without thinking">
-              <img src="{{ '/assets/images/officemom/02-water.png' | relative_url }}" alt="Water screen with a tank filled to 69 percent, quick add buttons, a pace target and today's water logs." loading="lazy">
+              <img src="{{ '/assets/images/officemom/02-water.webp' | relative_url }}" width="368" height="800" alt="Water screen with a tank filled to 69 percent, quick add buttons, a pace target and today's water logs." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Sit 20. Stand 8. Move 2.">
-              <img src="{{ '/assets/images/officemom/03-standup.png' | relative_url }}" alt="Stand-up timer showing 12:24 minutes of sitting left in the 20-8-2 routine, with Next and Stop buttons." loading="lazy">
+              <img src="{{ '/assets/images/officemom/03-standup.webp' | relative_url }}" width="368" height="800" alt="Stand-up timer showing 12:24 minutes of sitting left in the 20-8-2 routine, with Next and Stop buttons." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Every step counts toward your goal">
-              <img src="{{ '/assets/images/officemom/04-movement.png' | relative_url }}" alt="Movement screen with 6,842 of 8,000 steps, an Add Steps button, step targets and a HealthKit import." loading="lazy">
+              <img src="{{ '/assets/images/officemom/04-movement.webp' | relative_url }}" width="368" height="800" alt="Movement screen with 6,842 of 8,000 steps, an Add Steps button, step targets and a HealthKit import." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Your break timer on the Lock Screen">
-              <img src="{{ '/assets/images/officemom/05-lock.png' | relative_url }}" alt="iPhone Lock Screen with the Office Mom stand-up Live Activity and a hydration reminder from Mom." loading="lazy">
+              <img src="{{ '/assets/images/officemom/05-lock.webp' | relative_url }}" width="368" height="800" alt="iPhone Lock Screen with the Office Mom stand-up Live Activity and a hydration reminder from Mom." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Watch your habits add up">
-              <img src="{{ '/assets/images/officemom/06-progress.png' | relative_url }}" alt="Progress screen with level, current and longest streak, and a seven-day water history chart." loading="lazy">
+              <img src="{{ '/assets/images/officemom/06-progress.webp' | relative_url }}" width="368" height="800" alt="Progress screen with level, current and longest streak, and a seven-day water history chart." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Earn trophies for healthy habits">
-              <img src="{{ '/assets/images/officemom/07-trophies.png' | relative_url }}" alt="Trophy collection with 14 of 29 trophies unlocked across hydration and streaks." loading="lazy">
+              <img src="{{ '/assets/images/officemom/07-trophies.webp' | relative_url }}" width="368" height="800" alt="Trophy collection with 14 of 29 trophies unlocked across hydration and streaks." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Share your week. Brag a little.">
-              <img src="{{ '/assets/images/officemom/08-recap.png' | relative_url }}" alt="Weekly recap card: 15.8 litres hydrated, 52.4 thousand steps and 23 stand-ups." loading="lazy">
+              <img src="{{ '/assets/images/officemom/08-recap.webp' | relative_url }}" width="368" height="800" alt="Weekly recap card: 15.8 litres hydrated, 52.4 thousand steps and 23 stand-ups." loading="lazy">
             </div>
           </div>
 
@@ -138,7 +143,7 @@ description: Office Mom is your hydration, stand-up and movement companion — o
 
     <section class="feature-section reveal om-mac">
       <div class="om-mac-inner">
-        <img src="{{ '/assets/images/Office Mom.png' | relative_url }}" alt="mOffice Mom app icon" class="om-mac-icon">
+        <img src="{{ '/assets/images/apps/office-mom-mac-256.webp' | relative_url }}" width="368" height="800" alt="mOffice Mom app icon" class="om-mac-icon" width="120" height="120" loading="lazy">
         <div>
           <span class="eyebrow">macOS · Menu bar</span>
           <h2>mOffice Mom on your Mac</h2>
@@ -149,7 +154,7 @@ description: Office Mom is your hydration, stand-up and movement companion — o
             <li><strong>Steps</strong> — custom goals and clear progress bars</li>
             <li><strong>Menu bar native</strong> — one-click access, runs quietly in the background</li>
           </ul>
-          <a href="{{ site.office_mom_mac_url }}" class="btn btn-primary btn-large btn-secondary-outline" target="_blank" rel="noopener noreferrer">Download on the Mac App Store</a>
+          {% include app-store-badge.html url=site.office_mom_mac_url platform="mac" size="md" %}
         </div>
       </div>
     </section>
@@ -169,11 +174,11 @@ description: Office Mom is your hydration, stand-up and movement companion — o
       <h3>Out now on the App Store</h3>
       <p>Office Mom is free on iPhone and Mac. Your back, your kidneys and your focus will thank you.</p>
       <div class="cta-button-row">
-        <a href="{{ site.office_mom_ios_url }}" class="btn btn-primary btn-large" target="_blank" rel="noopener noreferrer">iPhone App Store</a>
-        <a href="{{ site.office_mom_mac_url }}" class="btn btn-primary btn-large btn-secondary-outline" target="_blank" rel="noopener noreferrer">Mac App Store</a>
+        {% include app-store-badge.html url=site.office_mom_ios_url platform="ios" size="lg" %}
+        {% include app-store-badge.html url=site.office_mom_mac_url platform="mac" size="lg" %}
       </div>
       <div class="privacy-link-section">
-        <p><a href="{{ "/office-mom-privacy" | relative_url }}" class="privacy-link">Privacy Policy</a> · <a href="{{ "/impressum" | relative_url }}" class="privacy-link">Impressum</a></p>
+        <p><a href="{{ '/office-mom/privacy/' | relative_url }}" class="privacy-link">Privacy Policy</a> · <a href="{{ '/impressum/' | relative_url }}" class="privacy-link">Impressum</a></p>
       </div>
     </div>
 

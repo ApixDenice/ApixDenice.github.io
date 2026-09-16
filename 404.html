@@ -1,14 +1,19 @@
 ---
 layout: default
-title: 404 - Page Not Found
+title: Page not found
 permalink: /404.html
+sitemap: false
+robots: noindex
 ---
 
 <div class="error-page">
   <div class="error-content">
-    <h1 class="error-code">404</h1>
-    <h2>Page not found</h2>
+    <p class="error-code grad-text">404</p>
+    <h1>Page not found</h1>
     <p>The page you're looking for doesn't exist or has been moved.</p>
-    <a href="{{ "/" | relative_url }}" class="btn btn-primary btn-large">Go home</a>
+    <div class="cta-button-row">
+      <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-large">Go home</a>
+      <a href="{{ '/#apps' | relative_url }}" class="btn btn-outline btn-large">See the apps</a>
+    </div>
   </div>
 </div>

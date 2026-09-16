@@ -1,0 +1,19 @@
+{%- comment -%}
+  Official Apple "Download on the App Store" badge.
+  Params: url (required), platform ("ios" | "mac"), size ("sm" | "md" | "lg")
+  Artwork: drop Apple's unmodified SVGs into /assets/badges/ (see README there).
+  Until the file exists, a plain text button is rendered instead, so nothing breaks.
+{%- endcomment -%}
+{%- if include.platform == "mac" -%}
+  {%- assign badge_path = "/assets/badges/download-on-the-mac-app-store.svg" -%}
+  {%- assign badge_label = "Download on the Mac App Store" -%}
+{%- else -%}
+  {%- assign badge_path = "/assets/badges/download-on-the-app-store.svg" -%}
+  {%- assign badge_label = "Download on the App Store" -%}
+{%- endif -%}
+{%- assign badge_file = site.static_files | where: "path", badge_path | first -%}
+{%- if badge_file -%}
+<a class="store-badge store-badge--{{ include.size | default: 'md' }}" href="{{ include.url }}" target="_blank" rel="noopener noreferrer"><img src="{{ badge_path | relative_url }}" alt="{{ badge_label }}" width="{% if include.platform == 'mac' %}156{% else %}120{% endif %}" height="40"></a>
+{%- else -%}
+<a class="btn btn-primary{% if include.size == 'lg' %} btn-large{% endif %}" href="{{ include.url }}" target="_blank" rel="noopener noreferrer">{{ badge_label }}</a>
+{%- endif -%}

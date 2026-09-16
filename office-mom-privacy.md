@@ -1,12 +1,18 @@
 ---
 layout: default
-title: Office Mom - Privacy Policy
+title: Office Mom — Privacy Policy
+description: Privacy policy for Office Mom and mOffice Mom — no data is collected; everything stays on your device.
+permalink: /office-mom/privacy/
+redirect_from:
+  - /office-mom-privacy.html
+  - /office-mom-privacy/
 ---
 
 <div class="privacy-policy-page">
   <div class="privacy-header">
-    <h1>🔒 Privacy Policy</h1>
-    <p class="last-updated">Last updated: January 09, 2026</p>
+    <span class="eyebrow">Office Mom · mOffice Mom</span>
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last updated: 16 September 2026</p>
   </div>
 
   <div class="privacy-content">
@@ -68,17 +74,15 @@ title: Office Mom - Privacy Policy
       <h2>8. Contact</h2>
       <p>If you have any questions about this privacy policy, you can contact:</p>
       <div class="contact-details">
-        <p><strong>Dennis Hasselbusch</strong></p>
+        <p><strong>Dennis Hasselbusch</strong><br>Gartenstraße 22, 38268 Lengede, Germany</p>
         <p>
-          <a href="mailto:dennishasselbusch@googlemail.com" class="privacy-email-link">
-            dennishasselbusch@googlemail.com
-          </a>
+          <a href="mailto:{{ site.email }}" class="privacy-email-link">{{ site.email }}</a>
         </p>
       </div>
     </section>
 
     <div class="privacy-footer">
-      <a href="{{ "/office-mom" | relative_url }}" class="btn-primary">← Back to Office Mom</a>
+      <a href="{{ '/office-mom/' | relative_url }}" class="btn btn-outline">← Back to Office Mom</a>
     </div>
   </div>
 </div>

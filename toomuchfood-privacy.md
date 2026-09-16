@@ -1,6 +1,6 @@
 ---
 layout: default
-title: TooMuchFood — Privacy Policy
+title: Too Much Food — Privacy Policy
 description: Privacy policy for the Too Much Food iOS game — what data Google AdMob processes, Game Center leaderboard consent, and your GDPR rights.
 permalink: /toomuchfood/privacy/
 ---
@@ -8,10 +8,10 @@ permalink: /toomuchfood/privacy/
 <div class="privacy-policy-page">
   <div class="privacy-header">
     <span class="eyebrow">Too Much Food</span>
-    <h1>🔒 Privacy Policy</h1>
-    <p class="last-updated">Last updated: 15 September 2026</p>
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last updated: 16 September 2026</p>
     <p class="privacy-lang-switch">
-      <a href="{{ "/toomuchfood/datenschutz" | relative_url }}">Diese Seite auf Deutsch →</a>
+      <a href="{{ '/toomuchfood/datenschutz/' | relative_url }}">Diese Seite auf Deutsch →</a>
     </p>
   </div>
 
@@ -25,8 +25,8 @@ permalink: /toomuchfood/privacy/
         Gartenstraße 22<br>
         38268 Lengede<br>
         Germany</p>
-        <p>Email: <a href="mailto:dennishasselbusch@googlemail.com" class="privacy-email-link">dennishasselbusch@googlemail.com</a><br>
-        Website: <a href="{{ "/contact" | relative_url }}">apixdenice.github.io/contact</a></p>
+        <p>Email: <a href="mailto:{{ site.email }}" class="privacy-email-link">{{ site.email }}</a><br>
+        Website: <a href="{{ '/contact/' | relative_url }}">apixdenice.github.io/contact</a></p>
       </div>
     </section>
 
@@ -134,7 +134,7 @@ permalink: /toomuchfood/privacy/
     </section>
 
     <div class="privacy-footer">
-      <a href="{{ "/toomuchfood" | relative_url }}" class="btn btn-primary">← Back to TooMuchFood</a>
+      <a href="{{ '/toomuchfood/' | relative_url }}" class="btn btn-outline">← Back to Too Much Food</a>
     </div>
 
   </div>

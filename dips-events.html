@@ -3,8 +3,11 @@ layout: default
 title: Manage Events — DIPS
 description: Sign in with your DIPS account to create and manage sport events from the web.
 permalink: /dips/events/
+robots: noindex
+sitemap: false
 ---
 
+<div class="dips">
 <div class="events-page">
   <div class="events-hero reveal">
     <span class="eyebrow">DIPS · Manage events</span>
@@ -31,6 +34,7 @@ permalink: /dips/events/
 
     <div class="auth-msg" id="auth-msg" role="status" aria-live="polite"></div>
     <p class="auth-foot">No account yet? Create one in the DIPS app — the same login works here.</p>
+    <p class="auth-privacy">Sign-in is handled by Google Firebase Authentication. Details in the <a href="{{ '/datenschutz/#firebase' | relative_url }}">privacy policy</a>.</p>
   </div>
 
   <!-- Signed-in placeholder -->
@@ -49,10 +53,11 @@ permalink: /dips/events/
       <p>You're signed in. The tools to create and manage your DIPS events from the web are being built and will appear right here.</p>
     </div>
 
-    <p style="text-align:center;">
+    <p class="signout-row">
       <button class="link-btn" id="logout-btn">Sign out</button>
     </p>
   </div>
+</div>
 </div>
 
 <!--
@@ -68,47 +73,82 @@ permalink: /dips/events/
       The apiKey is a public client identifier — safe to commit.
 -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getAuth, setPersistence, browserLocalPersistence,
-    signInWithEmailAndPassword, signOut, onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+  /*
+    Privacy: the Firebase SDK (served by Google) is NOT loaded when someone merely
+    visits this page. It is loaded only when
+      (a) the visitor starts using the sign-in form, or
+      (b) a previous sign-in session already exists in this browser
+          (Firebase keeps it in the IndexedDB database "firebaseLocalStorageDb").
+  */
+  const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
   const firebaseConfig = {
-    apiKey: "AIzaSyCMmyksVRzJ6yUOLAwJsTe77rBkZL7po30",
+    apiKey: "AIzaSyCMmyksVRzJ6yUOLAwJsTe77rBkZL7po30",   // public client identifier, safe to commit
     authDomain: "hilsports.firebaseapp.com",
     projectId: "hilsports",
     storageBucket: "hilsports.appspot.com",
     messagingSenderId: "552572655098"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  setPersistence(auth, browserLocalPersistence).catch(() => {});
+  const authCard = document.getElementById("auth-card");
+  const signedIn = document.getElementById("signed-in");
+  const form     = document.getElementById("login-form");
+  const loginBtn = document.getElementById("login-btn");
+  const msg      = document.getElementById("auth-msg");
+  const whoEmail = document.getElementById("who-email");
+  const avatar   = document.getElementById("avatar");
 
-  const authCard  = document.getElementById("auth-card");
-  const signedIn  = document.getElementById("signed-in");
-  const form      = document.getElementById("login-form");
-  const loginBtn  = document.getElementById("login-btn");
-  const msg       = document.getElementById("auth-msg");
-  const whoEmail  = document.getElementById("who-email");
-  const avatar    = document.getElementById("avatar");
-
-  function showMsg(text, kind) {
-    msg.textContent = text;
-    msg.className = "auth-msg " + kind;
-  }
+  function showMsg(text, kind) { msg.textContent = text; msg.className = "auth-msg " + kind; }
   function clearMsg() { msg.textContent = ""; msg.className = "auth-msg"; }
 
   const friendlyError = (code) => ({
     "auth/invalid-email": "That email address looks invalid.",
     "auth/invalid-credential": "Email or password is incorrect.",
     "auth/wrong-password": "Email or password is incorrect.",
-    "auth/user-not-found": "No account found for that email.",
+    "auth/user-not-found": "Email or password is incorrect.",   // don't reveal which accounts exist
     "auth/too-many-requests": "Too many attempts. Please try again in a moment.",
     "auth/network-request-failed": "Network error. Check your connection and try again.",
     "auth/unauthorized-domain": "This domain isn't authorized in Firebase yet."
   }[code] || "Couldn't sign in. Please try again.");
+
+  let firebasePromise = null;
+  function loadFirebase() {
+    if (!firebasePromise) {
+      firebasePromise = Promise.all([import(SDK + "firebase-app.js"), import(SDK + "firebase-auth.js")])
+        .then(([appMod, authMod]) => {
+          const auth = authMod.getAuth(appMod.initializeApp(firebaseConfig));
+          authMod.setPersistence(auth, authMod.browserLocalPersistence).catch(() => {});
+          authMod.onAuthStateChanged(auth, (user) => {
+            if (user) {
+              whoEmail.textContent = user.email || "Signed in";
+              avatar.textContent = (user.email || "D").charAt(0).toUpperCase();
+              authCard.style.display = "none";
+              signedIn.classList.add("show");
+              clearMsg();
+              form.reset();
+            } else {
+              authCard.style.display = "";
+              signedIn.classList.remove("show");
+            }
+          });
+          return { auth, authMod };
+        })
+        .catch((err) => { firebasePromise = null; throw err; });
+    }
+    return firebasePromise;
+  }
+
+  // (b) Restore an existing session without loading Google code for first-time visitors.
+  (async () => {
+    try {
+      if (indexedDB.databases) {
+        const dbs = await indexedDB.databases();
+        if (dbs.some((d) => d.name === "firebaseLocalStorageDb")) loadFirebase();
+      }
+    } catch (e) { /* storage unavailable: nothing to restore */ }
+  })();
+
+  // (a) Warm up the SDK as soon as the visitor starts filling in the form.
+  form.addEventListener("focusin", () => { loadFirebase().catch(() => {}); }, { once: true });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -120,28 +160,17 @@ permalink: /dips/events/
     loginBtn.disabled = true;
     loginBtn.textContent = "Signing in…";
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { auth, authMod } = await loadFirebase();
+      await authMod.signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      showMsg(friendlyError(err.code), "error");
+      showMsg(friendlyError(err && err.code), "error");
     } finally {
       loginBtn.disabled = false;
       loginBtn.textContent = "Sign in";
     }
   });
 
-  document.getElementById("logout-btn").addEventListener("click", () => signOut(auth));
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      whoEmail.textContent = user.email || "Signed in";
-      avatar.textContent = (user.email || "D").charAt(0).toUpperCase();
-      authCard.style.display = "none";
-      signedIn.classList.add("show");
-      clearMsg();
-      form.reset();
-    } else {
-      authCard.style.display = "";
-      signedIn.classList.remove("show");
-    }
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    try { const { auth, authMod } = await loadFirebase(); await authMod.signOut(auth); } catch (e) {}
   });
 </script>

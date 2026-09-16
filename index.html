@@ -1,0 +1,170 @@
+---
+layout: default
+description: ApixDenice is the indie app studio of Dennis Hasselbusch — native, privacy-friendly apps for iPhone and Mac, from idea to App Store. Too Much Food, Office Mom and DIPS.
+image: /assets/images/og/home.jpg
+intro: true
+---
+
+<!-- Intro: plays once per fresh visit (see inline script in the layout). Pure CSS timeline; main.js adds skip + fly-to-hero. -->
+<div class="intro-overlay" id="intro">
+  <div class="intro-glow" aria-hidden="true"></div>
+  <div class="intro-stage" aria-hidden="true">
+    <div class="intro-fly" id="intro-fly">
+      {% include logo-3d.html id="intro" class="intro-logo" %}
+    </div>
+    <div class="intro-word">Apix<span>Denice</span></div>
+  </div>
+  <button class="intro-skip" type="button" id="intro-skip">Skip intro</button>
+</div>
+
+<section class="home-hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">Indie app studio · iPhone &amp; Mac</span>
+      <h1>Native apps, crafted from <span class="grad-text">idea to App&nbsp;Store.</span></h1>
+      <p class="hero-lead">I'm Dennis — product manager and developer. Under the name ApixDenice I design, build and ship focused apps for Apple platforms.</p>
+      <div class="hero-actions">
+        <a href="#apps" class="btn btn-light btn-large">Explore the apps <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="{{ '/contact/' | relative_url }}" class="btn btn-ghost-light btn-large">Get in touch</a>
+      </div>
+      <ul class="hero-meta">
+        <li><span class="live-dot" aria-hidden="true"></span>2 apps live on the App Store</li>
+        <li>1 in development</li>
+        <li>Made in Germany</li>
+      </ul>
+    </div>
+
+    <div class="hero-scene-wrap" aria-hidden="true">
+      <div class="hero-scene" id="hero-scene">
+        <div class="hero-float">
+          <div class="hero-halo"></div>
+          <div class="hero-logo-target" id="hero-logo-target">
+            {% include logo-3d.html id="hero" class="hero-logo" %}
+          </div>
+          <img class="orbit-icon orbit-icon--1" src="{{ '/assets/images/apps/toomuchfood-128.webp' | relative_url }}" alt="" width="74" height="74">
+          <img class="orbit-icon orbit-icon--2" src="{{ '/assets/images/apps/office-mom-128.webp' | relative_url }}" alt="" width="74" height="74">
+          <img class="orbit-icon orbit-icon--3" src="{{ '/assets/images/apps/office-mom-mac-128.webp' | relative_url }}" alt="" width="58" height="58">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="apps">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">The apps</span>
+      <h2>Small, focused products — each with its own personality</h2>
+      <p>A snack-grabbing arcade game, a caring desk companion and a social sport app on the way.</p>
+    </div>
+
+    <div class="apps-grid">
+      <article class="app-card reveal" data-app="toomuchfood">
+        <div class="app-card-top">
+          <img src="{{ '/assets/images/apps/toomuchfood-384.webp' | relative_url }}" alt="Too Much Food app icon" class="app-logo" width="72" height="72" loading="lazy">
+          <span class="status-pill"><span class="live-dot" aria-hidden="true"></span>Live</span>
+        </div>
+        <p class="app-platform">iPhone · Arcade game</p>
+        <h3>Too Much Food</h3>
+        <p>Grab the food, dodge the poo. An endless one-thumb arcade game with four worlds, daily challenges, ghost duels and a weekly league.</p>
+        <div class="app-card-actions">
+          {% include app-store-badge.html url=site.toomuchfood_url platform="ios" size="sm" %}
+          <a class="text-link" href="{{ '/toomuchfood/' | relative_url }}">Details <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      <article class="app-card reveal" data-app="office-mom">
+        <div class="app-card-top">
+          <img src="{{ '/assets/images/apps/office-mom-384.webp' | relative_url }}" alt="Office Mom app icon" class="app-logo" width="72" height="72" loading="lazy">
+          <span class="status-pill"><span class="live-dot" aria-hidden="true"></span>Live</span>
+        </div>
+        <p class="app-platform">iPhone &amp; Mac · Health</p>
+        <h3>Office Mom</h3>
+        <p>Water, steps and a healthy 20-8-2 sit/stand/move rhythm — with Live Activities, widgets and a Mac menu-bar companion. Zero data collected.</p>
+        <div class="app-card-actions">
+          {% include app-store-badge.html url=site.office_mom_ios_url platform="ios" size="sm" %}
+          <a class="text-link" href="{{ '/office-mom/' | relative_url }}">Details <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      <article class="app-card reveal" data-app="dips">
+        <div class="app-card-top">
+          <img src="{{ '/assets/images/apps/dips-384.webp' | relative_url }}" alt="DIPS app icon" class="app-logo" width="72" height="72" loading="lazy">
+          <span class="status-pill status-pill--soon">In development</span>
+        </div>
+        <p class="app-platform">iPhone · Sport &amp; fitness</p>
+        <h3>DIPS</h3>
+        <p>Find sport events near you on a live map, join sessions and meet training partners — or host your own. Coming to the App Store.</p>
+        <div class="app-card-actions">
+          <a class="text-link" href="{{ '/dips/' | relative_url }}">Learn more <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tint" id="craft">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">How I build</span>
+      <h2>Product thinking meets native craft</h2>
+      <p>Every app is designed, coded and shipped end to end — with a product manager's focus on the problem and a developer's care for the details.</p>
+    </div>
+    <div class="principles">
+      <div class="principle reveal">
+        <span class="principle-num grad-text">01</span>
+        <h3>Product first</h3>
+        <p>Each app starts with a sharp problem and a deliberately small scope. Features earn their place; everything else stays out.</p>
+      </div>
+      <div class="principle reveal">
+        <span class="principle-num grad-text">02</span>
+        <h3>Truly native</h3>
+        <p>Written in Swift on Apple's own frameworks, so apps feel at home on iPhone and Mac — fast, accessible and battery-friendly.</p>
+      </div>
+      <div class="principle reveal">
+        <span class="principle-num grad-text">03</span>
+        <h3>Privacy by design</h3>
+        <p>Apps process only what they need, and every privacy policy is public. Office Mom collects no data at all.</p>
+      </div>
+    </div>
+    <ul class="tech-row reveal" aria-label="Technologies">
+      <li>Swift</li><li>SwiftUI</li><li>SpriteKit</li><li>HealthKit</li><li>WidgetKit</li><li>Live Activities</li><li>Game Center</li><li>StoreKit</li><li>Universal Links</li><li>macOS menu bar</li><li>Firebase</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="container about">
+    <div class="about-visual reveal" aria-hidden="true">
+      <span class="initials">D<i>H</i></span>
+    </div>
+    <div class="about-copy reveal">
+      <span class="eyebrow">About</span>
+      <h2>Hi, I'm Dennis.</h2>
+      <p>I'm a product manager with a software engineering background. ApixDenice is where both sides come together: I take my own apps from the first sketch through design and Swift code to App Store launch and ongoing updates.</p>
+      <p>I care about apps that respect people's time and privacy — and that are a little bit fun to use.</p>
+      <ul class="about-facts">
+        <li><b>Product × Engineering</b>Strategy, scoping and hands-on Swift</li>
+        <li><b>Apple platforms</b>iPhone, Mac, widgets &amp; Live Activities</li>
+        <li><b>Based in Germany</b>Lower Saxony · English &amp; German</li>
+      </ul>
+      <div class="about-links">
+        <a class="btn btn-primary" href="https://www.linkedin.com/in/dennis-hasselbusch-7512391b5/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a class="btn btn-outline" href="https://github.com/ApixDenice" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="container">
+    <div class="cta-dark reveal">
+      <h2>Have an idea, a question or a project in mind?</h2>
+      <p>Whether it's feedback on one of the apps or a collaboration you'd like to explore — I'm happy to hear from you.</p>
+      <div class="cta-button-row">
+        <a class="btn btn-light btn-large" href="mailto:{{ site.email }}">Email me <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost-light btn-large" href="{{ '/contact/' | relative_url }}">All contact options</a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -3,15 +3,14 @@ layout: default
 title: DIPS — Social Sport & Fitness App for iPhone
 description: DIPS connects fitness enthusiasts through real sport events near you. Discover sessions on a live map, join in, or host your own.
 permalink: /dips/
+image: /assets/images/og/dips.jpg
 ---
 
+<div class="dips">
 <div class="app-page">
   <header class="app-header reveal">
-    <div class="app-logo-header-container">
-      <img src="{{ '/assets/images/Dips .png' | relative_url }}" alt="DIPS app icon" class="app-logo-header" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="app-icon-large" style="display:none;">🏃</div>
-    </div>
-    <span class="eyebrow">iPhone · Sport &amp; fitness</span>
+    <img src="{{ '/assets/images/apps/dips-384.webp' | relative_url }}" alt="DIPS app icon" class="app-logo-header" width="112" height="112">
+    <div><span class="eyebrow">iPhone · Sport &amp; fitness · In development</span></div>
     <h1>DIPS</h1>
     <p class="app-tagline">Find your people. Start the workout.</p>
   </header>
@@ -49,9 +48,19 @@ permalink: /dips/
     </section>
 
     <section class="feature-section reveal">
+      <h2>How DIPS works</h2>
+      <p>From "let's train" to training, in minutes.</p>
+      <div class="steps">
+        <div class="step"><div class="num"></div><h3>Discover nearby</h3><p>Open the live map and see sport events happening around you, filtered by activity.</p></div>
+        <div class="step"><div class="num"></div><h3>Join or host</h3><p>Tap to join a session, or create your own and set the sport, place, time and group size.</p></div>
+        <div class="step"><div class="num"></div><h3>Meet &amp; move</h3><p>Show up, train together, and grow your local fitness community session by session.</p></div>
+      </div>
+    </section>
+
+    <section class="feature-section reveal">
       <h2>New: create events from the web</h2>
       <p>Organising a regular meetup or a whole series of sessions is far easier on a keyboard. Sign in with your DIPS account in the browser and add events from your computer — they sync straight into the app so members can discover and join them. It's the fastest way to set up multiple events at once.</p>
-      <p style="margin-top:1.25rem;"><a href="{{ "/dips/events" | relative_url }}" class="btn btn-primary">Go to Manage events</a></p>
+      <p class="section-action"><a href="{{ '/dips/events/' | relative_url }}" class="btn btn-primary">Go to Manage events</a></p>
     </section>
 
     <section class="feature-section feature-section-compact reveal">
@@ -64,8 +73,12 @@ permalink: /dips/
       <h3>Coming soon to the App Store</h3>
       <p>DIPS is in active development. Want to be notified at launch? Reach out and I'll keep you posted.</p>
       <div class="cta-button-row">
-        <a href="{{ "/contact" | relative_url }}" class="btn btn-primary">Get launch updates</a>
+        <a href="{{ '/contact/' | relative_url }}" class="btn btn-primary">Get launch updates</a>
+      </div>
+      <div class="privacy-link-section">
+        <p><a href="{{ '/datenschutz/' | relative_url }}" class="privacy-link">Privacy (web sign-in)</a> · <a href="{{ '/impressum/' | relative_url }}" class="privacy-link">Impressum</a></p>
       </div>
     </div>
   </div>
+</div>
 </div>

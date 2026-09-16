@@ -1,31 +1,45 @@
 # Site settings
 title: ApixDenice
-description: DIPS & Office Mom — iOS & macOS apps for fitness and healthy habits
-email: dennishasselbusch@googlemail.com
+tagline: Native apps for iPhone & Mac
+description: ApixDenice is the indie app studio of Dennis Hasselbusch — native apps for iPhone and Mac, including Too Much Food and Office Mom.
+email: dennishasselbusch@icloud.com
+lang: en-US
 baseurl: ""
 url: "https://apixdenice.github.io"
 
-# App Store links.
+author:
+  name: Dennis Hasselbusch
+
+# jekyll-seo-tag
+logo: /assets/brand/icon-512.png
+social:
+  name: Dennis Hasselbusch
+  links:
+    - https://www.linkedin.com/in/dennis-hasselbusch-7512391b5/
+    - https://github.com/ApixDenice
+
+# App Store links + numeric IDs (IDs feed the Smart App Banner meta tag).
 # The short /app/idNNNN form is storefront-neutral: Apple redirects each
 # visitor to their own country's store automatically.
 office_mom_ios_url: "https://apps.apple.com/app/id6760966448"
+office_mom_ios_id: "6760966448"
 office_mom_mac_url: "https://apps.apple.com/app/id6757431484"
 toomuchfood_url: "https://apps.apple.com/app/id6749512460"
+toomuchfood_id: "6749512460"
 
-# Plugins (no remote theme — the site uses its own layout + stylesheet)
+# Plugins — all on the GitHub Pages whitelist
 plugins:
-  - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-redirect-from
 
-# Navigation (Home, Office Mom, Contact are simple links;
-# DIPS is rendered as a dropdown in the layout)
-navigation:
-  - title: Home
-    url: /
-  - title: Office Mom
-    url: /office-mom
-  - title: Contact
-    url: /contact
+# Defaults: every page gets a social preview image unless it sets its own
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      image: /assets/images/og/default.jpg
 
 # Build settings
 markdown: kramdown
@@ -40,5 +54,6 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
-  - DESIGN_RECOMMENDATIONS.md
+  - assets/badges/README.md
   - vendor
+  - _og

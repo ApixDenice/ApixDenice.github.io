@@ -1,117 +1,60 @@
 # ApixDenice.github.io
 
-Personal website showcasing iOS and macOS applications built with Jekyll and the Hacker theme.
+Studio website for **ApixDenice**, the indie app studio of Dennis Hasselbusch: <https://apixdenice.github.io>.
+It's a Jekyll site with its own layout and stylesheet (no theme), deployed with GitHub Pages.
 
-## 🚀 Features
+## Pages
 
-- **Modern Design**: Tech-inspired hacker theme with smooth animations
-- **Responsive**: Works perfectly on all devices
-- **Navigation**: Easy access to all sections via top menu bar
-- **App Showcases**: Dedicated pages for DIPS and Office Mom apps
-- **Contact Links**: Direct links to email, LinkedIn, and GitHub
+| URL | Source | Notes |
+|-----|--------|-------|
+| `/` | `index.html` | Studio landing page with the 3D logo intro |
+| `/toomuchfood/` | `toomuchfood.md` | Amber accent (`.tmf`), Smart App Banner |
+| `/toomuchfood/privacy/`, `/toomuchfood/datenschutz/` | `toomuchfood-*.md` | App privacy policy (EN/DE) |
+| `/toomuchfood/duel/` | `toomuchfood/duel/index.html` | Standalone challenge-link landing page (universal links) |
+| `/office-mom/` | `office-mom.md` | Blue accent (`.om`), Smart App Banner |
+| `/office-mom/privacy/` | `office-mom-privacy.md` | Redirects from the old `/office-mom-privacy` URL |
+| `/dips/`, `/dips/events/` | `dips.md`, `dips-events.html` | Green accent (`.dips`); events page is `noindex` |
+| `/contact/` | `contact.html` | |
+| `/impressum/` | `impressum.md` | One Impressum for the site and all apps |
+| `/datenschutz/` | `datenschutz.html` | Website privacy policy (DE + EN), `/privacy/` redirects here |
 
-## 📋 Setup Instructions
+The `.well-known/apple-app-site-association` file and `app-ads.txt` must stay at the root of this domain.
+If the domain ever changes, the Too Much Food duel links and AdMob verification change with it.
 
-### 1. Add App Logos
+## Brand
 
-Add your app logos to the `assets/images/` directory:
+- **Logo "Apex + Pixel":** an apex-shaped A whose crossbar is a single glowing pixel. Source files are in `assets/brand/`:
+  `logo-mark.svg` (master), `favicon.svg`, `apple-touch-icon.png`, `icon-512.png`, plus `/favicon.ico`.
+- Inline versions: `_includes/logo-mark.html` (flat) and `_includes/logo-3d.html` (extruded CSS 3D).
+- **Colours:** ink `#0B0C10`, pixel gradient `#FFB224 → #FF4F6D → #7C5CFF`, link/focus violet `#6246EA`.
+  Each app keeps its own accent through a scoped class that overrides the `--brand-*` tokens in `assets/css/custom.css`.
+- **Font:** Inter (variable, Latin subset), self-hosted in `assets/fonts/` under the SIL Open Font License.
 
-- `dips-logo.png` - DIPS app logo (recommended: 240x240px or higher, PNG format)
-- `office-mom-logo.png` - Office Mom app logo (recommended: 240x240px or higher, PNG format)
+## Home intro animation
 
-The logos will automatically display on the home page. If images are not found, emoji fallbacks will be used.
+- The timeline is pure CSS (`.intro-overlay` in `custom.css`). `assets/js/main.js` adds skip (click, Esc, Enter, Space), the fly-into-hero hand-off and cleanup.
+- An inline script in `_layouts/default.html` decides whether it plays. It runs only for a fresh entry into the site: not on reload, back/forward, internal navigation or with *reduced motion* enabled.
+- No cookies or storage are used, so no consent banner is needed.
 
-### 2. Contact Page
+## Social preview images and App Store badges
 
-The contact page includes direct links to:
-- Email: dennishasselbusch@googlemail.com
-- LinkedIn: https://www.linkedin.com/in/dennis-hasselbusch-7512391b5/
-- GitHub: https://github.com/ApixDenice
+- The 1200×630 Open Graph images are in `assets/images/og/`. Regenerate them with `python3 _og/generate.py` (needs Playwright).
+  Pages choose theirs with `image:` in the front matter; everything else falls back to `default.jpg`.
+- Official Apple badges: see `assets/badges/README.md`. Use `{% include app-store-badge.html url=... platform="ios|mac" size="sm|md|lg" %}`.
+- Smart App Banner: set `app_store_id: "<numeric id>"` in a page's front matter.
 
-No additional setup required for the contact page.
+## Privacy by design
 
-### 3. GitHub Pages Deployment
+- No third-party requests on page load: fonts and scripts are self-hosted.
+- The Firebase SDK on `/dips/events/` loads only once someone uses the sign-in form or already has a session.
+- If you add anything that loads from another domain (embeds, analytics, CDNs), update `datenschutz.html` first.
 
-1. Push all files to your `ApixDenice.github.io` repository
-2. Go to repository Settings → Pages
-3. Select the main branch as the source
-4. GitHub Pages will automatically build and deploy your site
-
-### 4. Local Development
-
-To test locally:
+## Local development
 
 ```bash
-# Install Jekyll (if not already installed)
-gem install bundler jekyll
-
-# Install dependencies
-bundle install
-
-# Run local server
-bundle exec jekyll serve
-
-# Visit http://localhost:4000
+bundle install            # installs the github-pages gem (same versions as production)
+bundle exec jekyll serve  # http://localhost:4000
 ```
 
-## 📁 Project Structure
-
-```
-.
-├── _config.yml          # Jekyll configuration
-├── _layouts/
-│   └── default.html     # Main layout with navigation
-├── assets/
-│   ├── css/
-│   │   └── custom.css   # Custom styles and animations
-│   ├── images/
-│   │   ├── dips-logo.png        # DIPS app logo (add your image)
-│   │   └── office-mom-logo.png  # Office Mom app logo (add your image)
-│   └── js/
-│       └── main.js      # Interactive JavaScript
-├── index.md             # Home page
-├── dips.md              # DIPS app page
-├── office-mom.md        # Office Mom app page
-└── contact.md           # Contact page with social links
-```
-
-## 🎨 Customization
-
-### Colors
-
-The theme uses a green-on-black hacker aesthetic. You can customize colors in `assets/css/custom.css`:
-
-```css
-:root {
-  --primary-green: #00ff00;
-  --accent-yellow: #ffff00;
-  --bg-dark: #0d1117;
-  /* ... */
-}
-```
-
-### Content
-
-- Edit `index.md` for the home page
-- Edit `dips.md` for DIPS app information
-- Edit `office-mom.md` for Office Mom app information
-- Edit `contact.md` for contact page content
-
-## 🔧 Technologies Used
-
-- **Jekyll**: Static site generator
-- **Hacker Theme**: GitHub Pages theme
-- **Vanilla JavaScript**: For interactions and animations
-- **CSS3**: Modern animations and responsive design
-
-## 📝 Design Recommendations
-
-See `DESIGN_RECOMMENDATIONS.md` for comprehensive design improvement suggestions and enhancements.
-
-## 📝 License
-
-This project is open source and available under the MIT License.
-
-## 📧 Contact
-
-For questions or suggestions, reach out via the contact page or email: dennishasselbusch@googlemail.com
+Images: app icons and screenshots are WebP (`assets/images/apps/`, `assets/images/officemom/`, `assets/images/toomuchfood/`).
+Always set `width`/`height` on `<img>` to avoid layout shift.
