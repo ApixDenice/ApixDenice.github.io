@@ -422,6 +422,8 @@ html.intro-skipped .orbit-icon { animation-delay: 0s !important; animation-durat
 .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--brand-soft); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 0.9rem; }
 .feature-card h3 { margin-bottom: 0.35rem; }
 .feature-card p { color: var(--muted); margin: 0; font-size: 0.96rem; }
+.feature-card { position: relative; }
+.feature-new { position: absolute; top: 1rem; right: 1rem; font-size: 0.7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--brand-deep); background: var(--brand-soft); padding: 0.25rem 0.55rem; border-radius: 999px; }
 
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; counter-reset: step; margin-top: 1.25rem; }
 .step { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
