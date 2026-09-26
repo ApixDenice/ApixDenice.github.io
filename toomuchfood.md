@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Too Much Food — Endless Arcade Snacking for iPhone
-description: Swipe, dodge and gobble your way through endless waves of food. Four worlds, daily challenges, weekly leagues and 13 Franks to unlock.
+description: Swipe, dodge and gobble your way through endless waves of food. Four worlds, daily challenges, weekly leagues, ghost duels — and 30 mix-and-match outfits and 9 trails for Frank.
 permalink: /toomuchfood/
 app_store_id: "6749512460"
 image: /assets/images/og/toomuchfood.jpg
@@ -15,6 +15,7 @@ image: /assets/images/og/toomuchfood.jpg
       <span class="eyebrow">iPhone · Arcade game</span>
       <h1>Grab the food. Dodge the poo.</h1>
       <p class="hero-lead">Frank loves food. A lot. Swipe through endless waves of fries, burgers and pizza — and keep him clear of the hazards. The more you eat, the faster it gets.</p>
+      <p class="hero-note"><strong>New in 3.0:</strong> Frank's wardrobe just exploded — <a href="#wardrobe">30 outfits, 9 trails, any hat with any outfit</a>.</p>
       <div class="hero-actions">
         {% include app-store-badge.html url=site.toomuchfood_url platform="ios" size="lg" %}
         <a href="#screenshots" class="btn btn-outline btn-large">See the game</a>
@@ -33,12 +34,53 @@ image: /assets/images/og/toomuchfood.jpg
     <section class="feature-section reveal">
       <h2>About the game</h2>
       <p>Your mission is simple: swipe, dodge, and gobble your way through endless waves of delicious goodies — and make sure Frank stays far away from the poo hazards on the field. One hit and the run is over, so every combo counts.</p>
-      <p>Perfect for quick breaks, offline sessions, or whenever you need a fun challenge. Difficulty climbs the more you eat, so "just one more round" is basically guaranteed.</p>
+      <p>Deep runs never flatten out: the heat keeps rising, gaps get tighter and the poo starts moving. Hit a milestone and a feast round blows every hazard off the screen for seven seconds of pure food at double points. So "just one more round" is basically guaranteed.</p>
       <div class="stat-strip stat-strip--spaced">
         <div class="stat"><b>4</b><span>Worlds to eat through</span></div>
-        <div class="stat"><b>13</b><span>Franks to unlock</span></div>
-        <div class="stat"><b>30</b><span>Food Pass tiers</span></div>
-        <div class="stat"><b>∞</b><span>Endless runs</span></div>
+        <div class="stat"><b>30</b><span>Outfits to mix &amp; match</span></div>
+        <div class="stat"><b>9</b><span>Trails behind Frank</span></div>
+        <div class="stat"><b>30</b><span>Food Pass tiers per season</span></div>
+      </div>
+    </section>
+
+    <section class="feature-section reveal" id="wardrobe">
+      <span class="eyebrow">New in version 3.0</span>
+      <h2>Frank's wardrobe just exploded</h2>
+      <p>Outfits are now split into body and head, and any hat goes with any outfit. Every skin you already owned came along — as both halves.</p>
+      <figure class="tmf-wardrobe">
+        <img src="{{ '/assets/images/toomuchfood/3.0-outfits.webp' | relative_url }}" width="1020" height="510" alt="Eighteen Frank outfits in a grid: pirate, knight, viking, wizard, astronaut, luchador, mad scientist, disco, robot, deep-sea diver, secret agent, gunslinger, vampire, explorer, detective, pharaoh, frost king and a mixed viking-helmet look." loading="lazy">
+      </figure>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎩</div>
+          <h3>15 new outfits</h3>
+          <p>Pirate, knight, viking, wizard, astronaut, luchador, mad scientist, disco, robot, deep-sea diver, secret agent, gunslinger, vampire, explorer and detective.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧩</div>
+          <h3>Mix &amp; match</h3>
+          <p>30 bodies, 30 heads, 900 possible looks. A viking helmet on a dinner jacket? Go for it.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3>Trails</h3>
+          <p>Sparks in four colours, fairy dust, butterflies or bees behind Frank. Your combo makes the trail stronger as you go.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌈</div>
+          <h3>The rainbow</h3>
+          <p>Collect 100,000 coins over time and the top trail unlocks. The shop shows exactly how close you are.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🪞</div>
+          <h3>Try before you buy</h3>
+          <p>The new shop has Body, Head and Trail tabs under a live preview. Try anything on — only the Buy button spends coins.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👑</div>
+          <h3>New pass exclusives</h3>
+          <p>Pharaoh and Frost King join the Food Pass — outfits you can only earn there.</p>
+        </div>
       </div>
     </section>
 
@@ -58,12 +100,22 @@ image: /assets/images/og/toomuchfood.jpg
         <div class="feature-card">
           <div class="feature-icon">🏔️</div>
           <h3>Four worlds</h3>
-          <p>Rooftops, countryside, city nights and a frozen Cold Snap — each with its own look and pace.</p>
+          <p>Rooftops, countryside, city nights and a frozen Cold Snap. Obstacle patterns are mirrored, chained and re-timed, so no run plays the same way twice.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">👻</div>
           <h3>Race your ghost</h3>
           <p>Run against a ghost of your personal best and see live whether you're ahead or behind.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚔️</div>
+          <h3>Ghost duels</h3>
+          <p>Send a friend a link to your run. They race your ghost — in whatever outfit you were wearing.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🍔</div>
+          <h3>Heat &amp; feast rounds</h3>
+          <p>The deeper you go, the hotter it gets. Hit a milestone for seven hazard-free seconds at double points.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">📅</div>
@@ -73,12 +125,12 @@ image: /assets/images/og/toomuchfood.jpg
         <div class="feature-card">
           <div class="feature-icon">🏆</div>
           <h3>Weekly league</h3>
-          <p>Climb from league to league each week, plus a real Game Center leaderboard for everyone who plays.</p>
+          <p>Earn trophies every run and fight for promotion through seven divisions, plus real global rankings via Game Center.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🎟️</div>
           <h3>Food Pass</h3>
-          <p>Seasonal progression with 30 tiers of crates, coins and skins on free and premium tracks.</p>
+          <p>30 tiers every season of crates, coins and exclusive outfits, with a free track for everyone.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">✈️</div>
@@ -120,9 +172,6 @@ image: /assets/images/og/toomuchfood.jpg
             <div class="carousel-slide" data-caption="30 tiers of rewards every season">
               <img src="{{ '/assets/images/toomuchfood/07-food-pass.webp' | relative_url }}" width="368" height="800" alt="Food Pass season 3 at tier 11, showing free and premium reward tracks with crates, coins and skins." loading="lazy">
             </div>
-            <div class="carousel-slide" data-caption="13 Franks to unlock">
-              <img src="{{ '/assets/images/toomuchfood/08-franks-shop.webp' | relative_url }}" width="368" height="800" alt="The shop screen with unlockable Frank skins including Retro, Beach and Chef Frank." loading="lazy">
-            </div>
           </div>
 
           <button class="carousel-btn carousel-next" type="button" aria-label="Next screenshot">
@@ -132,7 +181,7 @@ image: /assets/images/og/toomuchfood.jpg
 
         <div class="carousel-meta">
           <span class="carousel-caption" data-carousel-caption>Grab the food. Dodge the poo.</span>
-          <span class="carousel-count" data-carousel-count>1 / 8</span>
+          <span class="carousel-count" data-carousel-count>1 / 7</span>
         </div>
 
         <div class="carousel-thumbs" data-carousel-thumbs></div>
@@ -141,7 +190,7 @@ image: /assets/images/og/toomuchfood.jpg
 
     <section class="feature-section feature-section-compact reveal">
       <h2>Built with</h2>
-      <p>Too Much Food is a native iOS game built in <strong>Swift</strong> and <strong>SpriteKit</strong>, with <strong>Game Center</strong> leaderboards and full offline play.</p>
+      <p>Too Much Food is a native iOS game built in <strong>Swift</strong> and <strong>SpriteKit</strong>, with <strong>Game Center</strong> leaderboards, universal links for ghost duels and full offline play. Free to play, no pay-to-win: every upgrade and outfit is earnable, and nothing random is ever sold for money.</p>
     </section>
 
     <div class="cta-section reveal">

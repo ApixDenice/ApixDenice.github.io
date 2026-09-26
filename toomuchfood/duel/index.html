@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Duel · Too Much Food</title>
-<meta name="description" content="You've been challenged. Race your friend's ghost on the same course in Too Much Food.">
+<meta name="description" content="You've been challenged. Watch the run, then race your friend's ghost on the same course in Too Much Food.">
 <meta property="og:title" content="You've been challenged in Too Much Food 👻🍟">
 <meta property="og:description" content="Same course. Their ghost. Beat their score.">
 <meta name="apple-itunes-app" content="app-id=6749512460">
@@ -20,19 +20,36 @@
     padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
   }
   main { width:100%; max-width:420px; }
-  .brand { font-weight:900; letter-spacing:.04em; font-size:22px; opacity:.95; margin:0 0 28px; }
+  .brand { font-weight:900; letter-spacing:.04em; font-size:22px; opacity:.95; margin:0 0 20px; }
   .brand b { color:var(--gold); }
   .kicker { font-weight:900; font-size:52px; line-height:1; margin:0; color:var(--gold);
             text-shadow:0 4px 0 rgba(0,0,0,.25); }
-  .who { font-weight:800; font-size:20px; margin:14px 0 26px; text-shadow:0 2px 0 rgba(0,0,0,.25); }
+  .who { font-weight:800; font-size:20px; margin:14px 0 20px; text-shadow:0 2px 0 rgba(0,0,0,.25); }
   .score { font-weight:900; font-size:96px; line-height:1; margin:0; text-shadow:0 6px 0 rgba(0,0,0,.25); }
-  .sub { font-weight:700; font-size:14px; letter-spacing:.06em; opacity:.85; margin:8px 0 34px; }
+  .sub { font-weight:700; font-size:14px; letter-spacing:.06em; opacity:.85; margin:8px 0 28px; }
   .btn { display:block; width:100%; padding:18px 20px; margin:0 0 14px; border-radius:30px;
          font-weight:900; font-size:21px; text-decoration:none; }
   .primary { background:var(--green); color:#fff; box-shadow:0 6px 0 var(--green-edge); }
   .secondary { background:rgba(255,255,255,.18); color:#fff; box-shadow:0 6px 0 rgba(0,0,0,.18); }
+  /* Most people opening a duel link do not have the game. The install was a
+     grey afterthought under a green button that does nothing for them. */
+  .install { background:#FFC93C; color:#2B1B10; box-shadow:0 6px 0 #C79512; }
   .btn:active { transform:translateY(4px); box-shadow:none; }
   .help { font-size:14px; line-height:1.45; opacity:.9; margin:22px 4px 0; }
+
+  /* Ghost replay. Hidden until a run has actually been decoded from the link,
+     so a malformed or old-format link simply shows the page it always did. */
+  .replay { display:none; margin:0 0 22px; }
+  .replay.on { display:block; }
+  .stage { position:relative; width:100%; border-radius:20px; overflow:hidden;
+           box-shadow:0 8px 0 rgba(0,0,0,.18); background:#8FD0F5; }
+  .stage canvas { display:block; width:100%; height:200px; }
+  .tag { position:absolute; top:10px; left:12px; font-size:11px; font-weight:800;
+         letter-spacing:.10em; opacity:.85; text-shadow:0 1px 0 rgba(0,0,0,.3); }
+  .live { position:absolute; top:8px; right:12px; font-size:26px; font-weight:900;
+          text-shadow:0 2px 0 rgba(0,0,0,.28); }
+  .seek { position:absolute; left:0; right:0; bottom:0; height:4px; background:rgba(0,0,0,.18); }
+  .seek i { display:block; height:100%; width:0; background:var(--gold); }
 </style>
 </head>
 <body>
@@ -40,25 +57,54 @@
   <p class="brand">TOO MUCH <b>FOOD</b></p>
   <p class="kicker">DUEL!</p>
   <p class="who" id="who">A friend challenges you</p>
+
+  <div class="replay" id="replay">
+    <div class="stage">
+      <canvas id="canvas" width="800" height="400"></canvas>
+      <div class="tag" id="tag">THEIR RUN</div>
+      <div class="live" id="live">0</div>
+      <div class="seek"><i id="seek"></i></div>
+    </div>
+  </div>
+
   <p class="score" id="score">?</p>
   <p class="sub">TO BEAT · SAME COURSE · RACE THEIR GHOST</p>
 
   <a class="btn primary" id="open" href="toomuchfood://duel">Open in Too Much Food</a>
-  <a class="btn secondary" href="https://apps.apple.com/app/id6749512460">Get the game</a>
+  <a class="btn install" id="get" href="https://apps.apple.com/app/id6749512460">Get the game — free</a>
 
-  <p class="help">New to the game? Install it, then come back to this page and tap
-    <b>Open in Too Much Food</b> to start the duel.</p>
+  <p class="help" id="help">Don't have it? Tap <b>Get the game</b> — the challenge
+    is waiting when you open it.</p>
 </main>
 <script>
 // Everything shown here is read from the link itself; nothing is sent anywhere.
 // Format mirrors GhostCodec in Duel.swift (container byte, then "TM", version 1).
+//
+// The replay is the point of this page. A link that is only a number is a dead
+// end for anyone who does not already have the game; a ten-second replay of the
+// run they are being challenged to beat is the whole pitch.
 (function () {
   var params = new URLSearchParams(location.search);
   var token = params.get("d");
   if (!token && location.hash.indexOf("#d=") === 0) token = location.hash.slice(3);
   if (!token || token.length > 1400000) return;
 
-  document.getElementById("open").href = "toomuchfood://duel?d=" + encodeURIComponent(token);
+  var openLink = document.getElementById("open");
+  openLink.href = "toomuchfood://duel?d=" + encodeURIComponent(token);
+
+  // A custom scheme fails silently when the app is not installed, so the
+  // primary button was a dead end for exactly the visitors worth converting —
+  // the ones who have never seen the game. Fire the scheme as before, then, if
+  // this page is still in front of them a moment later, the app did not take
+  // over and the App Store is where they should be. Deliberately triggered by
+  // the tap rather than on load: auto-firing a scheme raises a "Cannot Open
+  // Page" alert in some browsers, which is worse than a dead button.
+  openLink.addEventListener("click", function () {
+    var store = "https://apps.apple.com/app/id6749512460";
+    window.setTimeout(function () {
+      if (document.visibilityState === "visible") { window.location = store; }
+    }, 1400);
+  });
 
   function fromBase64URL(s) {
     s = s.replace(/-/g, "+").replace(/_/g, "/");
@@ -79,6 +125,7 @@
     var o = 0;
     function need(n) { if (o + n > b.length) throw new Error("short"); }
     function u8() { need(1); return b[o++]; }
+    function u16() { need(2); var v = b[o] | (b[o + 1] << 8); o += 2; return v; }
     function varint() {
       var result = 0, mul = 1;
       for (var i = 0; i < 10; i++) {
@@ -89,28 +136,180 @@
       }
       throw new Error("varint");
     }
+    function zigzag() { var raw = varint(); return (raw % 2) ? -((raw + 1) / 2) : raw / 2; }
+
     if (u8() !== 0x54 || u8() !== 0x4d || u8() !== 1) throw new Error("format");
-    need(8); o += 8;                  // seed
+    need(8); o += 8;                       // seed
     var score = varint();
-    need(2); o += 2;                  // interval
+    var interval = u16() / 1000;           // seconds between samples
     var count = varint();
-    need(count); o += count;          // ghost heights
-    for (var i = 0; i < count; i++) varint();   // score deltas
+    if (count < 2 || count > 10000) throw new Error("count");
+    need(count);
+    var ys = b.subarray(o, o + count); o += count;
+    var scores = new Int32Array(count), running = 0;
+    for (var i = 0; i < count; i++) { running += zigzag(); scores[i] = running; }
     var len = u8(); need(len);
     var name = new TextDecoder().decode(b.subarray(o, o + len));
-    return { score: score, name: name };
+    return { score: score, name: name, interval: interval, ys: ys, scores: scores };
   }
 
   render();
   async function render() {
+    var duel;
     try {
       var raw = await body(fromBase64URL(token));
       if (!raw) return;
-      var duel = parse(raw);
-      var name = (duel.name || "").replace(/[^A-Z0-9 _.\-]/gi, "").slice(0, 14).toUpperCase() || "A FRIEND";
-      document.getElementById("who").textContent = name + " challenges you";
-      document.getElementById("score").textContent = String(duel.score);
-    } catch (e) { /* keep the generic copy */ }
+      duel = parse(raw);
+    } catch (e) { return; }               // keep the generic copy
+
+    var name = (duel.name || "").replace(/[^A-Z0-9 _.\-]/gi, "").slice(0, 14).toUpperCase() || "A FRIEND";
+    document.getElementById("who").textContent = name + " challenges you";
+    document.getElementById("score").textContent = String(duel.score);
+    document.getElementById("tag").textContent = name + "'S RUN";
+    document.getElementById("replay").className = "replay on";
+    play(duel);
+  }
+
+  // ---------------------------------------------------------------- replay
+
+  function play(duel) {
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var live = document.getElementById("live");
+    var seek = document.getElementById("seek");
+    if (!ctx) return;
+
+    var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    function resize() {
+      var rect = canvas.getBoundingClientRect();
+      W = Math.max(240, Math.round(rect.width));
+      H = Math.round(rect.height) || 200;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    var duration = duel.ys.length * duel.interval;
+    // Nobody watches a three-minute replay on a landing page. Long runs are
+    // sped up rather than cut, so the ending is always the real ending.
+    var rate = Math.max(1, duration / 12);
+    var groundH = 26, pad = 18;
+    var pxPerSecond = 190;                 // scroll speed of the trail
+    var frankX = 0.26;
+
+    function heightAt(t) {
+      var pos = Math.max(0, Math.min(t / duel.interval, duel.ys.length - 1));
+      var i = Math.floor(pos), f = pos - i;
+      var a = duel.ys[i] / 255, b = duel.ys[Math.min(i + 1, duel.ys.length - 1)] / 255;
+      return a + (b - a) * f;
+    }
+    function yFor(n) {
+      var top = pad, bottom = H - groundH - pad;
+      return bottom - n * (bottom - top);
+    }
+    function scoreAt(t) {
+      var i = Math.max(0, Math.min(Math.round(t / duel.interval), duel.scores.length - 1));
+      return duel.scores[i];
+    }
+
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var start = null, holdUntil = 0;
+
+    function frame(now) {
+      if (start === null) start = now;
+      var elapsed = (now - start) / 1000 * rate;
+      var t = Math.min(elapsed, duration);
+
+      draw(t, elapsed);
+
+      if (t < duration) { requestAnimationFrame(frame); return; }
+      // Hold on the crash, then run it again — the loop is what makes the
+      // page feel alive while someone decides whether to install.
+      if (!holdUntil) holdUntil = now + 1600;
+      if (now < holdUntil) { requestAnimationFrame(frame); return; }
+      start = null; holdUntil = 0;
+      requestAnimationFrame(frame);
+    }
+
+    function draw(t, elapsed) {
+      // Sky
+      var sky = ctx.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, "#8FD0F5");
+      sky.addColorStop(1, "#CFEBFB");
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, W, H);
+
+      // Scrolling ground stripes, for a sense of speed.
+      ctx.fillStyle = "#7FC24A";
+      ctx.fillRect(0, H - groundH, W, groundH);
+      ctx.fillStyle = "rgba(255,255,255,.18)";
+      var offset = (elapsed * pxPerSecond) % 48;
+      for (var x = -48; x < W + 48; x += 48) {
+        ctx.fillRect(x - offset, H - groundH, 24, groundH);
+      }
+
+      // The run itself: the last couple of seconds of the flight path.
+      var head = { x: W * frankX, y: yFor(heightAt(t)) };
+      var window_ = 2.4;
+      ctx.lineWidth = 4;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "rgba(255,201,60,.85)";
+      ctx.beginPath();
+      var first = true;
+      for (var dt = window_; dt >= 0; dt -= duel.interval) {
+        var ti = t - dt;
+        if (ti < 0) continue;
+        var px = head.x - dt * pxPerSecond;
+        var py = yFor(heightAt(ti));
+        if (first) { ctx.moveTo(px, py); first = false; } else { ctx.lineTo(px, py); }
+      }
+      ctx.stroke();
+
+      // The ghost.
+      var crashed = t >= duration;
+      drawGhost(ctx, head.x, head.y, crashed);
+
+      live.textContent = String(scoreAt(t));
+      seek.style.width = Math.round((t / duration) * 100) + "%";
+
+      if (crashed) {
+        ctx.fillStyle = "rgba(18,10,22,.55)";
+        ctx.fillRect(0, H / 2 - 26, W, 52);
+        ctx.fillStyle = "#FFC93C";
+        ctx.font = "900 22px 'Avenir Next', system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("FINISHED ON " + duel.score, W / 2, H / 2 + 8);
+      }
+    }
+
+    function drawGhost(c, x, y, crashed) {
+      var r = 17;
+      c.save();
+      c.globalAlpha = crashed ? 0.45 : 0.92;
+      c.fillStyle = "#EAF7FF";
+      c.strokeStyle = "rgba(60,120,160,.45)";
+      c.lineWidth = 2;
+      c.beginPath();
+      c.arc(x, y - 2, r, Math.PI, 0);                 // domed head
+      c.lineTo(x + r, y + r - 2);
+      // Wavy hem, so it reads as a ghost at a glance rather than a ball.
+      for (var i = 0; i < 3; i++) {
+        var w = (r * 2) / 3;
+        c.quadraticCurveTo(x + r - w * (i + 0.5), y + r + 6, x + r - w * (i + 1), y + r - 2);
+      }
+      c.closePath();
+      c.fill();
+      c.stroke();
+      c.fillStyle = "#2A3F52";
+      c.beginPath(); c.arc(x - 6, y - 4, 2.6, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(x + 5, y - 4, 2.6, 0, Math.PI * 2); c.fill();
+      c.restore();
+    }
+
+    if (reduced) { draw(duration, duration); return; }
+    requestAnimationFrame(frame);
   }
 })();
 </script>

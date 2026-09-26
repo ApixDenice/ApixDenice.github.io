@@ -670,3 +670,8 @@ html.js .reveal.visible { opacity: 1; transform: none; }
   .footer-inner { grid-template-columns: 1fr; }
   .cta-dark { padding: 3rem 1.25rem; border-radius: 22px; }
 }
+
+/* Too Much Food 3.0 wardrobe image */
+.tmf-wardrobe { margin: 1.5rem 0 0; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--brand-soft-2); box-shadow: var(--shadow-sm); }
+.tmf-wardrobe img { display: block; width: 100%; height: auto; }
+@media (min-width: 900px) { #wardrobe .features-grid { grid-template-columns: repeat(3, 1fr); } }
