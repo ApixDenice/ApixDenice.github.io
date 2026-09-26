@@ -2,9 +2,28 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["UL8QYY28QS.Ashtari.TooMuchFood"],
+        "appIDs": [
+          "UL8QYY28QS.Ashtari.TooMuchFood"
+        ],
         "components": [
-          { "/": "/toomuchfood/duel/*", "comment": "Ghost duel challenges" }
+          {
+            "/": "/toomuchfood/duel/*",
+            "comment": "Ghost duel challenges"
+          }
+        ]
+      },
+      {
+        "appIDs": [
+          "UL8QYY28QS.ApixDenice.DIPS"
+        ],
+        "components": [
+          {
+            "/": "/dips/e/*",
+            "?": {
+              "id": "?*"
+            },
+            "comment": "DIPS event invites"
+          }
         ]
       }
     ]

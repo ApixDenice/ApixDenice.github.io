@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Einladung · DIPS</title>
+<meta name="description" content="Du bist zu einer Sport-Aktivität eingeladen. Öffne sie in DIPS und sei dabei.">
+<meta property="og:title" content="Du bist eingeladen – DIPS">
+<meta property="og:description" content="Eine Sport-Aktivität in deiner Nähe. Öffne sie in DIPS und sei dabei.">
+<meta property="og:image" content="https://apixdenice.github.io/assets/images/og/dips.jpg">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<!--
+  Invite page for DIPS event links: https://apixdenice.github.io/dips/e/?id=<uuid>
+
+  With DIPS installed, iOS never shows this page: the link is claimed by the app
+  through /.well-known/apple-app-site-association. Everybody else lands here.
+  The event comes from the public `eventPreview` Cloud Function, which returns
+  a deliberately small projection (no names, location rounded to ~1 km).
+-->
+<style>
+  :root { --brand:#0BA000; --deep:#046B17; --glow:#75FA85; --night:#100031; --ink:#F4F6F5; --muted:rgba(244,246,245,.72); }
+  * { box-sizing:border-box; }
+  html, body { margin:0; min-height:100%; }
+  body {
+    font-family: -apple-system, system-ui, "SF Pro Rounded", "Helvetica Neue", sans-serif;
+    color:var(--ink);
+    background: radial-gradient(120% 80% at 50% 0%, #1b3a21 0%, var(--night) 70%) fixed;
+    display:flex; align-items:center; justify-content:center;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  }
+  main { width:100%; max-width:440px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.06em; margin:0 0 22px; }
+  .brand img { width:40px; height:40px; border-radius:10px; }
+  .card { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:24px; padding:22px; }
+  .eyebrow { color:var(--glow); font-weight:700; font-size:13px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 6px; }
+  h1 { font-size:28px; line-height:1.15; margin:0 0 14px; }
+  .facts { list-style:none; padding:0; margin:0 0 16px; display:grid; gap:10px; }
+  .facts li { display:flex; gap:10px; align-items:flex-start; font-size:16px; }
+  .facts .i { width:22px; text-align:center; flex:none; }
+  .details { color:var(--muted); font-size:15px; line-height:1.45; margin:0 0 6px; white-space:pre-line; }
+  .spots { display:inline-block; margin:4px 0 0; padding:6px 12px; border-radius:999px; background:rgba(117,250,133,.14); color:var(--glow); font-weight:700; font-size:14px; }
+  .spots.full { background:rgba(255,190,80,.16); color:#FFC56B; }
+  .btn { display:block; width:100%; text-align:center; padding:17px 20px; margin:14px 0 0; border-radius:16px; font-weight:800; font-size:18px; text-decoration:none; }
+  .primary { background:linear-gradient(135deg, var(--brand), var(--deep)); color:#fff; }
+  .secondary { background:rgba(255,255,255,.1); color:var(--ink); }
+  .note { color:var(--muted); font-size:14px; line-height:1.45; margin:18px 2px 0; text-align:center; }
+  .muted-state h1 { font-size:24px; }
+  .skeleton { height:18px; border-radius:8px; background:rgba(255,255,255,.1); margin:10px 0; }
+  a.inline { color:var(--glow); }
+</style>
+</head>
+<body>
+<main>
+  <p class="brand"><img src="/assets/images/apps/dips-128.webp" alt="" width="40" height="40">DIPS</p>
+
+  <div class="card" id="card" aria-live="polite">
+    <p class="eyebrow">Du bist eingeladen</p>
+    <div class="skeleton" style="width:70%"></div>
+    <div class="skeleton" style="width:50%"></div>
+    <div class="skeleton" style="width:60%"></div>
+  </div>
+
+  <a class="btn primary" id="open" href="#">In DIPS öffnen</a>
+  <a class="btn secondary" id="get" href="/dips/">DIPS holen</a>
+
+  <p class="note" id="note">Mit DIPS siehst du, wer dabei ist, kannst beitreten und im Gruppenchat absprechen, wer den Ball mitbringt.</p>
+</main>
+<script>
+(function () {
+  "use strict";
+  var PREVIEW = "https://us-central1-hilsports.cloudfunctions.net/eventPreview";
+  // Set once the App Store record exists; until then "DIPS holen" goes to /dips/.
+  var APP_STORE_URL = "";
+
+  var card = document.getElementById("card");
+  var openBtn = document.getElementById("open");
+  var getBtn = document.getElementById("get");
+
+  if (APP_STORE_URL) { getBtn.href = APP_STORE_URL; }
+  else { getBtn.textContent = "Mehr über DIPS"; }
+
+  var params = new URLSearchParams(location.search);
+  var id = params.get("id") || "";
+  var isUUID = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/.test(id);
+
+  // Custom scheme for people who have the app but reached this page anyway
+  // (links tapped inside the same domain, some in-app browsers). It fails
+  // silently without the app, so fall through to the store after a moment.
+  openBtn.href = isUUID ? "dips://event/" + id : "dips://";
+  openBtn.addEventListener("click", function () {
+    window.setTimeout(function () {
+      if (document.visibilityState === "visible") { window.location = getBtn.href; }
+    }, 1400);
+  });
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function fact(icon, text) {
+    var li = el("li"); li.appendChild(el("span", "i", icon)); li.appendChild(el("span", null, text)); return li;
+  }
+  function state(title, text) {
+    card.className = "card muted-state";
+    card.innerHTML = "";
+    card.appendChild(el("p", "eyebrow", "DIPS"));
+    card.appendChild(el("h1", null, title));
+    card.appendChild(el("p", "details", text));
+  }
+
+  var LEVELS = { beginner: "Anfänger", intermediate: "Fortgeschritten", advanced: "Profi" };
+  var AUDIENCES = { womenOnly: "Nur für Frauen", beginnersOnly: "Für Einsteiger" };
+
+  function render(ev) {
+    if (ev.state === "past") {
+      state("Diese Aktivität ist schon vorbei", "Auf der Karte in DIPS findest du, was als Nächstes in deiner Nähe los ist.");
+      return;
+    }
+    card.innerHTML = "";
+    card.appendChild(el("p", "eyebrow", ev.sport ? "Du bist eingeladen · " + ev.sport : "Du bist eingeladen"));
+    card.appendChild(el("h1", null, ev.title || ev.sport || "Sport-Aktivität"));
+
+    var facts = el("ul", "facts");
+    if (ev.date) {
+      var d = new Date(ev.date);
+      var when = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(d);
+      if (ev.durationMinutes) {
+        var end = new Date(d.getTime() + ev.durationMinutes * 60000);
+        when += " – " + new Intl.DateTimeFormat("de-DE", { hour: "2-digit", minute: "2-digit" }).format(end);
+      }
+      facts.appendChild(fact("📅", when));
+    }
+    if (ev.venueName) facts.appendChild(fact("📍", ev.venueName));
+    if (ev.latitude != null && ev.longitude != null) {
+      var li = fact("🗺️", "");
+      var a = el("a", "inline", "Ungefähre Lage in Karten");
+      a.href = "https://maps.apple.com/?ll=" + ev.latitude + "," + ev.longitude + "&z=13";
+      li.lastChild.appendChild(a);
+      facts.appendChild(li);
+    }
+    if (typeof ev.costPerPerson === "number") {
+      facts.appendChild(fact("💶", ev.costPerPerson === 0 ? "Kostenlos" : ev.costPerPerson.toLocaleString("de-DE", { style: "currency", currency: "EUR" }) + " pro Person"));
+    }
+    if (LEVELS[ev.skillLevel]) facts.appendChild(fact("💪", LEVELS[ev.skillLevel]));
+    if (AUDIENCES[ev.audience]) facts.appendChild(fact("👥", AUDIENCES[ev.audience]));
+    card.appendChild(facts);
+
+    if (ev.details) card.appendChild(el("p", "details", ev.details));
+
+    if (ev.capacity != null) {
+      var full = ev.spotsLeft === 0;
+      var text = full ? "Ausgebucht – Warteliste in der App"
+                      : (ev.spotsLeft === 1 ? "Noch 1 Platz frei" : "Noch " + ev.spotsLeft + " Plätze frei");
+      card.appendChild(el("span", "spots" + (full ? " full" : ""), text));
+    }
+    if (ev.title) document.title = ev.title + " · DIPS";
+  }
+
+  if (!isUUID) {
+    state("Link unvollständig", "Dieser Einladungslink ist nicht vollständig. Frag die Person, die ihn geschickt hat, nach einem neuen.");
+    return;
+  }
+
+  fetch(PREVIEW + "?id=" + encodeURIComponent(id), { headers: { "Accept": "application/json" } })
+    .then(function (r) {
+      if (r.status === 404) { state("Diese Aktivität gibt es nicht mehr", "Sie wurde abgesagt oder gelöscht. In DIPS findest du andere Aktivitäten in deiner Nähe."); return null; }
+      if (!r.ok) throw new Error("status " + r.status);
+      return r.json();
+    })
+    .then(function (ev) { if (ev) render(ev); })
+    .catch(function () {
+      state("Du bist eingeladen", "Die Details konnten gerade nicht geladen werden. Öffne die Einladung in DIPS.");
+    });
+})();
+</script>
+</body>
+</html>
