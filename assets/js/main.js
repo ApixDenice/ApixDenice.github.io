@@ -248,7 +248,16 @@
 
   /* ---------------- Intro ----------------
      The timeline itself is pure CSS (works even if this script fails).
-     Here we add: skip on click/key, fly the logo into its hero position, cleanup. */
+     Here we add: the "genesis pixel" wordmark build, skip on click/key,
+     fly the logo into its hero position, cleanup.
+
+     Intro clock (ms from the start of the CSS timeline, see custom.css):
+        0  logo spins in             450  the "A" draws
+      850  the pixel drops in       1150  the pixel emits the wordmark (canvas)
+    ~1850  last pixel lands, canvas hands over to the real text
+     2150  logo flies to the hero   2300  overlay fades        3000  cleanup */
+  var INTRO = { emit: 1150, fly: 2150, done: 3000 };
+
   function initIntro() {
     var intro = document.getElementById('intro');
     if (!intro) return;
@@ -259,11 +268,15 @@
     var skipBtn = document.getElementById('intro-skip');
     var finished = false;
     var timers = [];
+    var clock = introClock(intro);
+    var genesis = null;
+    try { genesis = initGenesis(intro, clock); } catch (e) { intro.classList.add('is-resolved'); }
 
     function cleanup() {
       if (finished) return;
       finished = true;
       timers.forEach(clearTimeout);
+      if (genesis) genesis.stop();
       root.classList.add('intro-done');
       intro.remove();
       document.removeEventListener('keydown', onKey);
@@ -271,6 +284,7 @@
 
     function skip() {
       if (finished) return;
+      if (genesis) genesis.stop();
       root.classList.add('intro-skipped');
       intro.style.transition = 'opacity .35s ease';
       intro.style.opacity = '0';
@@ -298,7 +312,256 @@
     if (skipBtn) skipBtn.addEventListener('click', function (e) { e.stopPropagation(); skip(); });
     document.addEventListener('keydown', onKey);
 
-    timers.push(setTimeout(flyToHero, 1900));
-    timers.push(setTimeout(cleanup, 2750));
+    // Scheduled against the CSS clock, so a late-running script stays in sync.
+    timers.push(setTimeout(flyToHero, Math.max(0, INTRO.fly - clock())));
+    timers.push(setTimeout(cleanup, Math.max(0, INTRO.done - clock())));
+  }
+
+  // Milliseconds elapsed on the CSS intro timeline. Anchored to the pixel's own CSS
+  // animation (currentTime includes its delay), falling back to time since navigation.
+  function introClock(intro) {
+    var elapsed = performance.now();
+    try {
+      var px = intro.querySelector('.logo-px');
+      var anims = px && px.getAnimations ? px.getAnimations() : [];
+      for (var i = 0; i < anims.length; i++) {
+        if (anims[i].animationName === 'intro-pixel' && anims[i].currentTime != null) { elapsed = anims[i].currentTime; break; }
+      }
+    } catch (e) {}
+    var t0 = performance.now() - elapsed;
+    return function () { return performance.now() - t0; };
+  }
+
+  /* ---------------- Genesis pixel ----------------
+     The wordmark is rasterised into a coarse grid (sampled from the real DOM text, so
+     it matches font, kerning and letter-spacing exactly). Each filled cell becomes a
+     pixel that leaves the logo's pixel and arcs into place, left to right, carrying
+     the brand gradient in flight. Then the canvas cross-fades to the crisp text.
+     Returns { stop } or null when unsupported (the CSS wipe then plays instead). */
+  var GENESIS = {
+    window: 300,   // ms over which pixels are emitted, left → right
+    jitter: 50,    // ms random emission jitter per pixel
+    flight: 400,   // ms each pixel is in the air
+    settle: 60,    // ms after the last landing before the hand-over
+    handoff: 350   // ms cross-fade canvas → text (matches .intro-canvas transition)
+  };
+  var BRAND_GRADIENT = [[255, 178, 36], [255, 79, 109], [124, 92, 255]]; // amber → pink → violet
+
+  function initGenesis(intro, clock) {
+    var word = intro.querySelector('.intro-word');
+    var source = intro.querySelector('.logo-px');
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext && canvas.getContext('2d');
+    if (!word || !source || !ctx || !document.fonts || !document.fonts.load) return null;
+    if (clock() > INTRO.emit + GENESIS.window) return null; // too late to build — let CSS handle it
+
+    canvas.className = 'intro-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    intro.classList.add('is-genesis');
+    intro.appendChild(canvas);
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var particles = null;   // built once the font is ready
+    var emitted = false;
+    var stopped = false;
+    var raf = 0;
+    var endAt = 0;          // clock time of the hand-over
+
+    function resize() {
+      canvas.width = Math.round(intro.clientWidth * dpr);
+      canvas.height = Math.round(intro.clientHeight * dpr);
+    }
+
+    // Show the real word without the build (font failed, resize, late start…).
+    function resolveNow() {
+      stop();
+      intro.classList.add('is-resolved');
+    }
+
+    function stop() {
+      stopped = true;
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resolveNow);
+    }
+
+    resize();
+    window.addEventListener('resize', resolveNow);
+
+    document.fonts.load('700 32px Inter').then(function () {
+      if (stopped) return;
+      particles = buildParticles(intro, word);
+      if (!particles.length) resolveNow();
+    }, resolveNow);
+
+    function frame() {
+      if (stopped) return;
+      var t = clock();
+
+      if (t >= INTRO.emit && !emitted) {
+        if (!particles) {
+          // Font still loading: give it a short grace period, then fall back.
+          if (t > INTRO.emit + 250) { resolveNow(); return; }
+          raf = requestAnimationFrame(frame);
+          return;
+        }
+        emitted = true;
+        launch(particles, source, intro, t);
+        endAt = t + GENESIS.window + GENESIS.jitter + GENESIS.flight + GENESIS.settle;
+      }
+
+      if (emitted) {
+        draw(ctx, particles, t, dpr, canvas);
+        if (t >= endAt && !intro.classList.contains('is-resolved')) intro.classList.add('is-resolved');
+        if (t >= endAt + GENESIS.handoff) { stop(); return; }
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+
+    return { stop: stop };
+  }
+
+  // Rasterise the DOM word into grid cells → particle targets (coords relative to the overlay).
+  function buildParticles(intro, word) {
+    var box = intro.getBoundingClientRect();
+    var wr = word.getBoundingClientRect();
+    var fontSize = parseFloat(getComputedStyle(word).fontSize) || 32;
+    var cell = Math.max(3, Math.round(fontSize / 10));  // ≈ 10 cells per em
+    var pad = cell * 2;
+    var w = Math.ceil(wr.width + pad * 2);
+    var h = Math.ceil(wr.height + pad * 2);
+
+    var off = document.createElement('canvas');
+    off.width = w; off.height = h;
+    var o = off.getContext('2d');
+    o.textBaseline = 'alphabetic';
+
+    // Each styled run (text node) is drawn into its own colour channel so we can tell
+    // "Apix" from "Denice" per cell. Up to three runs are supported (R, G, B).
+    var tones = [];
+    var channels = ['#f00', '#0f0', '#00f'];
+    var walker = document.createTreeWalker(word, NodeFilter.SHOW_TEXT, null);
+    var range = document.createRange();
+    var node;
+    o.globalCompositeOperation = 'lighter';
+    while ((node = walker.nextNode()) && tones.length < 3) {
+      var st = getComputedStyle(node.parentNode);
+      o.font = st.fontWeight + ' ' + st.fontSize + ' ' + st.fontFamily;
+      o.fillStyle = channels[tones.length];
+      var m = o.measureText('Hg');
+      var ascent = m.fontBoundingBoxAscent != null ? m.fontBoundingBoxAscent : parseFloat(st.fontSize) * 0.97;
+      for (var i = 0; i < node.length; i++) {
+        if (!node.data.charAt(i).trim()) continue;
+        range.setStart(node, i); range.setEnd(node, i + 1);
+        var r = range.getBoundingClientRect();
+        o.fillText(node.data.charAt(i), r.left - wr.left + pad, r.top - wr.top + pad + ascent);
+      }
+      tones.push(parseColor(st.color));
+    }
+    if (!tones.length) return [];
+
+    var data = o.getImageData(0, 0, w, h).data;
+    var out = [];
+    var minX = Infinity, maxX = -Infinity;
+    var area = cell * cell;
+    for (var cy = 0; cy + cell <= h; cy += cell) {
+      for (var cx = 0; cx + cell <= w; cx += cell) {
+        var sum = [0, 0, 0];
+        for (var y = cy; y < cy + cell; y++) {
+          for (var x = cx; x < cx + cell; x++) {
+            var idx = (y * w + x) * 4;
+            sum[0] += data[idx]; sum[1] += data[idx + 1]; sum[2] += data[idx + 2];
+          }
+        }
+        var ch = sum[0] >= sum[1] ? (sum[0] >= sum[2] ? 0 : 2) : (sum[1] >= sum[2] ? 1 : 2);
+        if (sum[ch] / area < 255 * 0.3 || !tones[ch]) continue;   // coverage threshold
+        var tx = wr.left - box.left - pad + cx + cell / 2;
+        var ty = wr.top - box.top - pad + cy + cell / 2;
+        minX = Math.min(minX, tx); maxX = Math.max(maxX, tx);
+        out.push({ tx: tx, ty: ty, size: cell - 1, tone: tones[ch] });   // 1px gutter → LED grid
+      }
+    }
+
+    var span = Math.max(1, maxX - minX);
+    out.forEach(function (p) {
+      p.f = (p.tx - minX) / span;                        // 0 = left edge, 1 = right edge
+      p.hot = gradientAt(p.f);                           // in-flight colour
+      p.delay = p.f * GENESIS.window + Math.random() * GENESIS.jitter;
+      p.spin = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random()) * Math.PI;
+    });
+    return out;
+  }
+
+  // Emission: every particle gets a start point inside the logo pixel and an arc apex.
+  function launch(particles, source, intro, t) {
+    var box = intro.getBoundingClientRect();
+    var s = source.getBoundingClientRect();
+    var sx = s.left - box.left, sy = s.top - box.top;
+    particles.forEach(function (p) {
+      p.t0 = t + p.delay;
+      p.sx = sx + s.width * (0.2 + Math.random() * 0.6);
+      p.sy = sy + s.height * (0.2 + Math.random() * 0.6);
+      // Control point: leans toward the target and lifts above the source → fountain arc.
+      p.cx = p.sx + (p.tx - p.sx) * (0.45 + Math.random() * 0.2);
+      p.cy = Math.min(p.sy, p.ty) - (30 + Math.random() * 50);
+    });
+    // The source pixel "fires": a quick pulse as the stream leaves it.
+    if (source.animate) {
+      source.animate(
+        [{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(0) scale(1.18)' }, { transform: 'translateY(0) scale(1)' }],
+        { duration: 420, easing: 'cubic-bezier(.34,1.56,.64,1)' }
+      );
+    }
+  }
+
+  function draw(ctx, particles, t, dpr, canvas) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      var k = (t - p.t0) / GENESIS.flight;
+      if (k <= 0) continue;                  // still inside the source pixel
+      if (k > 1) k = 1;
+      var e = 1 - Math.pow(1 - k, 3);        // easeOutCubic: fast out of the pixel, soft landing
+      var u = 1 - e;
+      var x = u * u * p.sx + 2 * u * e * p.cx + e * e * p.tx;   // quadratic Bézier
+      var y = u * u * p.sy + 2 * u * e * p.cy + e * e * p.ty;
+      var size = p.size * (1 + 0.7 * u);     // slightly larger in flight
+      var rot = p.spin * u;                  // tumbles, squares up on landing
+      var c = smoothstep(0.55, 1, k);        // gradient → final text colour
+      var r = Math.round(p.hot[0] + (p.tone[0] - p.hot[0]) * c);
+      var g = Math.round(p.hot[1] + (p.tone[1] - p.hot[1]) * c);
+      var b = Math.round(p.hot[2] + (p.tone[2] - p.hot[2]) * c);
+      var a = 1 + (p.tone[3] - 1) * c;
+      ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
+      if (k === 1) {
+        // Landed: snap to device pixels so the grid reads crisp before the hand-over.
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        var d = Math.round(size * dpr);
+        ctx.fillRect(Math.round((x - size / 2) * dpr), Math.round((y - size / 2) * dpr), d, d);
+        continue;
+      }
+      var cos = Math.cos(rot) * dpr, sin = Math.sin(rot) * dpr;
+      ctx.setTransform(cos, sin, -sin, cos, x * dpr, y * dpr);
+      ctx.fillRect(-size / 2, -size / 2, size, size);
+    }
+  }
+
+  function gradientAt(f) {
+    var seg = f < 0.5 ? 0 : 1;
+    var k = f < 0.5 ? f * 2 : (f - 0.5) * 2;
+    var a = BRAND_GRADIENT[seg], b = BRAND_GRADIENT[seg + 1];
+    return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+  }
+
+  function smoothstep(a, b, x) {
+    var t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  }
+
+  // "rgb(r, g, b)" / "rgba(r, g, b, a)" → [r, g, b, a]
+  function parseColor(str) {
+    var n = (str.match(/[\d.]+/g) || []).map(Number);
+    return [n[0] || 255, n[1] || 255, n[2] || 255, n.length > 3 ? n[3] : 1];
   }
 })();
