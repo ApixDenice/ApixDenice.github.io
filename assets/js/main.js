@@ -254,9 +254,11 @@
      Intro clock (ms from the start of the CSS timeline, see custom.css):
         0  logo spins in             550  the "A" draws
      1050  the pixel drops in       1450  the pixel emits the wordmark (canvas)
-    ~2780  last pixel lands; brief hold, then the canvas hands over to the text
-     3450  logo flies to the hero   3600  overlay fades        4300  cleanup */
-  var INTRO = { emit: 1450, fly: 3450, done: 4300 };
+    ~2580  a resolve wave follows the build left → right: text fades in beneath
+           the grid, pixels melt away (letters resolve while the last ones land)
+    ~3630  wordmark fully resolved
+     3700  logo flies to the hero   3850  overlay fades        4550  cleanup */
+  var INTRO = { emit: 1450, fly: 3700, done: 4550 };
 
   function initIntro() {
     var intro = document.getElementById('intro');
@@ -336,14 +338,17 @@
      The wordmark is rasterised into a coarse grid (sampled from the real DOM text, so
      it matches font, kerning and letter-spacing exactly). Each filled cell becomes a
      pixel that leaves the logo's pixel and arcs into place, left to right, carrying
-     the brand gradient in flight. Then the canvas cross-fades to the crisp text.
+     the brand gradient in flight. A resolve wave then sweeps the same direction:
+     the real text fades in under the grid (showing through its gutters first) and
+     the pixels grow into each other and melt away.
      Returns { stop } or null when unsupported (the CSS wipe then plays instead). */
   var GENESIS = {
     window: 600,   // ms over which pixels are emitted, left → right
     jitter: 80,    // ms random emission jitter per pixel
     flight: 650,   // ms each pixel is in the air
-    settle: 200,   // ms the finished pixel grid holds before the hand-over
-    handoff: 450   // ms cross-fade canvas → text (matches .intro-canvas transition)
+    hold: 250,     // ms every pixel shows landed before the resolve wave reaches it
+    sweep: 450,    // ms the resolve wave takes to cross the word, left → right
+    resolve: 600   // ms each spot takes to go from pixel grid to crisp text
   };
   var BRAND_GRADIENT = [[255, 178, 36], [255, 79, 109], [124, 92, 255]]; // amber → pink → violet
 
@@ -365,7 +370,8 @@
     var emitted = false;
     var stopped = false;
     var raf = 0;
-    var endAt = 0;          // clock time of the hand-over
+    var resolveAt = 0;      // clock time the resolve wave starts at the left edge
+    var doneAt = 0;         // clock time the wordmark is fully resolved
 
     function resize() {
       canvas.width = Math.round(intro.clientWidth * dpr);
@@ -380,8 +386,32 @@
 
     function stop() {
       stopped = true;
+      clearWordStyles();
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resolveNow);
+    }
+
+    function clearWordStyles() {
+      word.style.opacity = '';
+      word.style.webkitMaskImage = '';
+      word.style.maskImage = '';
+    }
+
+    // Reveal the real text behind the grid with a soft left → right gradient mask
+    // that tracks the same wave the pixels use (see draw()).
+    function maskWord(t) {
+      var tau = t - resolveAt, fx0 = particles.fx0, fx1 = particles.fx1;
+      var stops = [];
+      for (var i = 4; i >= 0; i--) {
+        var sv = i / 8;                                         // wave phase 0 … 0.5
+        var f = (tau - sv * GENESIS.resolve) / GENESIS.sweep;   // word fraction at that phase
+        var pct = (fx0 + f * (fx1 - fx0)) * 100;
+        stops.push('rgba(0,0,0,' + smoothstep(0, 1, sv * 2).toFixed(3) + ') ' + pct.toFixed(2) + '%');
+      }
+      var m = 'linear-gradient(90deg,' + stops.join(',') + ')';
+      word.style.opacity = '1';
+      word.style.webkitMaskImage = m;
+      word.style.maskImage = m;
     }
 
     resize();
@@ -406,13 +436,23 @@
         }
         emitted = true;
         launch(particles, source, intro, t);
-        endAt = t + GENESIS.window + GENESIS.jitter + GENESIS.flight + GENESIS.settle;
+        // Start the wave as early as possible while guaranteeing each pixel is seen
+        // landed for `hold` ms (the right edge, which lands last, is the constraint).
+        resolveAt = t + particles.lastLanding + GENESIS.hold - GENESIS.sweep;
+        doneAt = resolveAt + GENESIS.sweep + GENESIS.resolve;
       }
 
       if (emitted) {
-        draw(ctx, particles, t, dpr, canvas);
-        if (t >= endAt && !intro.classList.contains('is-resolved')) intro.classList.add('is-resolved');
-        if (t >= endAt + GENESIS.handoff) { stop(); return; }
+        if (t >= doneAt) {
+          // Fully resolved: hand the word back to CSS (same end values, no visible change).
+          intro.classList.add('is-resolved');
+          stop();
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          return;
+        }
+        draw(ctx, particles, t, dpr, canvas, resolveAt);
+        if (t >= resolveAt) maskWord(t);
       }
       raf = requestAnimationFrame(frame);
     }
@@ -483,12 +523,19 @@
     }
 
     var span = Math.max(1, maxX - minX);
+    var maxDelay = 0;
     out.forEach(function (p) {
       p.f = (p.tx - minX) / span;                        // 0 = left edge, 1 = right edge
       p.hot = gradientAt(p.f);                           // in-flight colour
       p.delay = p.f * GENESIS.window + Math.random() * GENESIS.jitter;
       p.spin = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random()) * Math.PI;
+      maxDelay = Math.max(maxDelay, p.delay);
     });
+    // Pixel extent as fractions of the word box (maps the wave onto the text mask).
+    var wordLeft = wr.left - box.left;
+    out.fx0 = (minX - wordLeft) / wr.width;
+    out.fx1 = (maxX - wordLeft) / wr.width;
+    out.lastLanding = maxDelay + GENESIS.flight;         // ms after emission
     return out;
   }
 
@@ -514,7 +561,7 @@
     }
   }
 
-  function draw(ctx, particles, t, dpr, canvas) {
+  function draw(ctx, particles, t, dpr, canvas, resolveAt) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (var i = 0; i < particles.length; i++) {
@@ -535,7 +582,21 @@
       var a = 1 + (p.tone[3] - 1) * c;
       ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
       if (k === 1) {
-        // Landed: snap to device pixels so the grid reads crisp before the hand-over.
+        // Resolve wave: phase 0 → 1 as it passes this pixel. The text has already faded
+        // in underneath by phase 0.5; the pixel then grows into its gutter and melts away.
+        var phase = (t - resolveAt - p.f * GENESIS.sweep) / GENESIS.resolve;
+        var melt = smoothstep(0.35, 1, phase);
+        if (melt >= 1) continue;
+        if (melt > 0) {
+          a *= 1 - melt;
+          size *= 1 + 0.25 * melt;
+          ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
+          var hs = size / 2;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.fillRect(x - hs, y - hs, size, size);
+          continue;
+        }
+        // Landed: snap to device pixels so the grid reads crisp.
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         var d = Math.round(size * dpr);
         ctx.fillRect(Math.round((x - size / 2) * dpr), Math.round((y - size / 2) * dpr), d, d);

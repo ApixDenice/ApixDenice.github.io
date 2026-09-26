@@ -368,11 +368,11 @@ section { position: relative; }
 html.intro .intro-overlay {
   position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center;
   background: var(--ink); overflow: hidden;
-  animation: intro-bg-out .6s cubic-bezier(.65,0,.35,1) 3.6s forwards;
+  animation: intro-bg-out .6s cubic-bezier(.65,0,.35,1) 3.85s forwards;
 }
-html.intro:not(.intro-leaving) .intro-stage { animation: fade-out .45s ease 3.6s forwards; }
+html.intro:not(.intro-leaving) .intro-stage { animation: fade-out .45s ease 3.85s forwards; }
 html.intro-leaving .intro-glow { opacity: 0 !important; transition: opacity .5s ease; animation: none; }
-html.intro .hero-float { animation-delay: 4.15s; animation-fill-mode: both; }
+html.intro .hero-float { animation-delay: 4.4s; animation-fill-mode: both; }
 html.intro body { overflow: hidden; }
 html.intro.intro-done body { overflow: auto; }
 .intro-glow { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; background: radial-gradient(closest-side, rgba(124,92,255,.35), rgba(255,79,109,.15) 50%, transparent 72%); opacity: 0; animation: intro-glow 1.6s ease-out .3s forwards; }
@@ -391,8 +391,7 @@ html.intro-leaving .intro-word, html.intro-leaving .intro-skip { opacity: 0; tra
    then hands over to the real text. Without JS the CSS wipe above still runs. */
 .intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: opacity .45s ease; }
 .intro-overlay.is-genesis .intro-word { animation: none; clip-path: none; opacity: 0; }
-.intro-overlay.is-genesis.is-resolved .intro-word { opacity: 1; filter: blur(0); transition: opacity .45s ease, filter .45s ease; }
-.intro-overlay.is-genesis:not(.is-resolved) .intro-word { filter: blur(6px); }
+.intro-overlay.is-genesis.is-resolved .intro-word { opacity: 1; transition: opacity .45s ease; }
 .intro-overlay.is-resolved .intro-canvas { opacity: 0; }
 html.intro-leaving .intro-overlay.is-genesis .intro-word { opacity: 0; transition: opacity .3s ease; }
 
@@ -411,13 +410,13 @@ html.intro-leaving .intro-overlay.is-genesis .intro-word { opacity: 0; transitio
 
 /* Hero content eases in after the intro */
 html.intro .home-hero .hero-copy > * { opacity: 0; transform: translateY(16px); animation: hero-in .7s cubic-bezier(.16,1,.3,1) forwards; }
-html.intro .home-hero .hero-copy > *:nth-child(1) { animation-delay: 3.8s; }
-html.intro .home-hero .hero-copy > *:nth-child(2) { animation-delay: 3.88s; }
-html.intro .home-hero .hero-copy > *:nth-child(3) { animation-delay: 3.96s; }
-html.intro .home-hero .hero-copy > *:nth-child(4) { animation-delay: 4.04s; }
-html.intro .home-hero .hero-copy > *:nth-child(5) { animation-delay: 4.12s; }
-html.intro .hero-scene-wrap { opacity: 0; animation: fade-in .01s linear 4.15s forwards; }
-html.intro .orbit-icon { opacity: 0; animation: fade-in .6s ease 4.15s forwards; }
+html.intro .home-hero .hero-copy > *:nth-child(1) { animation-delay: 4.05s; }
+html.intro .home-hero .hero-copy > *:nth-child(2) { animation-delay: 4.13s; }
+html.intro .home-hero .hero-copy > *:nth-child(3) { animation-delay: 4.21s; }
+html.intro .home-hero .hero-copy > *:nth-child(4) { animation-delay: 4.29s; }
+html.intro .home-hero .hero-copy > *:nth-child(5) { animation-delay: 4.37s; }
+html.intro .hero-scene-wrap { opacity: 0; animation: fade-in .01s linear 4.4s forwards; }
+html.intro .orbit-icon { opacity: 0; animation: fade-in .6s ease 4.4s forwards; }
 html.intro-skipped .home-hero .hero-copy > *,
 html.intro-skipped .hero-scene-wrap,
 html.intro-skipped .orbit-icon { animation-delay: 0s !important; animation-duration: .35s !important; }
