@@ -252,11 +252,11 @@
      fly the logo into its hero position, cleanup.
 
      Intro clock (ms from the start of the CSS timeline, see custom.css):
-        0  logo spins in             450  the "A" draws
-      850  the pixel drops in       1150  the pixel emits the wordmark (canvas)
-    ~1850  last pixel lands, canvas hands over to the real text
-     2150  logo flies to the hero   2300  overlay fades        3000  cleanup */
-  var INTRO = { emit: 1150, fly: 2150, done: 3000 };
+        0  logo spins in             550  the "A" draws
+     1050  the pixel drops in       1450  the pixel emits the wordmark (canvas)
+    ~2780  last pixel lands; brief hold, then the canvas hands over to the text
+     3450  logo flies to the hero   3600  overlay fades        4300  cleanup */
+  var INTRO = { emit: 1450, fly: 3450, done: 4300 };
 
   function initIntro() {
     var intro = document.getElementById('intro');
@@ -339,11 +339,11 @@
      the brand gradient in flight. Then the canvas cross-fades to the crisp text.
      Returns { stop } or null when unsupported (the CSS wipe then plays instead). */
   var GENESIS = {
-    window: 300,   // ms over which pixels are emitted, left → right
-    jitter: 50,    // ms random emission jitter per pixel
-    flight: 400,   // ms each pixel is in the air
-    settle: 60,    // ms after the last landing before the hand-over
-    handoff: 350   // ms cross-fade canvas → text (matches .intro-canvas transition)
+    window: 600,   // ms over which pixels are emitted, left → right
+    jitter: 80,    // ms random emission jitter per pixel
+    flight: 650,   // ms each pixel is in the air
+    settle: 200,   // ms the finished pixel grid holds before the hand-over
+    handoff: 450   // ms cross-fade canvas → text (matches .intro-canvas transition)
   };
   var BRAND_GRADIENT = [[255, 178, 36], [255, 79, 109], [124, 92, 255]]; // amber → pink → violet
 
