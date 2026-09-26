@@ -21,6 +21,7 @@ image: /assets/images/og/office-mom.jpg
         {% include app-store-badge.html url=site.office_mom_ios_url platform="ios" size="lg" %}
         <a href="#screenshots" class="btn btn-outline btn-large">See the app</a>
       </div>
+      <p class="hero-note"><strong>Freshly redesigned:</strong> a new Today screen, tabs and illustrations — <a href="#screenshots">take a look</a>.</p>
       <p class="hero-note">Free · Zero data collection · English, German, Spanish &amp; French</p>
     </div>
     <div class="hero-visual reveal">
@@ -47,6 +48,12 @@ image: /assets/images/og/office-mom.jpg
     <section class="feature-section reveal">
       <h2>Features</h2>
       <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-new">Redesigned</span>
+          <div class="feature-icon">🏠</div>
+          <h3>A calmer Today screen</h3>
+          <p>A swipeable card from Mom up top, water, steps, stand-up and streak tiles at a glance, and one “+” button to log anything. Today, Recap, Progress and Profile are now simple tabs.</p>
+        </div>
         <div class="feature-card">
           <div class="feature-icon">💧</div>
           <h3>Smart hydration</h3>
@@ -98,7 +105,7 @@ image: /assets/images/og/office-mom.jpg
         <div class="feature-card">
           <div class="feature-icon">✨</div>
           <h3>Weekly &amp; monthly recaps</h3>
-          <p>A story-ready card that sums up your water, steps and stand-ups — now with a QR code so friends can join in one tap.</p>
+          <p>Recaps now have their own tab: goal days, totals and daily averages, plus a story-ready card with a QR code so colleagues can join in one tap.</p>
         </div>
       </div>
     </section>
@@ -115,13 +122,13 @@ image: /assets/images/og/office-mom.jpg
 
           <div class="carousel-track" aria-live="polite">
             <div class="carousel-slide is-active" data-caption="Healthy habits for your desk job">
-              <img src="{{ '/assets/images/officemom/01-hero.webp' | relative_url }}" width="739" height="1600" alt="Office Mom dashboard with a running sitting timer, water at 69 percent of 2.40 litres, movement and stand-up rings, a 12-day streak and a hydration reminder from Mom.">
+              <img src="{{ '/assets/images/officemom/01-hero.webp' | relative_url }}" width="739" height="1600" alt="The redesigned Today tab: a “Mom says” card with a one-tap Log 250 ml button, tiles for water (1.65 of 2.40 litres), movement (6,842 steps), stand-up and a 12-day streak, a hydration reminder from Mom and the new tab bar.">
             </div>
             <div class="carousel-slide" data-caption="Drink enough. Without thinking.">
-              <img src="{{ '/assets/images/officemom/02-water.webp' | relative_url }}" width="739" height="1600" alt="Water screen with a personal goal, pace target and one-tap logging, next to a Siri request: “Log a glass of water in Office Mom”." loading="lazy">
+              <img src="{{ '/assets/images/officemom/02-water.webp' | relative_url }}" width="739" height="1600" alt="Water screen at 69 percent (1.65 of 2.40 litres) with quick-add buttons and today's logs, next to a Siri request: “Log a glass of water in Office Mom”." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Sit 20. Stand 8. Move 2.">
-              <img src="{{ '/assets/images/officemom/03-standup.webp' | relative_url }}" width="739" height="1600" alt="Stand-up timer counting down 12:24 minutes of sitting in the 20-8-2 routine, with a Dynamic Island countdown and “Next: Standing”." loading="lazy">
+              <img src="{{ '/assets/images/officemom/03-standup.webp' | relative_url }}" width="739" height="1600" alt="Stand-up screen counting down 12:24 minutes of sitting, with Next and Stop buttons, the 20-8-2, 50-10 and Micro-Break routines, a Dynamic Island countdown and “Next: Standing”." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Caring, witty or strict">
               <img src="{{ '/assets/images/officemom/04-mom.webp' | relative_url }}" width="739" height="1600" alt="Three versions of the same reminder in Mom's caring, witty and strict voice." loading="lazy">
@@ -133,13 +140,13 @@ image: /assets/images/og/office-mom.jpg
               <img src="{{ '/assets/images/officemom/06-standby.webp' | relative_url }}" width="739" height="1600" alt="StandBy mode showing 1.7 litres of water with a +250 ml button, plus Home and Lock Screen water widgets." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Every step counts">
-              <img src="{{ '/assets/images/officemom/07-movement.webp' | relative_url }}" width="739" height="1600" alt="Movement screen with daily step progress and 6,342 steps imported from Apple Health." loading="lazy">
+              <img src="{{ '/assets/images/officemom/07-movement.webp' | relative_url }}" width="739" height="1600" alt="Movement screen with 6,842 of 8,000 steps, an afternoon target, today's step additions and 6,342 steps imported from Apple Health." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Streaks, levels &amp; 29 trophies">
-              <img src="{{ '/assets/images/officemom/08-trophies.webp' | relative_url }}" width="739" height="1600" alt="Trophy collection with an unlocked “On Fire” 7-day streak trophy, level 7 and a ready streak freeze." loading="lazy">
+              <img src="{{ '/assets/images/officemom/08-trophies.webp' | relative_url }}" width="739" height="1600" alt="Your Progress screen with 14 of 29 trophies collected, an unlocked “On Fire” 7-day streak trophy, level 7 and a ready streak freeze." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Your week, wrapped">
-              <img src="{{ '/assets/images/officemom/09-recap.webp' | relative_url }}" width="739" height="1600" alt="Weekly recap card with a Share button, exported as a story-ready 9:16 image." loading="lazy">
+              <img src="{{ '/assets/images/officemom/09-recap.webp' | relative_url }}" width="739" height="1600" alt="The new Recap tab: this week at 5 of 7 goal days, with totals of 10.4 litres of water, 38,152 steps and 27 stand-ups, a Share recap button and a story-ready 9:16 image." loading="lazy">
             </div>
           </div>
 
