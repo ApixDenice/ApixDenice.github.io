@@ -151,26 +151,32 @@ image: /assets/images/og/toomuchfood.jpg
           </button>
 
           <div class="carousel-track" aria-live="polite">
-            <div class="carousel-slide is-active" data-caption="Grab the food. Dodge the poo.">
-              <img src="{{ '/assets/images/toomuchfood/01-grab-the-food.webp' | relative_url }}" width="368" height="800" alt="Gameplay over a city skyline: score 2860, a 41-hit combo at 5x multiplier, with fries and burgers to collect.">
+            <div class="carousel-slide is-active" data-caption="Eat the fries. Dodge the poo!">
+              <img src="{{ '/assets/images/toomuchfood/01-eat-the-fries.webp' | relative_url }}" width="736" height="1600" alt="Gameplay over green hills: Frank collects fries at level 8 with score 1247 and a 22-hit combo at 4x, dodging a column of poo hazards.">
             </div>
-            <div class="carousel-slide" data-caption="One thumb. One hit. No mercy.">
-              <img src="{{ '/assets/images/toomuchfood/02-one-thumb.webp' | relative_url }}" width="368" height="800" alt="Gameplay over green hills: score 1247 at level 8 with a 22-hit combo and hazards to dodge." loading="lazy">
+            <div class="carousel-slide" data-caption="30 outfits. Mix &amp; match!">
+              <img src="{{ '/assets/images/toomuchfood/02-outfits.webp' | relative_url }}" width="736" height="1600" alt="A wizard, astronaut, viking, pirate and luchador Frank above the shop, where a pirate hat is tried on with the Fur &amp; Mail outfit under Body, Head and Trail tabs." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Challenge your friends">
+              <img src="{{ '/assets/images/toomuchfood/03-challenge-friends.webp' | relative_url }}" width="736" height="1600" alt="A duel invite from Anna: beat her score of 2847 on the same course and race her ghost, with Accept, Later and No Thanks buttons." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Race their ghost on the same course">
+              <img src="{{ '/assets/images/toomuchfood/04-race-their-ghost.webp' | relative_url }}" width="736" height="1600" alt="A viking Frank races Anna's ghost through a night city at level 16, score 2903, with an Ahead! indicator." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Show off your rainbow trail">
+              <img src="{{ '/assets/images/toomuchfood/05-rainbow-trail.webp' | relative_url }}" width="736" height="1600" alt="A wizard Frank leaves a rainbow trail over a sunset city at level 13, above a row of trails: sparks, fairy dust, butterflies, bees and the rainbow." loading="lazy">
+            </div>
+            <div class="carousel-slide" data-caption="Just one more go…">
+              <img src="{{ '/assets/images/toomuchfood/06-one-more-go.webp' | relative_url }}" width="736" height="1600" alt="Game over screen: 1843 points, 4 short of the best of 1847, with +553 coins, XP progress and buttons to open a crate, double coins, play again or challenge." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Four worlds. One appetite.">
-              <img src="{{ '/assets/images/toomuchfood/03-four-worlds.webp' | relative_url }}" width="368" height="800" alt="The Cold Snap world at level 21, a snowy landscape with score 4180." loading="lazy">
-            </div>
-            <div class="carousel-slide" data-caption="Race the ghost of your best run">
-              <img src="{{ '/assets/images/toomuchfood/04-race-the-ghost.webp' | relative_url }}" width="368" height="800" alt="Night city run at level 18 showing the ghost of a previous best run and an Ahead! indicator." loading="lazy">
-            </div>
-            <div class="carousel-slide" data-caption="A new challenge every single day">
-              <img src="{{ '/assets/images/toomuchfood/05-daily-challenge.webp' | relative_url }}" width="368" height="800" alt="Too Much Food home screen with Play, the daily challenge, Food Pass, league standing and waiting crates." loading="lazy">
+              <img src="{{ '/assets/images/toomuchfood/07-four-worlds.webp' | relative_url }}" width="736" height="1600" alt="Previews of the hills, sunset city, night city and snow worlds above the Cold Snap world at level 21, score 4180." loading="lazy">
             </div>
             <div class="carousel-slide" data-caption="Climb the weekly league">
-              <img src="{{ '/assets/images/toomuchfood/06-weekly-league.webp' | relative_url }}" width="368" height="800" alt="Gold League leaderboard showing the player in fourth place with 339 trophies." loading="lazy">
+              <img src="{{ '/assets/images/toomuchfood/08-weekly-league.webp' | relative_url }}" width="736" height="1600" alt="Gold League leaderboard against computer opponents, with the player in fourth place on 339 trophies, 12 behind Ketchup Kid." loading="lazy">
             </div>
-            <div class="carousel-slide" data-caption="30 tiers of rewards every season">
-              <img src="{{ '/assets/images/toomuchfood/07-food-pass.webp' | relative_url }}" width="368" height="800" alt="Food Pass season 3 at tier 11, showing free and premium reward tracks with crates, coins and skins." loading="lazy">
+            <div class="carousel-slide" data-caption="A new challenge every day">
+              <img src="{{ '/assets/images/toomuchfood/09-daily-challenge.webp' | relative_url }}" width="736" height="1600" alt="Too Much Food home screen with Play, the daily Gold Rush challenge, Food Pass tier 11 of 30, the Gold league standing and two waiting crates." loading="lazy">
             </div>
           </div>
 
@@ -180,8 +186,8 @@ image: /assets/images/og/toomuchfood.jpg
         </div>
 
         <div class="carousel-meta">
-          <span class="carousel-caption" data-carousel-caption>Grab the food. Dodge the poo.</span>
-          <span class="carousel-count" data-carousel-count>1 / 7</span>
+          <span class="carousel-caption" data-carousel-caption>Eat the fries. Dodge the poo!</span>
+          <span class="carousel-count" data-carousel-count>1 / 9</span>
         </div>
 
         <div class="carousel-thumbs" data-carousel-thumbs></div>
