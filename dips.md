@@ -137,8 +137,9 @@ image: /assets/images/og/dips.jpg
     </section>
 
     <section class="feature-section reveal">
+      <span class="eyebrow">Coming soon</span>
       <h2>Create events from the web</h2>
-      <p>Organising a regular meetup or a whole series of sessions is much easier on a keyboard. Sign in with your DIPS account in the browser and add events from your computer. They sync straight into the app, where members can find and join them.</p>
+      <p>Organising a regular meetup or a whole series of sessions is much easier on a keyboard. You can already sign in to Manage events with your DIPS email and password. The tools for creating and managing events from your computer are being built and will appear there right after sign-in, synced straight into the app.</p>
       <p class="section-action"><a href="{{ '/dips/events/' | relative_url }}" class="btn btn-primary">Go to Manage events</a></p>
     </section>
 
