@@ -12,7 +12,7 @@ sitemap: false
   <div class="events-hero reveal" id="events-hero">
     <span class="eyebrow">DIPS · Manage events</span>
     <h1>Create events from the web</h1>
-    <p>Sign in with your DIPS account to add and manage sport events. Everything you create here shows up in the DIPS app straight away.</p>
+    <p>Plan single sessions and whole course series from your computer, made for trainers, studios and clubs and open to every DIPS account. Everything you create here shows up in the DIPS app straight away.</p>
   </div>
 
   <!-- Sign-in card -->
@@ -55,12 +55,22 @@ sitemap: false
       <button class="link-btn account-signout" id="logout-btn" type="button">Sign out</button>
     </div>
 
+    <div class="plan-bar" id="plan-bar" hidden>
+      <span class="plan-chip" id="plan-chip"></span>
+      <span class="plan-usage" id="plan-usage"></span>
+      <a class="link-btn plan-link" href="{{ '/dips/#plans' | relative_url }}">Compare plans</a>
+    </div>
+
     <div class="auth-msg" id="manager-msg" role="status" aria-live="polite"></div>
 
     <div class="manager-grid">
       <!-- New event -->
       <section class="manager-card" aria-labelledby="new-event-title">
         <h2 id="new-event-title">New event</h2>
+        <div class="edit-banner" id="edit-banner" hidden>
+          <span>Editing <b id="edit-banner-title"></b>. If you change the date or time, everyone who joined gets a notice.</span>
+          <button type="button" class="link-btn" id="edit-stop">Stop editing</button>
+        </div>
         <form id="event-form" novalidate>
           <div class="field">
             <label for="ev-sport">Sport</label>
@@ -143,10 +153,37 @@ sitemap: false
             </div>
           </div>
 
-          <div class="field toggle-field">
-            <label class="check"><input type="checkbox" id="ev-repeat-on"> Repeat weekly</label>
+          <div class="field toggle-field" id="price-block">
+            <label class="check"><input type="checkbox" id="ev-cost-on"> Show a price per person <span class="badge-pro">Trainer &amp; club</span></label>
+            <div class="inline-input" id="ev-cost-box" hidden>
+              <label for="ev-cost">Price</label>
+              <input id="ev-cost" type="number" min="0" max="200" step="0.5" value="10" inputmode="decimal">
+              <span>€ per person, paid on site (0 = free)</span>
+            </div>
+            <label class="check check-gap"><input type="checkbox" id="ev-sell-on"> Sell spots through DIPS (Apple Pay or card) <span class="badge-pro">Trainer &amp; club</span></label>
+            <div id="ev-sell-box" hidden>
+              <div class="inline-input">
+                <label for="ev-slot">Price per spot</label>
+                <input id="ev-slot" type="number" min="3" max="500" step="0.5" value="15" inputmode="decimal">
+                <span>€</span>
+              </div>
+              <p class="hint" id="ev-slot-share"></p>
+            </div>
+            <p class="hint" id="price-note" hidden></p>
+          </div>
+
+          <div class="field toggle-field" id="repeat-block">
+            <label class="check"><input type="checkbox" id="ev-repeat-on"> Repeat</label>
             <div id="ev-repeat-box" hidden>
-              <div class="weekday-chips" role="group" aria-label="Repeat on">
+              <div class="inline-input">
+                <label for="ev-repeat-mode">Every</label>
+                <select id="ev-repeat-mode">
+                  <option value="weekly">week, on</option>
+                  <option value="daily">day</option>
+                  <option value="monthly">month</option>
+                </select>
+              </div>
+              <div class="weekday-chips" id="ev-weekdays" role="group" aria-label="Repeat on">
                 <label><input type="checkbox" value="1"><span>Mo</span></label>
                 <label><input type="checkbox" value="2"><span>Tu</span></label>
                 <label><input type="checkbox" value="3"><span>We</span></label>
@@ -164,6 +201,7 @@ sitemap: false
           </div>
 
           <div class="auth-msg" id="form-msg" role="status" aria-live="polite"></div>
+          <div class="fit-offer" id="fit-offer" hidden></div>
           <button type="submit" class="btn btn-primary btn-wide" id="create-btn">Create event</button>
         </form>
       </section>
@@ -177,7 +215,7 @@ sitemap: false
         <ul class="my-events" id="my-events" aria-live="polite">
           <li class="my-events-empty">Loading…</li>
         </ul>
-        <p class="hint">Edits, chats and ratings work in the DIPS app. Cancelling an event here notifies everyone who joined.</p>
+        <p class="hint">Moving an event to a new time or cancelling it notifies everyone who joined. Chats, ratings and attendance work in the DIPS app.</p>
       </section>
     </div>
   </div>

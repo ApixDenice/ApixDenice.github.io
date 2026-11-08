@@ -123,7 +123,81 @@ image: /assets/images/og/dips.jpg
     <section class="feature-section reveal">
       <span class="eyebrow">For trainers, studios &amp; clubs</span>
       <h2>Bring your sessions to DIPS</h2>
-      <p>Trainers, studios, clubs and schools get a business profile, with a description, address, website and Instagram, plus followers and rating counts. Run a regular course as a series, see who follows you, and message everyone signed up at once. Paid course spots are coming, with participants paying by Apple Pay or card.</p>
+      <p>Trainers, studios, clubs and schools get a business profile, with a description, address, website and Instagram, plus followers and rating counts. Run a regular course as a series, see who follows you, and message everyone signed up at once. Show a price or sell spots that participants pay for with Apple Pay or card. <a href="#plans">See the plans</a>.</p>
+    </section>
+
+    <section class="feature-section reveal" id="plans">
+      <span class="eyebrow">Plans</span>
+      <h2>Two kinds of accounts, one app</h2>
+      <p>Finding, joining and hosting events is free for everyone. Choose the account that matches how you use DIPS: a <strong>personal account</strong> to train with others, or a <strong>trainer or club account</strong> to run regular sessions and courses. You choose and change your account type in the app under <em>Konto &amp; Abo</em>.</p>
+
+      <h3 class="plans-group-title">Personal account</h3>
+      <div class="plan-cards plan-cards--2">
+        <div class="plan-card">
+          <p class="plan-name">Free</p>
+          <p class="plan-price">0 €</p>
+          <ul class="plan-list">
+            <li><b>4 events</b> per month</li>
+            <li>Repeat events, up to 4 dates per series</li>
+            <li>Join events, waiting list, group chats</li>
+            <li>Friends, following, ratings</li>
+          </ul>
+        </div>
+        <div class="plan-card">
+          <p class="plan-name">Plus</p>
+          <p class="plan-price">from 4.99 € <span>/ month</span></p>
+          <ul class="plan-list">
+            <li><b>15 events</b> per month</li>
+            <li>Whole series, up to 26 dates</li>
+            <li>Statistics</li>
+            <li>Everything in Free</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="plans-group-title">Trainer, studio &amp; club account</h3>
+      <div class="plan-cards plan-cards--3">
+        <div class="plan-card">
+          <p class="plan-name">Free</p>
+          <p class="plan-price">0 €</p>
+          <ul class="plan-list">
+            <li><b>2 events</b> per week</li>
+            <li>Business profile with followers</li>
+            <li>Prices and paid spots</li>
+            <li>Web event manager</li>
+          </ul>
+        </div>
+        <div class="plan-card plan-card--featured">
+          <p class="plan-name">Trainer</p>
+          <p class="plan-price">from 12.99 € <span>/ month</span></p>
+          <ul class="plan-list">
+            <li><b>7 events</b> per week</li>
+            <li>Room for a full weekly schedule</li>
+            <li>Series up to 26 dates</li>
+            <li>Everything in Free</li>
+          </ul>
+        </div>
+        <div class="plan-card">
+          <p class="plan-name">Business</p>
+          <p class="plan-price">from 39.99 € <span>/ month</span></p>
+          <ul class="plan-list">
+            <li><b>30 events</b> per week</li>
+            <li>For studios and clubs</li>
+            <li>Series up to 26 dates</li>
+            <li>Everything in Trainer</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="plan-perks">
+        <h3>What trainer &amp; club accounts get</h3>
+        <ul>
+          <li><b>Business profile:</b> name, category (trainer, studio, club, school), description, address, website and Instagram, with followers and rating counts.</li>
+          <li><b>Prices:</b> show what a session costs on site, or sell spots through DIPS with Apple Pay or card. DIPS keeps 5 %, plus card fees; cancelled events are refunded in full automatically. Prices need an Impressum in your profile, and selling spots needs payouts set up in the app.</li>
+          <li><b>Web event manager:</b> plan single sessions and whole course series on your computer, with the meeting point on a map. <a href="{{ '/dips/events/' | relative_url }}">Open Manage events</a> (it works with every DIPS account).</li>
+        </ul>
+      </div>
+      <p class="plan-footnote"><b>Beta:</b> the prices are planned and nothing is charged during the beta. Until launch every account gets the top plan of its type, and accounts from the beta keep it for 3 months after launch.</p>
     </section>
 
     <section class="feature-section reveal">

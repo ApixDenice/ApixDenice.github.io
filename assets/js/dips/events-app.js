@@ -1,10 +1,14 @@
 // DIPS web event manager — /dips/events/
 //
-// Sign in with a DIPS account, create events (single or weekly series) and
-// cancel your own upcoming ones. Events are written straight to Firestore,
-// exactly like the iOS app writes them (see ./event-model.js), so the security
-// rules and server triggers — plan limit, daily rate limit, follower / area
-// notifications, statistics — apply unchanged.
+// Made for trainers, studios and clubs (open to every DIPS account): sign in,
+// create single events or whole series (weekly / daily / monthly), show a price
+// or sell spots through DIPS, edit and cancel upcoming events.
+//
+// Events are written straight to Firestore, exactly like the iOS app writes
+// them (see ./event-model.js), so the security rules and the server triggers —
+// plan limit, daily rate limit, follower / area notifications, statistics,
+// change / cancel notifications — apply unchanged. The plan is checked here
+// BEFORE writing with a port of the server's logic, like the app's paywall.
 //
 // Privacy: nothing from Google is loaded for a mere visit. The Firebase SDK is
 // loaded only when the visitor starts signing in or already has a session in
@@ -13,8 +17,10 @@
 // the organiser presses Search.
 
 import {
-  LIMITS, AUDIENCES, SKILL_LEVELS,
-  validateForm, buildEventDocuments, localDateTime, weeklyOccurrences
+  LIMITS, AUDIENCES, SKILL_LEVELS, ACCOUNT_LABELS, PLAN_LABELS,
+  validateForm, buildEventDocuments, buildEditPayload, localDateTime, repeatOccurrences,
+  effectivePlan, datesThatFit, fittingDates, usedThisPeriod, plannedDates,
+  moneyCapabilities, organiserShareCents, clampSlotCents
 } from "./event-model.js";
 
 // ---------------------------------------------------------------------------
@@ -53,7 +59,7 @@ function h(tag, attrs = {}, ...children) {
     else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
     else el.setAttribute(k, v === true ? "" : v);
   }
-  for (const c of children.flat()) if (c != null) el.append(c);
+  for (const c of children.flat()) if (c != null && c !== false) el.append(c);
   return el;
 }
 
@@ -65,8 +71,11 @@ function clearMsg(el) { el.textContent = ""; el.className = "auth-msg"; }
 
 const pad = (n) => String(n).padStart(2, "0");
 const isoDay = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const hhmm = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 const fmtDate = new Intl.DateTimeFormat(undefined, { weekday: "short", day: "numeric", month: "short" });
 const fmtTime = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit" });
+const fmtEuro = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 // ---------------------------------------------------------------------------
 // Firebase (lazy)
@@ -198,13 +207,23 @@ function initSignIn() {
 const state = {
   user: null,
   username: "",
+  profile: {},
+  planConfig: {},
+  payments: {},
+  plan: null,              // effectivePlan(...)
+  money: { canShowPrice: false, canSellSpots: false, reason: null, sellReason: null },
   unsubscribe: null,
+  liveAll: [],             // all own events in databaseMapEvents ({id, date, ...})
+  doneEvents: [],          // own archived events ({id, date}) — count towards the plan period
   events: [],              // own upcoming events, sorted by date
   map: null,
   marker: null,
   pin: null,               // { lat, lng }
+  editing: null,           // the event being edited, or null
   pendingCheck: null,      // ids just created, checked against the live list
-  expanded: new Set()      // series ids whose dates are shown
+  expanded: new Set(),     // series ids whose dates are shown
+  db: null,
+  fs: null
 };
 
 async function enterManager(user) {
@@ -223,9 +242,14 @@ async function enterManager(user) {
   const stale = () => state.user !== user;
   try {
     const { db, fs } = await loadFirestore();
-    const profile = await fs.getDoc(fs.doc(db, "databaseUserData", user.uid));
+    state.db = db; state.fs = fs;
+    const [profile, plansCfg, paymentsCfg, done] = await Promise.all([
+      fs.getDoc(fs.doc(db, "databaseUserData", user.uid)),
+      fs.getDoc(fs.doc(db, "config", "plans")).catch(() => null),
+      fs.getDoc(fs.doc(db, "config", "payments")).catch(() => null),
+      fs.getDocs(fs.query(fs.collection(db, "databaseDoneEvents"), fs.where("ownerId", "==", user.uid))).catch(() => null)
+    ]);
     if (stale()) return;
-    const username = profile.exists() ? String(profile.get("username") || "") : "";
 
     if (!profile.exists()) {
       // A Google account that has never been used with DIPS: Firebase just
@@ -242,15 +266,27 @@ async function enterManager(user) {
       showMsg($("auth-msg"), "There's no DIPS profile for this account yet. Create your account in the DIPS app first, then sign in here.", "error");
       return;
     }
+
+    $("login-form").reset();
+    state.profile = profile.data() || {};
+    state.planConfig = (plansCfg && plansCfg.exists() && plansCfg.data()) || {};
+    state.payments = (paymentsCfg && paymentsCfg.exists() && paymentsCfg.data()) || {};
+    state.doneEvents = done ? done.docs.map((d) => ({ id: d.id, date: toJsDate(d.get("date")) })) : [];
+    state.plan = effectivePlan(state.profile, state.planConfig, new Date());
+    state.money = moneyCapabilities(state.profile, state.payments);
+
+    const username = String(state.profile.username || "");
     if (!username) {
       showMsg(msg, "Your profile has no username yet. Open the DIPS app and finish your profile, then reload this page.", "error");
       $("create-btn").disabled = true;
     }
-    $("login-form").reset();
     state.username = username;
-    $("who-name").textContent = username || user.email;
-    $("avatar").textContent = (username || user.email || "D").charAt(0).toUpperCase();
+    const business = state.profile.business && state.profile.business.name;
+    $("who-name").textContent = business ? `${business} · ${username}` : (username || user.email);
+    $("avatar").textContent = (business || username || user.email || "D").charAt(0).toUpperCase();
 
+    applyMoneyUi();
+    renderPlanBar();
     await Promise.all([loadSports(db, fs), initMap()]);
     if (stale()) return;
     watchMyEvents(db, fs);
@@ -262,12 +298,16 @@ async function enterManager(user) {
 
 function leaveManager() {
   if (state.unsubscribe) state.unsubscribe();
-  state.user = null; state.username = ""; state.unsubscribe = null; state.events = [];
+  stopEditing();
+  Object.assign(state, { user: null, username: "", profile: {}, unsubscribe: null, events: [], liveAll: [], doneEvents: [], plan: null });
   $("signed-in").classList.remove("show");
   $("events-page").classList.remove("is-manager");
   $("auth-card").style.display = "";
+  $("plan-bar").hidden = true;
   clearMsg($("manager-msg"));
 }
+
+const toJsDate = (v) => (v && typeof v.toDate === "function" ? v.toDate() : v instanceof Date ? v : null);
 
 function firestoreError(err, prefix) {
   const code = err && err.code ? String(err.code).replace("firestore/", "") : "";
@@ -276,6 +316,28 @@ function firestoreError(err, prefix) {
   }
   if (code === "unavailable") return `${prefix} You seem to be offline. Check your connection and try again.`;
   return `${prefix} ${code ? "(" + code + ")" : "Please try again."}`;
+}
+
+// ---------------------------------------------------------------------------
+// Plan bar ("Trainer · Business plan · 3 of 30 this week")
+// ---------------------------------------------------------------------------
+
+/** Every own event the server counts for the plan (live + archived), optionally without one. */
+function planEvents(exceptId = null) {
+  return [...state.liveAll, ...state.doneEvents].filter((e) => e.date && e.id !== exceptId).map((e) => ({ id: e.id, date: e.date }));
+}
+
+function renderPlanBar() {
+  const p = state.plan;
+  if (!p) return;
+  const bar = $("plan-bar");
+  const per = p.limits.period === "week" ? "this week" : "this month";
+  const used = usedThisPeriod(planEvents(), p.limits, new Date());
+  const early = p.source === "earlyAccess";
+  $("plan-chip").textContent = `${ACCOUNT_LABELS[p.accountType]} account · ${PLAN_LABELS[p.plan]} plan${early ? " (early access)" : ""}`;
+  $("plan-usage").textContent = `${used} of ${p.limits.limit} events ${per}`;
+  $("plan-usage").classList.toggle("full", used >= p.limits.limit);
+  bar.hidden = false;
 }
 
 // ---------------------------------------------------------------------------
@@ -314,14 +376,14 @@ async function initMap() {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
   }).addTo(map);
-  map.on("click", (e) => setPin(e.latlng.lat, e.latlng.lng));
+  map.on("click", (e) => { if (!state.editing) setPin(e.latlng.lat, e.latlng.lng); });
   map.on("focus", () => map.scrollWheelZoom.enable());
   map.on("blur", () => map.scrollWheelZoom.disable());
   state.map = map;
   setTimeout(() => map.invalidateSize(), 50);
 }
 
-function setPin(lat, lng, { zoom } = {}) {
+function setPin(lat, lng, { zoom, locked = false } = {}) {
   const L = window.L;
   state.pin = { lat, lng };
   if (!state.marker) {
@@ -333,9 +395,20 @@ function setPin(lat, lng, { zoom } = {}) {
   } else {
     state.marker.setLatLng([lat, lng]);
   }
+  if (state.marker.dragging) locked ? state.marker.dragging.disable() : state.marker.dragging.enable();
   if (zoom) state.map.setView([lat, lng], zoom);
-  $("ev-place-hint").textContent = "Meeting point set. Drag the pin to fine-tune it. Meeting points are public, so never use a home address.";
-  $("ev-place-hint").classList.add("ok");
+  const hint = $("ev-place-hint");
+  hint.textContent = locked
+    ? "The meeting point can't be moved once an event exists (as in the app). If it changes, cancel and create the event again."
+    : "Meeting point set. Drag the pin to fine-tune it. Meeting points are public, so never use a home address.";
+  hint.classList.toggle("ok", !locked);
+}
+
+function clearPin() {
+  state.pin = null;
+  if (state.marker) { state.marker.remove(); state.marker = null; }
+  $("ev-place-hint").textContent = "Click the map to set the meeting point, then drag the pin to fine-tune it. Meeting points are public, so never use a home address.";
+  $("ev-place-hint").classList.remove("ok");
 }
 
 function initPlaceSearch() {
@@ -345,7 +418,7 @@ function initPlaceSearch() {
 
   async function search() {
     const text = q.value.trim();
-    if (text.length < 3) return;
+    if (text.length < 3 || state.editing) return;
     go.disabled = true; go.textContent = "Searching…";
     try {
       const url = `${NOMINATIM}?format=jsonv2&limit=5&q=${encodeURIComponent(text)}`;
@@ -383,6 +456,52 @@ function initPlaceSearch() {
 }
 
 // ---------------------------------------------------------------------------
+// Prices (trainer & club accounts)
+// ---------------------------------------------------------------------------
+
+function applyMoneyUi() {
+  const m = state.money;
+  const costOn = $("ev-cost-on"), sellOn = $("ev-sell-on");
+  costOn.disabled = !m.canShowPrice;
+  sellOn.disabled = !m.canSellSpots;
+  if (!m.canShowPrice) { costOn.checked = false; $("ev-cost-box").hidden = true; }
+  if (!m.canSellSpots) { sellOn.checked = false; $("ev-sell-box").hidden = true; }
+  const note = $("price-note");
+  const text = !m.canShowPrice ? m.reason : !m.canSellSpots ? m.sellReason : null;
+  note.hidden = !text;
+  note.replaceChildren();
+  if (text) {
+    note.append(text + " ");
+    if (!m.canShowPrice && m.reason && m.reason.startsWith("Prices are for")) {
+      note.append(h("a", { href: new URL("../../../dips/#plans", import.meta.url).href }, "See the plans"));
+    }
+  }
+  $("price-block").classList.toggle("is-locked", !m.canShowPrice);
+  updateSlotShare();
+}
+
+function updateSlotShare() {
+  const euros = Number($("ev-slot").value);
+  const out = $("ev-slot-share");
+  if (!Number.isFinite(euros) || euros <= 0) { out.textContent = ""; return; }
+  const cents = clampSlotCents(Math.round(euros * 100));
+  out.textContent = `You receive about ${fmtEuro.format(organiserShareCents(cents) / 100)} per spot (after card fees and the 5 % DIPS fee). Payouts go to the account you set up in the app.`;
+}
+
+function initPrices() {
+  $("ev-cost-on").addEventListener("change", (e) => {
+    $("ev-cost-box").hidden = !e.target.checked;
+    if (e.target.checked && $("ev-sell-on").checked) { $("ev-sell-on").checked = false; $("ev-sell-box").hidden = true; }
+  });
+  $("ev-sell-on").addEventListener("change", (e) => {
+    $("ev-sell-box").hidden = !e.target.checked;
+    // A paid spot shows its own price; the two are exclusive, as in the app.
+    if (e.target.checked && $("ev-cost-on").checked) { $("ev-cost-on").checked = false; $("ev-cost-box").hidden = true; }
+  });
+  $("ev-slot").addEventListener("input", updateSlotShare);
+}
+
+// ---------------------------------------------------------------------------
 // Form
 // ---------------------------------------------------------------------------
 
@@ -416,7 +535,7 @@ function initForm() {
     if (repeatOn.checked) {
       const start = localDateTime($("ev-date").value, $("ev-time").value);
       if (start && !selectedWeekdays().length) {
-        const chip = document.querySelector(`.weekday-chips input[value="${start.getDay()}"]`);
+        const chip = document.querySelector(`#ev-weekdays input[value="${start.getDay()}"]`);
         if (chip) chip.checked = true;
       }
       if (start && !$("ev-until").value) {
@@ -425,21 +544,28 @@ function initForm() {
     }
     updateRepeatPreview();
   });
-  for (const el of document.querySelectorAll(".weekday-chips input, #ev-until, #ev-date, #ev-time")) {
+  $("ev-repeat-mode").addEventListener("change", () => {
+    $("ev-weekdays").hidden = $("ev-repeat-mode").value !== "weekly";
+    updateRepeatPreview();
+  });
+  for (const el of document.querySelectorAll("#ev-weekdays input, #ev-until, #ev-date, #ev-time")) {
     el.addEventListener("change", updateRepeatPreview);
   }
 
-  $("event-form").addEventListener("submit", onCreate);
+  $("event-form").addEventListener("submit", onSubmit);
+  $("edit-stop").addEventListener("click", () => stopEditing());
 }
 
 function selectedWeekdays() {
-  return [...document.querySelectorAll(".weekday-chips input:checked")].map((c) => Number(c.value));
+  return [...document.querySelectorAll("#ev-weekdays input:checked")].map((c) => Number(c.value));
 }
 
 function readForm() {
   const start = localDateTime($("ev-date").value, $("ev-time").value);
   const until = $("ev-until").value ? localDateTime($("ev-until").value, "00:00") : null;
   const duration = $("ev-duration").value;
+  const editing = state.editing;
+  const sell = $("ev-sell-on").checked;
   return {
     sport: $("ev-sport").value,
     title: $("ev-title").value,
@@ -453,40 +579,92 @@ function readForm() {
     longitude: state.pin ? state.pin.lng : undefined,
     audience: $("ev-audience").value,
     skillLevel: $("ev-level").value,
-    repeat: $("ev-repeat-on").checked ? { weekdays: selectedWeekdays(), until } : null
+    costPerPerson: !sell && $("ev-cost-on").checked ? Number($("ev-cost").value) : null,
+    // When editing, paid-spot terms stay as they are (not part of an edit, as in the app).
+    priceCents: editing ? (editing.paidSlots ? editing.priceCents : null)
+      : sell ? clampSlotCents(Math.round(Number($("ev-slot").value) * 100)) : null,
+    repeat: !editing && $("ev-repeat-on").checked
+      ? { mode: $("ev-repeat-mode").value, weekdays: selectedWeekdays(), until }
+      : null
   };
 }
+
+function seriesMax() { return state.plan ? state.plan.limits.seriesMax : LIMITS.seriesMax; }
 
 function updateRepeatPreview() {
   const btn = $("create-btn");
   const out = $("ev-repeat-preview");
+  $("fit-offer").hidden = true;
+  if (state.editing) { btn.textContent = "Save changes"; return; }
   if (!$("ev-repeat-on").checked) { btn.textContent = "Create event"; out.textContent = ""; return; }
   const f = readForm();
-  if (!f.start || !f.repeat.until || !f.repeat.weekdays.length) {
-    out.textContent = "Pick the weekdays and the last day."; btn.textContent = "Create events"; return;
+  if (!f.start || !f.repeat.until || (f.repeat.mode === "weekly" && !f.repeat.weekdays.length)) {
+    out.textContent = f.repeat.mode === "weekly" ? "Pick the weekdays and the last day." : "Pick the last day.";
+    btn.textContent = "Create events"; return;
   }
-  const { dates, capped } = weeklyOccurrences(f.start, f.repeat.weekdays, f.repeat.until);
+  const max = seriesMax();
+  const { dates, capped } = repeatOccurrences(f.start, f.repeat, max);
   if (!dates.length) { out.textContent = "No dates fall in this range."; btn.textContent = "Create events"; return; }
   const first = dates[0], last = dates[dates.length - 1];
-  out.textContent = `${dates.length} event${dates.length === 1 ? "" : "s"}: ${fmtDate.format(first)} – ${fmtDate.format(last)}, ${fmtTime.format(first)}`
-    + (capped ? ` · A series can have at most ${LIMITS.seriesMax} dates, so it stops there.` : "");
+  let text = `${plural(dates.length, "date", "dates")}: ${fmtDate.format(first)} – ${fmtDate.format(last)}, ${fmtTime.format(first)}`;
+  if (capped) {
+    text += max < LIMITS.seriesMax
+      ? ` · Your plan allows series of up to ${max} dates.`
+      : ` · A series can have at most ${max} dates, so it stops there.`;
+  }
+  if (state.plan) {
+    const fit = datesThatFit(dates, planEvents(), state.plan.limits);
+    if (fit < dates.length) {
+      text += ` · Only ${fit} fit your plan's limit of ${state.plan.limits.limit} per ${state.plan.limits.period}.`;
+    }
+  }
+  out.textContent = text;
   btn.textContent = dates.length === 1 ? "Create event" : `Create ${dates.length} events`;
 }
 
-async function onCreate(e) {
+async function onSubmit(e) {
   e.preventDefault();
+  if (state.editing) return saveEdit();
+  return create();
+}
+
+async function create(onlyDates = null) {
   const msg = $("form-msg");
   clearMsg(msg);
+  $("fit-offer").hidden = true;
   if (!state.user) return;
   if (!state.username) { showMsg(msg, "Finish your profile (username) in the DIPS app first.", "error"); return; }
 
   const f = readForm();
-  const problems = validateForm(f);
+  const problems = validateForm(f, new Date(), { money: state.money });
   if (problems.length) { showMsg(msg, problems.join(" "), "error"); return; }
 
-  const docs = buildEventDocuments(f, { uid: state.user.uid, username: state.username });
-  if (!docs.length) { showMsg(msg, "No dates fall in this range.", "error"); return; }
+  // Plan check before anything is written — the app's paywall step. The server
+  // checks again and removes whatever is over the limit.
+  let dates = onlyDates || plannedDates(f, seriesMax());
+  if (!dates.length) { showMsg(msg, "No dates fall in this range.", "error"); return; }
+  if (!onlyDates && state.plan) {
+    const limits = state.plan.limits;
+    const fits = fittingDates(dates, planEvents(), limits);
+    const per = limits.period === "week" ? "week" : "month";
+    if (fits.length === 0) {
+      showMsg(msg, `That would go over your plan: ${PLAN_LABELS[state.plan.plan]} allows ${limits.limit} events per ${per}, and ${dates.length === 1 ? "that " + per + " is" : "those " + per + "s are"} already full.`, "error");
+      offerPlans();
+      return;
+    }
+    if (fits.length < dates.length) {
+      showMsg(msg, `Only ${fits.length} of ${dates.length} dates fit your plan (${limits.limit} events per ${per}). The rest fall into ${per}s that are already full.`, "error");
+      const offer = $("fit-offer");
+      offer.replaceChildren(
+        h("button", { type: "button", class: "btn btn-primary btn-sm", onclick: () => create(fits) }, `Create the ${fits.length} that fit`),
+        h("a", { class: "link-btn", href: new URL("../../../dips/#plans", import.meta.url).href }, "Compare plans")
+      );
+      offer.hidden = false;
+      return;
+    }
+  }
 
+  const docs = buildEventDocuments(f, { uid: state.user.uid, username: state.username }, { dates });
   const btn = $("create-btn");
   btn.disabled = true;
   const label = btn.textContent;
@@ -519,18 +697,131 @@ async function onCreate(e) {
   }
 }
 
+function offerPlans() {
+  const offer = $("fit-offer");
+  offer.replaceChildren(h("a", { class: "link-btn", href: new URL("../../../dips/#plans", import.meta.url).href }, "Compare plans"));
+  offer.hidden = false;
+}
+
 function scheduleLimitCheck(ids) {
   const check = () => {
-    const live = new Set(state.events.map((ev) => ev.id));
+    const live = new Set(state.liveAll.map((ev) => ev.id));
     const removed = ids.filter((id) => !live.has(id));
     if (removed.length) {
       showMsg($("form-msg"), removed.length === ids.length
-        ? "The server removed this right away: you've reached the number of events your plan allows for this period. The DIPS app shows your plan under “Konto & Abo”."
-        : `${ids.length - removed.length} of ${ids.length} events were kept. The rest went over the number of events your plan allows per period and were removed. The DIPS app shows your plan under “Konto & Abo”.`, "error");
+        ? "The server removed this right away because it goes over your plan's limit for that period. Your plan is shown above."
+        : `${ids.length - removed.length} of ${ids.length} events were kept. The rest went over your plan's limit for their period and were removed.`, "error");
     }
   };
   clearTimeout(state.pendingCheck);
   state.pendingCheck = setTimeout(check, 9000);
+}
+
+// ---------------------------------------------------------------------------
+// Edit (same fields as the app's edit screen)
+// ---------------------------------------------------------------------------
+
+function startEditing(ev) {
+  state.editing = ev;
+  const form = $("event-form");
+  $("new-event-title").textContent = "Edit event";
+  $("edit-banner-title").textContent = String(ev.title || "this event");
+  $("edit-banner").hidden = false;
+  $("repeat-block").hidden = true;
+  clearMsg($("form-msg"));
+
+  if (![...$("ev-sport").options].some((o) => o.value === ev.sportsArt)) {
+    $("ev-sport").append(h("option", { value: ev.sportsArt }, ev.sportsArt));
+  }
+  $("ev-sport").value = ev.sportsArt || "";
+  $("ev-title").value = ev.title || "";
+  $("ev-details").value = ev.details || "";
+  $("ev-date").value = isoDay(ev.when);
+  $("ev-time").value = hhmm(ev.when);
+  const dur = ev.durationMinutes != null ? String(ev.durationMinutes) : "";
+  if (dur && ![...$("ev-duration").options].some((o) => o.value === dur)) {
+    $("ev-duration").append(h("option", { value: dur }, `${dur} min`));
+  }
+  $("ev-duration").value = dur;
+  $("ev-venue").value = ev.venueName || "";
+  $("ev-capacity").value = String(ev.participant || LIMITS.capacityDefault);
+  $("ev-audience").value = ev.audience || "all";
+  $("ev-level").value = ev.skillLevel || "any";
+  $("ev-quorum-on").checked = ev.minParticipants != null;
+  $("ev-quorum-box").hidden = ev.minParticipants == null;
+  if (ev.minParticipants != null) $("ev-quorum").value = String(ev.minParticipants);
+
+  // Prices: a shown price can be changed; paid-spot terms can't (as in the app).
+  const paid = ev.paidSlots === true;
+  $("ev-sell-on").checked = paid;
+  $("ev-sell-on").disabled = true;
+  $("ev-sell-box").hidden = !paid;
+  $("ev-slot").disabled = true;
+  if (paid) { $("ev-slot").value = String((ev.priceCents || 0) / 100); updateSlotShare(); }
+  $("ev-cost-on").checked = !paid && ev.costPerPerson != null;
+  $("ev-cost-on").disabled = paid || !state.money.canShowPrice;
+  $("ev-cost-box").hidden = !$("ev-cost-on").checked;
+  if (ev.costPerPerson != null) $("ev-cost").value = String(ev.costPerPerson);
+
+  if (typeof ev.latitude === "number") setPin(ev.latitude, ev.longitude, { zoom: 15, locked: true });
+  ["ev-place-q", "ev-place-go"].forEach((id) => { $(id).disabled = true; });
+  ["ev-title", "ev-details"].forEach((id) => $(id).dispatchEvent(new Event("input")));
+  updateRepeatPreview();
+  form.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function stopEditing() {
+  if (!state.editing) return;
+  state.editing = null;
+  $("new-event-title").textContent = "New event";
+  $("edit-banner").hidden = true;
+  $("repeat-block").hidden = false;
+  ["ev-place-q", "ev-place-go", "ev-slot"].forEach((id) => { $(id).disabled = false; });
+  $("ev-title").value = ""; $("ev-details").value = ""; $("ev-venue").value = "";
+  ["ev-title", "ev-details"].forEach((id) => $(id).dispatchEvent(new Event("input")));
+  $("ev-sell-on").checked = false; $("ev-sell-box").hidden = true;
+  $("ev-cost-on").checked = false; $("ev-cost-box").hidden = true;
+  applyMoneyUi();
+  clearPin();
+  updateRepeatPreview();
+  if (state.db) renderMyEvents(state.db, state.fs);   // drop the "editing" outline
+}
+
+async function saveEdit() {
+  const msg = $("form-msg");
+  clearMsg(msg);
+  // Check against the live document: people may have joined since "Edit" was clicked.
+  const ev = state.liveAll.find((e) => e.id === state.editing.id) || state.editing;
+  const f = readForm();
+  const problems = validateForm(f, new Date(), { editing: true, money: state.money });
+  // An existing paid event keeps its terms even if payouts were switched off since.
+  const relevant = ev.paidSlots ? problems.filter((p) => !/spot|payout|Selling/i.test(p)) : problems;
+  const going = goingOf(ev);
+  if (f.capacity < going) relevant.push(`${going} people have already joined, so the group can't be smaller than ${going}.`);
+  if (relevant.length) { showMsg(msg, relevant.join(" "), "error"); return; }
+
+  const { set, cleared } = buildEditPayload(f);
+  const btn = $("create-btn");
+  btn.disabled = true; btn.textContent = "Saving…";
+  try {
+    const { db, fs } = await loadFirestore();
+    const update = { ...set, date: fs.Timestamp.fromDate(set.date) };
+    for (const key of cleared) update[key] = fs.deleteField();
+    await fs.updateDoc(fs.doc(db, "databaseMapEvents", ev.id), update);
+    const others = Math.max(0, going - 1);
+    // The server pushes a notice to the roster when the time changes (onEventChangedNotify).
+    const timeChanged = ev.when && set.date.getTime() !== ev.when.getTime();
+    stopEditing();
+    showMsg(msg, others && timeChanged
+      ? `Changes saved. ${plural(others, "person who joined gets", "people who joined get")} a notice about the new time.`
+      : "Changes saved.", "info");
+  } catch (err) {
+    console.error("[DIPS] edit failed", err);
+    showMsg(msg, firestoreError(err, "The changes couldn't be saved."), "error");
+  } finally {
+    btn.disabled = false;
+    updateRepeatPreview();
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -542,12 +833,20 @@ function watchMyEvents(db, fs) {
   const q = fs.query(fs.collection(db, "databaseMapEvents"), fs.where("ownerId", "==", state.user.uid));
   state.unsubscribe = fs.onSnapshot(q, (snap) => {
     const now = Date.now();
-    state.events = snap.docs
+    state.liveAll = snap.docs
       .map((d) => ({ id: d.id, ...d.data() }))
-      .map((ev) => ({ ...ev, when: ev.date && ev.date.toDate ? ev.date.toDate() : null }))
+      .map((ev) => ({ ...ev, when: toJsDate(ev.date) }))
+      .map((ev) => ({ ...ev, date: ev.when }));
+    state.events = state.liveAll
       .filter((ev) => ev.when && ev.when.getTime() > now - 60 * 60 * 1000)
       .sort((a, b) => a.when - b.when);
+    if (state.editing && !state.events.some((ev) => ev.id === state.editing.id)) {
+      stopEditing();
+      showMsg($("form-msg"), "That event no longer exists (cancelled or archived).", "error");
+    }
     renderMyEvents(db, fs);
+    renderPlanBar();
+    if (!state.editing) updateRepeatPreview();
     // Start the map where the organiser usually meets.
     const last = state.events.find((ev) => typeof ev.latitude === "number");
     if (last && state.map && !state.pin && !state.centeredOnce) {
@@ -567,7 +866,7 @@ function renderMyEvents(db, fs) {
     list.replaceChildren(h("li", { class: "my-events-empty" }, "No upcoming events yet. Create your first one on the left."));
     return;
   }
-  // A weekly series shows as one row (first upcoming date + "n dates"), expandable.
+  // A series shows as one row (first upcoming date + "n dates"), expandable.
   const groups = [];
   const bySeries = new Map();
   for (const ev of state.events) {
@@ -593,8 +892,8 @@ async function deleteEvents(ids, db, fs) {
   }
 }
 
-/** "Open · Copy link · Cancel" with an inline confirmation (no browser dialogs). */
-function actionBar(ev, { cancelIds, cancelLabel, confirmNote, compact = false }, db, fs) {
+/** "Edit · Open · Copy link · Cancel" with an inline confirmation (no browser dialogs). */
+function actionBar(ev, { cancelIds, cancelLabel, confirmNote, compact = false, editable = true }, db, fs) {
   const bar = h("div", { class: "ev-actions" });
   const link = inviteLink(ev);
   const copyBtn = h("button", {
@@ -607,6 +906,7 @@ function actionBar(ev, { cancelIds, cancelLabel, confirmNote, compact = false },
   }, "Copy link");
 
   const show = () => bar.replaceChildren(...[
+    editable ? h("button", { type: "button", class: "link-btn", onclick: () => startEditing(ev) }, "Edit") : null,
     h("a", { class: "link-btn", href: link, target: "_blank", rel: "noopener" }, "Open"),
     compact ? null : copyBtn,
     h("button", { type: "button", class: "link-btn danger", onclick: confirm }, cancelLabel)
@@ -622,8 +922,10 @@ function actionBar(ev, { cancelIds, cancelLabel, confirmNote, compact = false },
   }
   async function run() {
     bar.replaceChildren(h("span", { class: "hint" }, "Cancelling…"));
-    try { await deleteEvents(cancelIds, db, fs); }
-    catch (err) {
+    try {
+      if (state.editing && cancelIds.includes(state.editing.id)) stopEditing();
+      await deleteEvents(cancelIds, db, fs);
+    } catch (err) {
       console.error("[DIPS] cancel failed", err);
       showMsg($("manager-msg"), firestoreError(err, "Couldn't cancel."), "error");
       show();
@@ -635,7 +937,9 @@ function actionBar(ev, { cancelIds, cancelLabel, confirmNote, compact = false },
 
 function joinedNote(events) {
   const others = events.reduce((n, ev) => n + Math.max(0, goingOf(ev) - 1), 0);
-  return others ? `${others} sign-up${others === 1 ? "" : "s"} will be notified.` : "Nobody has joined yet.";
+  const paid = events.some((ev) => ev.paidSlots && goingOf(ev) > 1);
+  if (!others) return "Nobody has joined yet.";
+  return `${plural(others, "sign-up", "sign-ups")} will be notified.` + (paid ? " Paid spots are refunded in full automatically." : "");
 }
 
 function dateTile(when) {
@@ -647,15 +951,18 @@ function dateTile(when) {
 function goingLine(ev) {
   const going = goingOf(ev);
   const full = typeof ev.participant === "number" && going >= ev.participant;
+  const price = ev.paidSlots && ev.priceCents ? ` · ${fmtEuro.format(ev.priceCents / 100)} per spot`
+    : ev.costPerPerson != null ? (ev.costPerPerson > 0 ? ` · ${fmtEuro.format(ev.costPerPerson)} on site` : " · free") : "";
   return h("p", { class: "ev-going" + (full ? " full" : "") },
-    typeof ev.participant === "number" ? `${going}/${ev.participant} going` : `${going} going`);
+    (typeof ev.participant === "number" ? `${going}/${ev.participant} going` : `${going} going`) + price);
 }
 
 function eventRow(ev, db, fs) {
-  return h("li", { class: "ev-row" },
+  return h("li", { class: "ev-row" + (state.editing && state.editing.id === ev.id ? " is-editing" : "") },
     dateTile(ev.when),
     h("div", { class: "ev-main" },
-      h("p", { class: "ev-title" }, String(ev.title || "Untitled")),
+      h("p", { class: "ev-title" }, String(ev.title || "Untitled"),
+        ev.paidSlots ? h("span", { class: "ev-tag ev-tag--paid" }, "Paid") : null),
       h("p", { class: "ev-meta" },
         `${String(ev.sportsArt || "")} · ${fmtDate.format(ev.when)}, ${fmtTime.format(ev.when)}`
         + (ev.venueName ? ` · ${String(ev.venueName)}` : "")),
@@ -677,7 +984,7 @@ function seriesRow(group, db, fs) {
     }
   }, open ? "Hide dates" : `Show all ${items.length} dates`);
 
-  const dates = open ? h("ul", { class: "ev-series-dates" }, items.map((ev) => h("li", {},
+  const dates = open ? h("ul", { class: "ev-series-dates" }, items.map((ev) => h("li", { class: state.editing && state.editing.id === ev.id ? "is-editing" : null },
     h("div", { class: "ev-series-when" },
       h("b", {}, `${fmtDate.format(ev.when)}, ${fmtTime.format(ev.when)}`),
       goingLine(ev)),
@@ -687,7 +994,9 @@ function seriesRow(group, db, fs) {
   return h("li", { class: "ev-row ev-row--series" },
     dateTile(first.when),
     h("div", { class: "ev-main" },
-      h("p", { class: "ev-title" }, String(first.title || "Untitled"), h("span", { class: "ev-tag" }, `Series · ${items.length}`)),
+      h("p", { class: "ev-title" }, String(first.title || "Untitled"),
+        h("span", { class: "ev-tag" }, `Series · ${items.length}`),
+        first.paidSlots ? h("span", { class: "ev-tag ev-tag--paid" }, "Paid") : null),
       h("p", { class: "ev-meta" },
         `${String(first.sportsArt || "")} · next ${fmtDate.format(first.when)}, ${fmtTime.format(first.when)}`
         + ` · until ${fmtDate.format(items[items.length - 1].when)}`
@@ -695,7 +1004,7 @@ function seriesRow(group, db, fs) {
       h("div", { class: "ev-actions" }, toggle),
       actionBar(first, {
         cancelIds: items.map((ev) => ev.id), cancelLabel: "Cancel whole series",
-        confirmNote: `All ${items.length} upcoming dates will be cancelled. ${joinedNote(items)}`, compact: true
+        confirmNote: `All ${items.length} upcoming dates will be cancelled. ${joinedNote(items)}`, compact: true, editable: false
       }, db, fs),
       dates
     )
@@ -706,4 +1015,5 @@ function seriesRow(group, db, fs) {
 
 initSignIn();
 initForm();
+initPrices();
 initPlaceSearch();
