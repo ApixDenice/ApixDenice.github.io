@@ -28,13 +28,19 @@ import {
 // ---------------------------------------------------------------------------
 
 const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
+// The WEB app's config (Firebase console → Project settings → Your apps → Web app).
+// Do NOT use the key from the iOS app's GoogleService-Info.plist: it is
+// restricted to the iOS app, and Google answers every browser request with
+// API_KEY_IOS_APP_BLOCKED. The web key is a public client identifier, safe to
+// commit; restrict it to the referrer apixdenice.github.io in Google Cloud.
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCMmyksVRzJ6yUOLAwJsTe77rBkZL7po30",   // public client identifier, safe to commit
+  apiKey: "AIzaSyDSoRMvSwrtAZ50QziNGFU2fAxYUfEqOpk",   // web app "DIPS Web"
   authDomain: "hilsports.firebaseapp.com",
   projectId: "hilsports",
   storageBucket: "hilsports.appspot.com",
-  messagingSenderId: "552572655098"
-  // appId: "1:552572655098:web:…"   ← only needed for App Check (see below)
+  messagingSenderId: "552572655098",
+  appId: "1:552572655098:web:370762988e39cc93084043"
+  // measurementId deliberately left out: no Analytics on the website.
 };
 // Fill in ONLY if App Check is enforced for Cloud Firestore in the Firebase
 // console (then also set appId above). Empty = App Check not used on the web.
@@ -132,9 +138,24 @@ const AUTH_ERRORS = {
   "auth/popup-blocked": "Your browser blocked the Google window. Allow pop-ups for this site and try again.",
   "auth/popup-closed-by-user": "The Google window was closed before signing in.",
   "auth/cancelled-popup-request": "The Google window was closed before signing in.",
-  "auth/account-exists-with-different-credential": "This email already uses another sign-in method. Sign in with your password instead."
+  "auth/account-exists-with-different-credential": "This email already uses another sign-in method. Use the one you chose in the app.",
+  "auth/operation-not-allowed": "This sign-in method isn't switched on for the website yet."
 };
-const authError = (err) => AUTH_ERRORS[err && err.code] || "Couldn't sign in. Please try again.";
+
+/** A setup problem on the website's side (API key / project config), not the user's login. */
+function isConfigError(err) {
+  const text = `${err && err.code} ${err && err.message}`;
+  return /API_KEY|api-key|requests-from-referer|iOS client application|are blocked|invalid-api-key|app-not-authorized/i.test(text);
+}
+
+function authError(err) {
+  if (isConfigError(err)) {
+    console.error("[DIPS] sign-in configuration problem", err);
+    return "Web sign-in isn't set up correctly yet. This is a problem on the website, not with your account or password. Please try again later.";
+  }
+  if (err && err.code && !AUTH_ERRORS[err.code]) console.error("[DIPS] sign-in failed", err);
+  return AUTH_ERRORS[err && err.code] || "Couldn't sign in. Please try again.";
+}
 
 function initSignIn() {
   const form = $("login-form");
@@ -195,6 +216,23 @@ function initSignIn() {
     }
   });
 
+  // Sign in with Apple — the same Firebase account as "Mit Apple anmelden" in the
+  // app. Needs the Apple provider's web setup (Services ID + key) in the console.
+  $("apple-btn").addEventListener("click", async () => {
+    clearMsg(msg);
+    try {
+      const { auth, authMod } = await loadFirebase();
+      const provider = new authMod.OAuthProvider("apple.com");
+      provider.addScope("email");
+      provider.addScope("name");
+      await authMod.signInWithPopup(auth, provider);
+    } catch (err) {
+      showMsg(msg, err && err.code === "auth/operation-not-allowed"
+        ? "Sign in with Apple isn't switched on for the website yet."
+        : authError(err), "error");
+    }
+  });
+
   $("logout-btn").addEventListener("click", async () => {
     try { const { auth, authMod } = await loadFirebase(); await authMod.signOut(auth); } catch (e) {}
   });
@@ -252,12 +290,12 @@ async function enterManager(user) {
     if (stale()) return;
 
     if (!profile.exists()) {
-      // A Google account that has never been used with DIPS: Firebase just
+      // A Google / Apple account that has never been used with DIPS: Firebase just
       // created an empty auth user for it. Remove it again instead of leaving
       // an orphan account without a profile, and send people to the app.
-      const isGoogle = user.providerData.some((p) => p.providerId === "google.com");
+      const isSocial = user.providerData.some((p) => p.providerId === "google.com" || p.providerId === "apple.com");
       const created = Date.parse(user.metadata.creationTime || "");
-      if (isGoogle && Date.now() - created < 5 * 60 * 1000) {
+      if (isSocial && Date.now() - created < 5 * 60 * 1000) {
         await user.delete().catch(() => {});
       } else {
         const { auth, authMod } = await loadFirebase();
@@ -310,6 +348,7 @@ function leaveManager() {
 const toJsDate = (v) => (v && typeof v.toDate === "function" ? v.toDate() : v instanceof Date ? v : null);
 
 function firestoreError(err, prefix) {
+  if (isConfigError(err)) return `${prefix} The website's connection to DIPS isn't set up correctly yet. This is a problem on the website, not with your account.`;
   const code = err && err.code ? String(err.code).replace("firestore/", "") : "";
   if (code === "permission-denied") {
     return `${prefix} The server refused the request (permission denied). Please sign out and in again; if it keeps happening, let me know.`;
