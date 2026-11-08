@@ -8,17 +8,17 @@ sitemap: false
 ---
 
 <div class="dips">
-<div class="events-page">
-  <div class="events-hero reveal">
+<div class="events-page" id="events-page">
+  <div class="events-hero reveal" id="events-hero">
     <span class="eyebrow">DIPS · Manage events</span>
     <h1>Create events from the web</h1>
-    <p>Sign in with your DIPS account to add and manage sport events. Everything you create here syncs straight into the DIPS app.</p>
+    <p>Sign in with your DIPS account to add and manage sport events. Everything you create here shows up in the DIPS app straight away.</p>
   </div>
 
   <!-- Sign-in card -->
   <div class="auth-card reveal" id="auth-card">
     <h2>Sign in</h2>
-    <p class="sub">Use the same email and password as the DIPS app.</p>
+    <p class="sub">Use the same account as in the DIPS app.</p>
 
     <form id="login-form" novalidate>
       <div class="field">
@@ -30,147 +30,174 @@ sitemap: false
         <input type="password" id="password" name="password" autocomplete="current-password" placeholder="••••••••" required>
       </div>
       <button type="submit" class="btn btn-primary" id="login-btn">Sign in</button>
+      <p class="auth-forgot"><button type="button" class="link-btn" id="reset-btn">Forgot password?</button></p>
     </form>
 
+    <div class="auth-or"><span>or</span></div>
+    <button type="button" class="btn btn-outline btn-google" id="google-btn">
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+      Continue with Google
+    </button>
+
     <div class="auth-msg" id="auth-msg" role="status" aria-live="polite"></div>
-    <p class="auth-foot">No account yet? Create one in the DIPS app — the same login works here.</p>
+    <p class="auth-foot">No account yet? Create one in the DIPS app — the same login works here. Signed up with Apple? Web sign-in for Apple accounts is coming soon.</p>
     <p class="auth-privacy">Sign-in is handled by Google Firebase Authentication. Details in the <a href="{{ '/datenschutz/#firebase' | relative_url }}">privacy policy</a>.</p>
   </div>
 
-  <!-- Signed-in placeholder -->
+  <!-- Signed in: the event manager -->
   <div class="signed-in" id="signed-in">
     <div class="account-badge">
       <span class="avatar" id="avatar">D</span>
       <div class="who">
-        <b id="who-email">—</b>
-        <span>Signed in to DIPS</span>
+        <b id="who-name">—</b>
+        <span id="who-email">Signed in to DIPS</span>
       </div>
+      <button class="link-btn account-signout" id="logout-btn" type="button">Sign out</button>
     </div>
 
-    <div class="placeholder-box">
-      <div class="big">🛠️</div>
-      <h3>Event manager is coming soon</h3>
-      <p>You're signed in. The tools to create and manage your DIPS events from the web are being built and will appear right here.</p>
-    </div>
+    <div class="auth-msg" id="manager-msg" role="status" aria-live="polite"></div>
 
-    <p class="signout-row">
-      <button class="link-btn" id="logout-btn">Sign out</button>
-    </p>
+    <div class="manager-grid">
+      <!-- New event -->
+      <section class="manager-card" aria-labelledby="new-event-title">
+        <h2 id="new-event-title">New event</h2>
+        <form id="event-form" novalidate>
+          <div class="field">
+            <label for="ev-sport">Sport</label>
+            <select id="ev-sport" required><option value="">Loading sports…</option></select>
+          </div>
+
+          <div class="field">
+            <label for="ev-title">Title <span class="counter" data-for="ev-title"></span></label>
+            <input id="ev-title" type="text" maxlength="20" placeholder="e.g. Morning run" required>
+          </div>
+
+          <div class="field">
+            <label for="ev-details">Description <span class="counter" data-for="ev-details"></span></label>
+            <textarea id="ev-details" maxlength="120" rows="3" placeholder="What are you planning? Pace, what to bring, where exactly to meet…" required></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="ev-date">Date</label>
+              <input id="ev-date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="ev-time">Start</label>
+              <input id="ev-time" type="time" step="300" value="18:00" required>
+            </div>
+            <div class="field">
+              <label for="ev-duration">Duration</label>
+              <select id="ev-duration">
+                <option value="">Not set</option>
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60">1 h</option>
+                <option value="90" selected>1.5 h</option>
+                <option value="120">2 h</option>
+                <option value="180">3 h</option>
+                <option value="240">4 h</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset class="field">
+            <legend>Meeting point</legend>
+            <div class="place-search">
+              <input id="ev-place-q" type="search" placeholder="Search a park, street or sports ground" aria-label="Search a place" autocomplete="off">
+              <button type="button" class="btn btn-outline" id="ev-place-go">Search</button>
+            </div>
+            <ul class="place-results" id="ev-place-results" hidden></ul>
+            <div class="map-wrap">
+              <div id="ev-map" class="ev-map" role="application" aria-label="Map: click to set the meeting point"></div>
+              <button type="button" class="map-locate" id="ev-locate" title="Use my location" aria-label="Use my location">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+            </div>
+            <p class="hint" id="ev-place-hint">Click the map to set the meeting point, then drag the pin to fine-tune it. Meeting points are public, so never use a home address.</p>
+            <label class="sr-only" for="ev-venue">Name of the place</label>
+            <input id="ev-venue" type="text" maxlength="40" placeholder="Name of the place (optional), e.g. Stadtpark, north gate">
+          </fieldset>
+
+          <div class="field-row field-row--people">
+            <div class="field">
+              <label for="ev-capacity">Group size</label>
+              <input id="ev-capacity" type="number" min="2" max="30" step="1" value="10" inputmode="numeric" required>
+            </div>
+            <div class="field">
+              <label for="ev-audience">Who can join</label>
+              <select id="ev-audience"></select>
+            </div>
+            <div class="field">
+              <label for="ev-level">Level</label>
+              <select id="ev-level"></select>
+            </div>
+          </div>
+
+          <div class="field toggle-field">
+            <label class="check"><input type="checkbox" id="ev-quorum-on"> Only takes place with a minimum number of people</label>
+            <div class="inline-input" id="ev-quorum-box" hidden>
+              <label for="ev-quorum">At least</label>
+              <input id="ev-quorum" type="number" min="2" max="30" step="1" value="4" inputmode="numeric">
+              <span>people</span>
+            </div>
+          </div>
+
+          <div class="field toggle-field">
+            <label class="check"><input type="checkbox" id="ev-repeat-on"> Repeat weekly</label>
+            <div id="ev-repeat-box" hidden>
+              <div class="weekday-chips" role="group" aria-label="Repeat on">
+                <label><input type="checkbox" value="1"><span>Mo</span></label>
+                <label><input type="checkbox" value="2"><span>Tu</span></label>
+                <label><input type="checkbox" value="3"><span>We</span></label>
+                <label><input type="checkbox" value="4"><span>Th</span></label>
+                <label><input type="checkbox" value="5"><span>Fr</span></label>
+                <label><input type="checkbox" value="6"><span>Sa</span></label>
+                <label><input type="checkbox" value="0"><span>Su</span></label>
+              </div>
+              <div class="inline-input">
+                <label for="ev-until">Until</label>
+                <input id="ev-until" type="date">
+              </div>
+              <p class="hint" id="ev-repeat-preview"></p>
+            </div>
+          </div>
+
+          <div class="auth-msg" id="form-msg" role="status" aria-live="polite"></div>
+          <button type="submit" class="btn btn-primary btn-wide" id="create-btn">Create event</button>
+        </form>
+      </section>
+
+      <!-- Your events -->
+      <section class="manager-card" aria-labelledby="my-events-title">
+        <div class="card-head">
+          <h2 id="my-events-title">Your upcoming events</h2>
+          <span class="count-pill" id="my-events-count"></span>
+        </div>
+        <ul class="my-events" id="my-events" aria-live="polite">
+          <li class="my-events-empty">Loading…</li>
+        </ul>
+        <p class="hint">Edits, chats and ratings work in the DIPS app. Cancelling an event here notifies everyone who joined.</p>
+      </section>
+    </div>
   </div>
 </div>
 </div>
 
 <!--
-  Firebase web login for the DIPS project ("hilsports").
-  Uses the same Email/Password accounts as the iOS app.
+  Firebase web access for the DIPS project ("hilsports").
+  Sign-in uses the same accounts as the iOS app; events are written straight to
+  Firestore exactly like the app does (see assets/js/dips/event-model.js), so the
+  security rules and the server triggers (plan limit, rate limit, notifications)
+  apply unchanged.
 
-  BEFORE THIS WORKS IN PRODUCTION, verify in the Firebase console:
-   1. Authentication → Sign-in method → Email/Password is enabled.
-   2. Authentication → Settings → Authorized domains includes:
-        apixdenice.github.io   (and localhost for testing)
-   3. Register a Web App (Project settings → Your apps → Web) and, if the
-      values below differ, replace firebaseConfig with the web app's config.
-      The apiKey is a public client identifier — safe to commit.
+  Firebase console checklist (once):
+   1. Authentication → Sign-in method: Email/Password and Google enabled.
+   2. Authentication → Settings → Authorized domains: apixdenice.github.io
+      (needed for "Continue with Google"; add localhost for local testing).
+   3. Only if App Check is ENFORCED for Cloud Firestore: register a Web app,
+      create a reCAPTCHA Enterprise key for apixdenice.github.io, add it under
+      App Check → Apps, and fill in appId + appCheckSiteKey in
+      assets/js/dips/events-app.js. Without enforcement nothing is needed.
 -->
-<script type="module">
-  /*
-    Privacy: the Firebase SDK (served by Google) is NOT loaded when someone merely
-    visits this page. It is loaded only when
-      (a) the visitor starts using the sign-in form, or
-      (b) a previous sign-in session already exists in this browser
-          (Firebase keeps it in the IndexedDB database "firebaseLocalStorageDb").
-  */
-  const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
-  const firebaseConfig = {
-    apiKey: "AIzaSyCMmyksVRzJ6yUOLAwJsTe77rBkZL7po30",   // public client identifier, safe to commit
-    authDomain: "hilsports.firebaseapp.com",
-    projectId: "hilsports",
-    storageBucket: "hilsports.appspot.com",
-    messagingSenderId: "552572655098"
-  };
-
-  const authCard = document.getElementById("auth-card");
-  const signedIn = document.getElementById("signed-in");
-  const form     = document.getElementById("login-form");
-  const loginBtn = document.getElementById("login-btn");
-  const msg      = document.getElementById("auth-msg");
-  const whoEmail = document.getElementById("who-email");
-  const avatar   = document.getElementById("avatar");
-
-  function showMsg(text, kind) { msg.textContent = text; msg.className = "auth-msg " + kind; }
-  function clearMsg() { msg.textContent = ""; msg.className = "auth-msg"; }
-
-  const friendlyError = (code) => ({
-    "auth/invalid-email": "That email address looks invalid.",
-    "auth/invalid-credential": "Email or password is incorrect.",
-    "auth/wrong-password": "Email or password is incorrect.",
-    "auth/user-not-found": "Email or password is incorrect.",   // don't reveal which accounts exist
-    "auth/too-many-requests": "Too many attempts. Please try again in a moment.",
-    "auth/network-request-failed": "Network error. Check your connection and try again.",
-    "auth/unauthorized-domain": "This domain isn't authorized in Firebase yet."
-  }[code] || "Couldn't sign in. Please try again.");
-
-  let firebasePromise = null;
-  function loadFirebase() {
-    if (!firebasePromise) {
-      firebasePromise = Promise.all([import(SDK + "firebase-app.js"), import(SDK + "firebase-auth.js")])
-        .then(([appMod, authMod]) => {
-          const auth = authMod.getAuth(appMod.initializeApp(firebaseConfig));
-          authMod.setPersistence(auth, authMod.browserLocalPersistence).catch(() => {});
-          authMod.onAuthStateChanged(auth, (user) => {
-            if (user) {
-              whoEmail.textContent = user.email || "Signed in";
-              avatar.textContent = (user.email || "D").charAt(0).toUpperCase();
-              authCard.style.display = "none";
-              signedIn.classList.add("show");
-              clearMsg();
-              form.reset();
-            } else {
-              authCard.style.display = "";
-              signedIn.classList.remove("show");
-            }
-          });
-          return { auth, authMod };
-        })
-        .catch((err) => { firebasePromise = null; throw err; });
-    }
-    return firebasePromise;
-  }
-
-  // (b) Restore an existing session without loading Google code for first-time visitors.
-  (async () => {
-    try {
-      if (indexedDB.databases) {
-        const dbs = await indexedDB.databases();
-        if (dbs.some((d) => d.name === "firebaseLocalStorageDb")) loadFirebase();
-      }
-    } catch (e) { /* storage unavailable: nothing to restore */ }
-  })();
-
-  // (a) Warm up the SDK as soon as the visitor starts filling in the form.
-  form.addEventListener("focusin", () => { loadFirebase().catch(() => {}); }, { once: true });
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    clearMsg();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    if (!email || !password) { showMsg("Please enter your email and password.", "error"); return; }
-
-    loginBtn.disabled = true;
-    loginBtn.textContent = "Signing in…";
-    try {
-      const { auth, authMod } = await loadFirebase();
-      await authMod.signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      showMsg(friendlyError(err && err.code), "error");
-    } finally {
-      loginBtn.disabled = false;
-      loginBtn.textContent = "Sign in";
-    }
-  });
-
-  document.getElementById("logout-btn").addEventListener("click", async () => {
-    try { const { auth, authMod } = await loadFirebase(); await authMod.signOut(auth); } catch (e) {}
-  });
-</script>
+<script type="module" src="{{ '/assets/js/dips/events-app.js' | relative_url }}"></script>
