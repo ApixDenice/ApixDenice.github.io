@@ -247,38 +247,41 @@
   }
 
   /* ---------------- Intro ----------------
-     The timeline itself is pure CSS (works even if this script fails).
-     Here we add: the "genesis pixel" wordmark build, skip on click/key,
-     fly the logo into its hero position, cleanup.
+     The timeline itself is pure CSS (works even if this script fails): the
+     wordmark fades in on the dark overlay, holds, then the overlay fades away.
+     Here we add the text-scramble build of the wordmark, skip on click/key,
+     and cleanup.
 
      Intro clock (ms from the start of the CSS timeline, see custom.css):
-        0  logo spins in             550  the "A" draws
-     1050  the pixel drops in       1450  the pixel emits the wordmark (canvas)
-    ~2580  a resolve wave follows the build left → right: text fades in beneath
-           the grid, pixels melt away (letters resolve while the last ones land)
-    ~3630  wordmark fully resolved
-     3700  logo flies to the hero   3850  overlay fades        4550  cleanup */
-  var INTRO = { emit: 1450, fly: 3700, done: 4550 };
+      200  wordmark layer fades in      250  scramble starts
+    ~1650  "ApixDenice" resolved       2500  overlay fades      3150  cleanup */
+  var INTRO = { scramble: 250, done: 3150 };
 
   function initIntro() {
     var intro = document.getElementById('intro');
     if (!intro) return;
     if (!root.classList.contains('intro')) { intro.remove(); return; }
 
-    var fly = document.getElementById('intro-fly');
-    var heroTarget = document.getElementById('hero-logo-target');
     var skipBtn = document.getElementById('intro-skip');
+    var word = intro.querySelector('.intro-word');
     var finished = false;
     var timers = [];
-    var clock = introClock(intro);
-    var genesis = null;
-    try { genesis = initGenesis(intro, clock); } catch (e) { intro.classList.add('is-resolved'); }
+    var clock = introClock(word);
+    var scramble = null;
+
+    // Only scramble if the script is on time; a late script leaves the plain CSS fade.
+    if (word && clock() < INTRO.scramble + 600) {
+      try {
+        scramble = new TextScramble(word);
+        timers.push(setTimeout(function () { scramble.run(); }, Math.max(0, INTRO.scramble - clock())));
+      } catch (e) { scramble = null; }
+    }
 
     function cleanup() {
       if (finished) return;
       finished = true;
       timers.forEach(clearTimeout);
-      if (genesis) genesis.stop();
+      if (scramble) scramble.stop();
       root.classList.add('intro-done');
       intro.remove();
       document.removeEventListener('keydown', onKey);
@@ -286,7 +289,7 @@
 
     function skip() {
       if (finished) return;
-      if (genesis) genesis.stop();
+      if (scramble) scramble.stop();
       root.classList.add('intro-skipped');
       intro.style.transition = 'opacity .35s ease';
       intro.style.opacity = '0';
@@ -297,332 +300,106 @@
       if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); skip(); }
     }
 
-    // Fly the intro logo onto the hero logo (FLIP), then let the overlay fade.
-    function flyToHero() {
-      if (finished || !fly || !heroTarget) return;
-      var from = fly.getBoundingClientRect();
-      var to = heroTarget.getBoundingClientRect();
-      if (!to.width) return;
-      root.classList.add('intro-leaving');
-      var dx = (to.left + to.width / 2) - (from.left + from.width / 2);
-      var dy = (to.top + to.height / 2) - (from.top + from.height / 2);
-      var scale = to.width / from.width;
-      fly.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ') rotateY(-14deg) rotateX(8deg)';
-    }
-
     intro.addEventListener('click', skip);
     if (skipBtn) skipBtn.addEventListener('click', function (e) { e.stopPropagation(); skip(); });
     document.addEventListener('keydown', onKey);
 
     // Scheduled against the CSS clock, so a late-running script stays in sync.
-    timers.push(setTimeout(flyToHero, Math.max(0, INTRO.fly - clock())));
     timers.push(setTimeout(cleanup, Math.max(0, INTRO.done - clock())));
   }
 
-  // Milliseconds elapsed on the CSS intro timeline. Anchored to the pixel's own CSS
-  // animation (currentTime includes its delay), falling back to time since navigation.
-  function introClock(intro) {
+  // Milliseconds elapsed on the CSS intro timeline. Anchored to the wordmark's own
+  // CSS animation (currentTime includes its delay), falling back to time since navigation.
+  function introClock(word) {
     var elapsed = performance.now();
     try {
-      var px = intro.querySelector('.logo-px');
-      var anims = px && px.getAnimations ? px.getAnimations() : [];
+      var anims = word && word.getAnimations ? word.getAnimations() : [];
       for (var i = 0; i < anims.length; i++) {
-        if (anims[i].animationName === 'intro-pixel' && anims[i].currentTime != null) { elapsed = anims[i].currentTime; break; }
+        if (anims[i].animationName === 'intro-word-in' && anims[i].currentTime != null) { elapsed = anims[i].currentTime; break; }
       }
     } catch (e) {}
     var t0 = performance.now() - elapsed;
     return function () { return performance.now() - t0; };
   }
 
-  /* ---------------- Genesis pixel ----------------
-     The wordmark is rasterised into a coarse grid (sampled from the real DOM text, so
-     it matches font, kerning and letter-spacing exactly). Each filled cell becomes a
-     pixel that leaves the logo's pixel and arcs into place, left to right, carrying
-     the brand gradient in flight. A resolve wave then sweeps the same direction:
-     the real text fades in under the grid (showing through its gutters first) and
-     the pixels grow into each other and melt away.
-     Returns { stop } or null when unsupported (the CSS wipe then plays instead). */
-  var GENESIS = {
-    window: 600,   // ms over which pixels are emitted, left → right
-    jitter: 80,    // ms random emission jitter per pixel
-    flight: 650,   // ms each pixel is in the air
-    hold: 250,     // ms every pixel shows landed before the resolve wave reaches it
-    sweep: 450,    // ms the resolve wave takes to cross the word, left → right
-    resolve: 600   // ms each spot takes to go from pixel grid to crisp text
+  /* ---------------- Text scramble ----------------
+     After Justin Windle's "Text Scramble" (codepen.io/soulwire/pen/mEMPrK): every
+     letter starts at a random moment, flickers through glitch glyphs for a random
+     while, then settles on its real character. Two changes for this site:
+     - each letter sits in a box locked to its final width, so the proportional
+       brand font never makes the word jitter while glyphs swap;
+     - it runs on elapsed time, not frames, so the build always takes ~1.4 s,
+       and the glitch glyphs flicker in the pixel gradient colours. */
+  var SCRAMBLE = {
+    duration: 1400,                         // whole build, ms
+    chars: '!<>-_\\/[]{}—=+*^?#________',   // the pen's glyph set
+    swap: 0.28,                             // chance a glitch glyph changes on a frame
+    colors: ['#FFB224', '#FF4F6D', '#7C5CFF', 'rgba(255,255,255,.45)']
   };
-  var BRAND_GRADIENT = [[255, 178, 36], [255, 79, 109], [124, 92, 255]]; // amber → pink → violet
 
-  function initGenesis(intro, clock) {
-    var word = intro.querySelector('.intro-word');
-    var source = intro.querySelector('.logo-px');
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext && canvas.getContext('2d');
-    if (!word || !source || !ctx || !document.fonts || !document.fonts.load) return null;
-    if (clock() > INTRO.emit + GENESIS.window) return null; // too late to build — let CSS handle it
-
-    canvas.className = 'intro-canvas';
-    canvas.setAttribute('aria-hidden', 'true');
-    intro.classList.add('is-genesis');
-    intro.appendChild(canvas);
-
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var particles = null;   // built once the font is ready
-    var emitted = false;
-    var stopped = false;
+  function TextScramble(el) {
+    var text = el.textContent;
+    var dim = el.querySelector('.intro-word-dim');
+    var dimFrom = dim ? text.length - dim.textContent.length : text.length;
+    var cells = [];
     var raf = 0;
-    var resolveAt = 0;      // clock time the resolve wave starts at the left edge
-    var doneAt = 0;         // clock time the wordmark is fully resolved
 
-    function resize() {
-      canvas.width = Math.round(intro.clientWidth * dpr);
-      canvas.height = Math.round(intro.clientHeight * dpr);
+    el.setAttribute('aria-label', text);
+    el.textContent = '';
+    for (var i = 0; i < text.length; i++) {
+      var c = document.createElement('span');
+      c.className = 'sc' + (i >= dimFrom ? ' sc-dim' : '');
+      c.textContent = text[i];
+      el.appendChild(c);
+      cells.push({ el: c, ch: text[i], start: 0, end: 0, glyph: '' });
     }
+    el.classList.add('is-waiting');          // letters laid out but invisible until the build
 
-    // Show the real word without the build (font failed, resize, late start…).
-    function resolveNow() {
-      stop();
-      intro.classList.add('is-resolved');
-    }
+    function randomGlyph() { return SCRAMBLE.chars[Math.floor(Math.random() * SCRAMBLE.chars.length)]; }
+    function randomColor() { return SCRAMBLE.colors[Math.floor(Math.random() * SCRAMBLE.colors.length)]; }
 
-    function stop() {
-      stopped = true;
-      clearWordStyles();
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resolveNow);
-    }
-
-    function clearWordStyles() {
-      word.style.opacity = '';
-      word.style.webkitMaskImage = '';
-      word.style.maskImage = '';
-    }
-
-    // Reveal the real text behind the grid with a soft left → right gradient mask
-    // that tracks the same wave the pixels use (see draw()).
-    function maskWord(t) {
-      var tau = t - resolveAt, fx0 = particles.fx0, fx1 = particles.fx1;
-      var stops = [];
-      for (var i = 4; i >= 0; i--) {
-        var sv = i / 8;                                         // wave phase 0 … 0.5
-        var f = (tau - sv * GENESIS.resolve) / GENESIS.sweep;   // word fraction at that phase
-        var pct = (fx0 + f * (fx1 - fx0)) * 100;
-        stops.push('rgba(0,0,0,' + smoothstep(0, 1, sv * 2).toFixed(3) + ') ' + pct.toFixed(2) + '%');
-      }
-      var m = 'linear-gradient(90deg,' + stops.join(',') + ')';
-      word.style.opacity = '1';
-      word.style.webkitMaskImage = m;
-      word.style.maskImage = m;
-    }
-
-    resize();
-    window.addEventListener('resize', resolveNow);
-
-    document.fonts.load('700 32px Inter').then(function () {
-      if (stopped) return;
-      particles = buildParticles(intro, word);
-      if (!particles.length) resolveNow();
-    }, resolveNow);
-
-    function frame() {
-      if (stopped) return;
-      var t = clock();
-
-      if (t >= INTRO.emit && !emitted) {
-        if (!particles) {
-          // Font still loading: give it a short grace period, then fall back.
-          if (t > INTRO.emit + 250) { resolveNow(); return; }
-          raf = requestAnimationFrame(frame);
-          return;
-        }
-        emitted = true;
-        launch(particles, source, intro, t);
-        // Start the wave as early as possible while guaranteeing each pixel is seen
-        // landed for `hold` ms (the right edge, which lands last, is the constraint).
-        resolveAt = t + particles.lastLanding + GENESIS.hold - GENESIS.sweep;
-        doneAt = resolveAt + GENESIS.sweep + GENESIS.resolve;
-      }
-
-      if (emitted) {
-        if (t >= doneAt) {
-          // Fully resolved: hand the word back to CSS (same end values, no visible change).
-          intro.classList.add('is-resolved');
-          stop();
-          ctx.setTransform(1, 0, 0, 1, 0, 0);
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          return;
-        }
-        draw(ctx, particles, t, dpr, canvas, resolveAt);
-        if (t >= resolveAt) maskWord(t);
-      }
-      raf = requestAnimationFrame(frame);
-    }
-    raf = requestAnimationFrame(frame);
-
-    return { stop: stop };
-  }
-
-  // Rasterise the DOM word into grid cells → particle targets (coords relative to the overlay).
-  function buildParticles(intro, word) {
-    var box = intro.getBoundingClientRect();
-    var wr = word.getBoundingClientRect();
-    var fontSize = parseFloat(getComputedStyle(word).fontSize) || 32;
-    var cell = Math.max(3, Math.round(fontSize / 10));  // ≈ 10 cells per em
-    var pad = cell * 2;
-    var w = Math.ceil(wr.width + pad * 2);
-    var h = Math.ceil(wr.height + pad * 2);
-
-    var off = document.createElement('canvas');
-    off.width = w; off.height = h;
-    var o = off.getContext('2d');
-    o.textBaseline = 'alphabetic';
-
-    // Each styled run (text node) is drawn into its own colour channel so we can tell
-    // "Apix" from "Denice" per cell. Up to three runs are supported (R, G, B).
-    var tones = [];
-    var channels = ['#f00', '#0f0', '#00f'];
-    var walker = document.createTreeWalker(word, NodeFilter.SHOW_TEXT, null);
-    var range = document.createRange();
-    var node;
-    o.globalCompositeOperation = 'lighter';
-    while ((node = walker.nextNode()) && tones.length < 3) {
-      var st = getComputedStyle(node.parentNode);
-      o.font = st.fontWeight + ' ' + st.fontSize + ' ' + st.fontFamily;
-      o.fillStyle = channels[tones.length];
-      var m = o.measureText('Hg');
-      var ascent = m.fontBoundingBoxAscent != null ? m.fontBoundingBoxAscent : parseFloat(st.fontSize) * 0.97;
-      for (var i = 0; i < node.length; i++) {
-        if (!node.data.charAt(i).trim()) continue;
-        range.setStart(node, i); range.setEnd(node, i + 1);
-        var r = range.getBoundingClientRect();
-        o.fillText(node.data.charAt(i), r.left - wr.left + pad, r.top - wr.top + pad + ascent);
-      }
-      tones.push(parseColor(st.color));
-    }
-    if (!tones.length) return [];
-
-    var data = o.getImageData(0, 0, w, h).data;
-    var out = [];
-    var minX = Infinity, maxX = -Infinity;
-    var area = cell * cell;
-    for (var cy = 0; cy + cell <= h; cy += cell) {
-      for (var cx = 0; cx + cell <= w; cx += cell) {
-        var sum = [0, 0, 0];
-        for (var y = cy; y < cy + cell; y++) {
-          for (var x = cx; x < cx + cell; x++) {
-            var idx = (y * w + x) * 4;
-            sum[0] += data[idx]; sum[1] += data[idx + 1]; sum[2] += data[idx + 2];
+    function start() {
+      // Lock every box to its final glyph width (needs the real font, hence fonts.ready).
+      cells.forEach(function (c) { c.el.style.width = c.el.getBoundingClientRect().width + 'px'; });
+      cells.forEach(function (c) {
+        c.start = Math.random() * SCRAMBLE.duration * 0.45;
+        c.end = Math.min(SCRAMBLE.duration, c.start + SCRAMBLE.duration * (0.15 + Math.random() * 0.4));
+        c.el.textContent = '';
+      });
+      el.classList.remove('is-waiting');
+      var t0 = performance.now();
+      var tick = function (now) {
+        var t = now - t0;
+        var done = 0;
+        for (var i = 0; i < cells.length; i++) {
+          var c = cells[i];
+          if (t >= c.end) {
+            if (c.glyph !== null) { c.el.textContent = c.ch; c.el.style.color = ''; c.el.classList.remove('is-dud'); c.glyph = null; }
+            done++;
+          } else if (t >= c.start) {
+            if (!c.glyph || Math.random() < SCRAMBLE.swap) {
+              c.glyph = randomGlyph();
+              c.el.textContent = c.glyph;
+              c.el.style.color = randomColor();
+              c.el.classList.add('is-dud');
+            }
           }
         }
-        var ch = sum[0] >= sum[1] ? (sum[0] >= sum[2] ? 0 : 2) : (sum[1] >= sum[2] ? 1 : 2);
-        if (sum[ch] / area < 255 * 0.3 || !tones[ch]) continue;   // coverage threshold
-        var tx = wr.left - box.left - pad + cx + cell / 2;
-        var ty = wr.top - box.top - pad + cy + cell / 2;
-        minX = Math.min(minX, tx); maxX = Math.max(maxX, tx);
-        out.push({ tx: tx, ty: ty, size: cell - 1, tone: tones[ch] });   // 1px gutter → LED grid
-      }
+        if (done < cells.length) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
     }
 
-    var span = Math.max(1, maxX - minX);
-    var maxDelay = 0;
-    out.forEach(function (p) {
-      p.f = (p.tx - minX) / span;                        // 0 = left edge, 1 = right edge
-      p.hot = gradientAt(p.f);                           // in-flight colour
-      p.delay = p.f * GENESIS.window + Math.random() * GENESIS.jitter;
-      p.spin = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random()) * Math.PI;
-      maxDelay = Math.max(maxDelay, p.delay);
-    });
-    // Pixel extent as fractions of the word box (maps the wave onto the text mask).
-    var wordLeft = wr.left - box.left;
-    out.fx0 = (minX - wordLeft) / wr.width;
-    out.fx1 = (maxX - wordLeft) / wr.width;
-    out.lastLanding = maxDelay + GENESIS.flight;         // ms after emission
-    return out;
-  }
+    this.run = function () {
+      var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+      var timeout = new Promise(function (resolve) { setTimeout(resolve, 300); });
+      Promise.race([fontsReady, timeout]).then(start, start);
+    };
 
-  // Emission: every particle gets a start point inside the logo pixel and an arc apex.
-  function launch(particles, source, intro, t) {
-    var box = intro.getBoundingClientRect();
-    var s = source.getBoundingClientRect();
-    var sx = s.left - box.left, sy = s.top - box.top;
-    particles.forEach(function (p) {
-      p.t0 = t + p.delay;
-      p.sx = sx + s.width * (0.2 + Math.random() * 0.6);
-      p.sy = sy + s.height * (0.2 + Math.random() * 0.6);
-      // Control point: leans toward the target and lifts above the source → fountain arc.
-      p.cx = p.sx + (p.tx - p.sx) * (0.45 + Math.random() * 0.2);
-      p.cy = Math.min(p.sy, p.ty) - (30 + Math.random() * 50);
-    });
-    // The source pixel "fires": a quick pulse as the stream leaves it.
-    if (source.animate) {
-      source.animate(
-        [{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(0) scale(1.18)' }, { transform: 'translateY(0) scale(1)' }],
-        { duration: 420, easing: 'cubic-bezier(.34,1.56,.64,1)' }
-      );
-    }
-  }
-
-  function draw(ctx, particles, t, dpr, canvas, resolveAt) {
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-      var k = (t - p.t0) / GENESIS.flight;
-      if (k <= 0) continue;                  // still inside the source pixel
-      if (k > 1) k = 1;
-      var e = 1 - Math.pow(1 - k, 3);        // easeOutCubic: fast out of the pixel, soft landing
-      var u = 1 - e;
-      var x = u * u * p.sx + 2 * u * e * p.cx + e * e * p.tx;   // quadratic Bézier
-      var y = u * u * p.sy + 2 * u * e * p.cy + e * e * p.ty;
-      var size = p.size * (1 + 0.7 * u);     // slightly larger in flight
-      var rot = p.spin * u;                  // tumbles, squares up on landing
-      var c = smoothstep(0.55, 1, k);        // gradient → final text colour
-      var r = Math.round(p.hot[0] + (p.tone[0] - p.hot[0]) * c);
-      var g = Math.round(p.hot[1] + (p.tone[1] - p.hot[1]) * c);
-      var b = Math.round(p.hot[2] + (p.tone[2] - p.hot[2]) * c);
-      var a = 1 + (p.tone[3] - 1) * c;
-      ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
-      if (k === 1) {
-        // Resolve wave: phase 0 → 1 as it passes this pixel. The text has already faded
-        // in underneath by phase 0.5; the pixel then grows into its gutter and melts away.
-        var phase = (t - resolveAt - p.f * GENESIS.sweep) / GENESIS.resolve;
-        var melt = smoothstep(0.35, 1, phase);
-        if (melt >= 1) continue;
-        if (melt > 0) {
-          a *= 1 - melt;
-          size *= 1 + 0.25 * melt;
-          ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(3) + ')';
-          var hs = size / 2;
-          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-          ctx.fillRect(x - hs, y - hs, size, size);
-          continue;
-        }
-        // Landed: snap to device pixels so the grid reads crisp.
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        var d = Math.round(size * dpr);
-        ctx.fillRect(Math.round((x - size / 2) * dpr), Math.round((y - size / 2) * dpr), d, d);
-        continue;
-      }
-      var cos = Math.cos(rot) * dpr, sin = Math.sin(rot) * dpr;
-      ctx.setTransform(cos, sin, -sin, cos, x * dpr, y * dpr);
-      ctx.fillRect(-size / 2, -size / 2, size, size);
-    }
-  }
-
-  function gradientAt(f) {
-    var seg = f < 0.5 ? 0 : 1;
-    var k = f < 0.5 ? f * 2 : (f - 0.5) * 2;
-    var a = BRAND_GRADIENT[seg], b = BRAND_GRADIENT[seg + 1];
-    return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
-  }
-
-  function smoothstep(a, b, x) {
-    var t = Math.min(1, Math.max(0, (x - a) / (b - a)));
-    return t * t * (3 - 2 * t);
-  }
-
-  // "rgb(r, g, b)" / "rgba(r, g, b, a)" → [r, g, b, a]
-  function parseColor(str) {
-    var n = (str.match(/[\d.]+/g) || []).map(Number);
-    return [n[0] || 255, n[1] || 255, n[2] || 255, n.length > 3 ? n[3] : 1];
+    this.stop = function () {
+      cancelAnimationFrame(raf);
+      cells.forEach(function (c) { c.el.textContent = c.ch; c.el.style.color = ''; c.el.classList.remove('is-dud'); });
+      el.classList.remove('is-waiting');
+    };
   }
 })();

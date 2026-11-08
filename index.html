@@ -5,14 +5,11 @@ image: /assets/images/og/home.jpg
 intro: true
 ---
 
-<!-- Intro: plays once per fresh visit (see inline script in the layout). Pure CSS timeline; main.js adds the genesis-pixel wordmark build, skip + fly-to-hero. -->
+<!-- Intro: plays once per fresh visit (see inline script in the layout). Pure CSS timeline; main.js adds the text-scramble build of the wordmark and skip. -->
 <div class="intro-overlay" id="intro">
   <div class="intro-glow" aria-hidden="true"></div>
   <div class="intro-stage" aria-hidden="true">
-    <div class="intro-fly" id="intro-fly">
-      {% include logo-3d.html id="intro" class="intro-logo" %}
-    </div>
-    <div class="intro-word">Apix<span>Denice</span></div>
+    <div class="intro-word">Apix<span class="intro-word-dim">Denice</span></div>
   </div>
   <button class="intro-skip" type="button" id="intro-skip">Skip intro</button>
 </div>
@@ -43,7 +40,7 @@ intro: true
           </div>
           <img class="orbit-icon orbit-icon--1" src="{{ '/assets/images/apps/toomuchfood-128.webp' | relative_url }}" alt="" width="74" height="74">
           <img class="orbit-icon orbit-icon--2" src="{{ '/assets/images/apps/office-mom-128.webp' | relative_url }}" alt="" width="74" height="74">
-          <img class="orbit-icon orbit-icon--3" src="{{ '/assets/images/apps/office-mom-mac-128.webp' | relative_url }}" alt="" width="58" height="58">
+          <img class="orbit-icon orbit-icon--3" src="{{ '/assets/images/apps/dips-128.webp' | relative_url }}" alt="" width="58" height="58">
         </div>
       </div>
     </div>
@@ -94,7 +91,7 @@ intro: true
         </div>
         <p class="app-platform">iPhone · Sport &amp; fitness</p>
         <h3>DIPS</h3>
-        <p>Find sport events near you on a live map, join sessions and meet training partners — or host your own. Coming to the App Store.</p>
+        <p>Find sport events near you on a live map, join in one tap and train with new people — with group chats, two-way ratings and profiles for trainers, studios and clubs. Coming to the App Store.</p>
         <div class="app-card-actions">
           <a class="text-link" href="{{ '/dips/' | relative_url }}">Learn more <span aria-hidden="true">→</span></a>
         </div>
