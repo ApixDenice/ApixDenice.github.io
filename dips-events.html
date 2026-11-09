@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Manage Events — DIPS
-description: Sign in with your DIPS account to create and manage sport events from the web.
+title: DIPS for organisers — Manage events, courses and revenue
+description: Sign in with your DIPS account to manage events, paid courses, revenue and your business profile from the web.
 permalink: /dips/events/
 robots: noindex
 sitemap: false
@@ -9,195 +9,295 @@ sitemap: false
 
 <div class="dips">
 <div class="events-page" id="events-page">
+
+  <!-- ============ Signed out ============ -->
   <div class="events-hero reveal" id="events-hero">
-    <span class="eyebrow">DIPS · Manage events</span>
-    <h1>Create events from the web</h1>
-    <p>Plan single sessions and whole course series from your computer, made for trainers, studios and clubs and open to every DIPS account. Everything you create here shows up in the DIPS app straight away.</p>
+    <div class="lang-switch lang-switch--hero" role="group" aria-label="Language / Sprache">
+      <button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button>
+    </div>
+    <span class="eyebrow" data-i18n="hero.eyebrow">DIPS · Organiser dashboard</span>
+    <h1 data-i18n="hero.title">Run your sessions from the web</h1>
+    <p data-i18n="hero.lead">Plan single sessions and whole course series, sell spots and keep an eye on your revenue.</p>
   </div>
 
-  <!-- Sign-in card -->
   <div class="auth-card reveal" id="auth-card">
-    <h2>Sign in</h2>
-    <p class="sub">Use the same account as in the DIPS app.</p>
+    <h2 data-i18n="auth.title">Sign in</h2>
+    <p class="sub" data-i18n="auth.sub">Use the same account as in the DIPS app.</p>
 
     <form id="login-form" novalidate>
       <div class="field">
-        <label for="email">Email</label>
+        <label for="email" data-i18n="auth.email">Email</label>
         <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
       </div>
       <div class="field">
-        <label for="password">Password</label>
+        <label for="password" data-i18n="auth.password">Password</label>
         <input type="password" id="password" name="password" autocomplete="current-password" placeholder="••••••••" required>
       </div>
-      <button type="submit" class="btn btn-primary" id="login-btn">Sign in</button>
-      <p class="auth-forgot"><button type="button" class="link-btn" id="reset-btn">Forgot password?</button></p>
+      <button type="submit" class="btn btn-primary" id="login-btn" data-i18n="auth.submit">Sign in</button>
+      <p class="auth-forgot"><button type="button" class="link-btn" id="reset-btn" data-i18n="auth.forgot">Forgot password?</button></p>
     </form>
 
-    <div class="auth-or"><span>or</span></div>
+    <div class="auth-or"><span data-i18n="auth.or">or</span></div>
     <button type="button" class="btn btn-apple" id="apple-btn">
       <svg width="17" height="20" viewBox="0 0 17 20" aria-hidden="true"><path fill="currentColor" d="M14.1 10.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1zM11.6 3c.7-.9 1.2-2 1.1-3.2-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.1 1.1.1 2.3-.6 3-1.5z"/></svg>
-      Continue with Apple
+      <span data-i18n="auth.apple">Continue with Apple</span>
     </button>
     <button type="button" class="btn btn-outline btn-google" id="google-btn">
       <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
-      Continue with Google
+      <span data-i18n="auth.google">Continue with Google</span>
     </button>
 
     <div class="auth-msg" id="auth-msg" role="status" aria-live="polite"></div>
-    <p class="auth-foot">No account yet? Create one in the DIPS app. Use the same sign-in as in the app: email, Apple or Google.</p>
-    <p class="auth-privacy">Sign-in is handled by Google Firebase Authentication. Details in the <a href="{{ '/datenschutz/#firebase' | relative_url }}">privacy policy</a>.</p>
+    <p class="auth-foot" data-i18n="auth.foot">No account yet? Create one in the DIPS app.</p>
+    <p class="auth-privacy"><span data-i18n="auth.privacy">Sign-in is handled by Google Firebase Authentication. Details in the</span> <a href="{{ '/datenschutz/#firebase' | relative_url }}" data-i18n="auth.privacyLink">privacy policy</a>.</p>
   </div>
 
-  <!-- Signed in: the event manager -->
-  <div class="signed-in" id="signed-in">
-    <div class="account-badge">
+  <!-- ============ Signed in: organiser dashboard ============ -->
+  <div class="dash" id="dash" hidden>
+    <header class="dash-head">
       <span class="avatar" id="avatar">D</span>
-      <div class="who">
+      <div class="dash-who">
         <b id="who-name">—</b>
-        <span id="who-email">Signed in to DIPS</span>
+        <span id="plan-chip"></span>
+        <span class="plan-usage" id="plan-usage"></span>
       </div>
-      <button class="link-btn account-signout" id="logout-btn" type="button">Sign out</button>
-    </div>
+      <div class="dash-head-actions">
+        <div class="lang-switch" role="group" aria-label="Language / Sprache">
+          <button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button>
+        </div>
+        <button class="link-btn" id="logout-btn" type="button" data-i18n="common.signOut">Sign out</button>
+      </div>
+    </header>
 
-    <div class="plan-bar" id="plan-bar" hidden>
-      <span class="plan-chip" id="plan-chip"></span>
-      <span class="plan-usage" id="plan-usage"></span>
-      <a class="link-btn plan-link" href="{{ '/dips/#plans' | relative_url }}">Compare plans</a>
-    </div>
+    <nav class="dash-nav" aria-label="Dashboard">
+      <a href="#/overview" data-view="overview" data-i18n="nav.overview">Overview</a>
+      <a href="#/events" data-view="events" data-i18n="nav.events">Events</a>
+      <a href="#/courses" data-view="courses" data-i18n="nav.courses">Paid courses</a>
+      <a href="#/revenue" data-view="revenue" data-i18n="nav.revenue">Revenue</a>
+      <a href="#/account" data-view="account" data-i18n="nav.account">Account</a>
+    </nav>
 
     <div class="auth-msg" id="manager-msg" role="status" aria-live="polite"></div>
 
-    <div class="manager-grid">
-      <!-- New event -->
-      <section class="manager-card" aria-labelledby="new-event-title">
-        <h2 id="new-event-title">New event</h2>
+    <!-- Overview -->
+    <section class="view" id="view-overview" hidden>
+      <div class="view-head">
+        <h2 id="ov-hello">—</h2>
+        <div class="view-actions">
+          <a class="btn btn-outline btn-sm" href="#/new" data-i18n="ov.newEvent">New event</a>
+          <a class="btn btn-primary btn-sm" href="#/new-course" data-i18n="ov.newCourse">New paid course</a>
+        </div>
+      </div>
+      <div class="kpis" id="ov-kpis"></div>
+      <div class="dash-grid">
+        <div class="manager-card">
+          <div class="card-head"><h3 data-i18n="ov.next">Next up</h3><a class="link-btn" href="#/events" data-i18n="ov.allEvents">All events</a></div>
+          <ul class="my-events" id="ov-next"></ul>
+        </div>
+        <div class="manager-card">
+          <div class="card-head"><h3 data-i18n="ov.todo">To do</h3></div>
+          <ul class="todo-list" id="ov-todo"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events -->
+    <section class="view" id="view-events" hidden>
+      <div class="view-head">
+        <h2 data-i18n="ev.title">Your events</h2>
+        <div class="view-actions">
+          <div class="seg" role="group" id="ev-filter">
+            <button type="button" data-filter="upcoming" data-i18n="ev.filter.upcoming">Upcoming</button>
+            <button type="button" data-filter="past" data-i18n="ev.filter.past">Past</button>
+          </div>
+          <a class="btn btn-primary btn-sm" href="#/new" data-i18n="ov.newEvent">New event</a>
+        </div>
+      </div>
+      <div class="manager-card">
+        <ul class="my-events" id="my-events" aria-live="polite"><li class="my-events-empty" data-i18n="common.loading">Loading…</li></ul>
+        <p class="hint" data-i18n="ev.hint">Moving an event to a new time or cancelling it notifies everyone who joined.</p>
+      </div>
+    </section>
+
+    <!-- Paid courses -->
+    <section class="view" id="view-courses" hidden>
+      <div class="view-head">
+        <h2 data-i18n="co.title">Paid courses</h2>
+        <div class="view-actions"><a class="btn btn-primary btn-sm" href="#/new-course" id="co-new" data-i18n="ov.newCourse">New paid course</a></div>
+      </div>
+      <p class="view-lead" data-i18n="co.lead">Courses are events with paid spots.</p>
+      <div class="notice" id="co-lock" hidden></div>
+      <div class="course-grid" id="co-list"></div>
+    </section>
+
+    <!-- Revenue -->
+    <section class="view" id="view-revenue" hidden>
+      <div class="view-head">
+        <h2 data-i18n="rev.title">Revenue</h2>
+        <div class="view-actions">
+          <div class="seg" role="group" id="rev-range">
+            <button type="button" data-range="month" data-i18n="rev.range.month">This month</button>
+            <button type="button" data-range="last" data-i18n="rev.range.last">Last month</button>
+            <button type="button" data-range="all" data-i18n="rev.range.all">All time</button>
+          </div>
+        </div>
+      </div>
+      <div class="notice" id="rev-payouts"></div>
+      <div class="kpis" id="rev-kpis"></div>
+      <div class="dash-grid">
+        <div class="manager-card">
+          <h3 data-i18n="rev.byCourse">By course</h3>
+          <div class="table-wrap" id="rev-courses"></div>
+        </div>
+        <div class="manager-card">
+          <h3 data-i18n="rev.byMonth">By month</h3>
+          <div class="table-wrap" id="rev-months"></div>
+        </div>
+      </div>
+      <div class="manager-card">
+        <h3 data-i18n="rev.latest">Latest bookings</h3>
+        <div class="table-wrap" id="rev-latest"></div>
+      </div>
+      <p class="hint" data-i18n="rev.note">Your share is the price minus the 5 % DIPS fee.</p>
+    </section>
+
+    <!-- Account -->
+    <section class="view" id="view-account" hidden>
+      <div class="view-head"><h2 data-i18n="ac.title">Account</h2></div>
+      <div class="dash-grid">
+        <div class="manager-card">
+          <h3 data-i18n="ac.account">Your account</h3>
+          <dl class="facts" id="ac-facts"></dl>
+          <p class="hint" data-i18n="ac.changeInApp">Change the account type and plan in the DIPS app.</p>
+          <p class="hint" data-i18n="ac.payouts.hint">Payouts are managed in the DIPS app.</p>
+          <p><a class="link-btn" href="{{ '/dips/#plans' | relative_url }}" data-i18n="common.comparePlans">Compare plans</a></p>
+        </div>
+        <div class="manager-card">
+          <h3 data-i18n="ac.biz">Business profile</h3>
+          <p class="hint" id="ac-biz-lead" data-i18n="ac.biz.lead">This is what people see on your profile and on your events.</p>
+          <form id="biz-form" novalidate hidden>
+            <div class="field-row field-row--2">
+              <div class="field"><label for="biz-name" data-i18n="ac.biz.name">Name</label><input id="biz-name" maxlength="60" required></div>
+              <div class="field"><label for="biz-category" data-i18n="ac.biz.category">Category</label><select id="biz-category"></select></div>
+            </div>
+            <div class="field"><label for="biz-description" data-i18n="ac.biz.description">Description</label><textarea id="biz-description" maxlength="1000" rows="4"></textarea></div>
+            <div class="field"><label for="biz-address" data-i18n="ac.biz.address">Address</label><input id="biz-address" maxlength="200"></div>
+            <div class="field-row field-row--3">
+              <div class="field"><label for="biz-website" data-i18n="ac.biz.website">Website</label><input id="biz-website" maxlength="200" inputmode="url"></div>
+              <div class="field"><label for="biz-instagram" data-i18n="ac.biz.instagram">Instagram</label><input id="biz-instagram" maxlength="60" placeholder="@"></div>
+              <div class="field"><label for="biz-phone" data-i18n="ac.biz.phone">Phone</label><input id="biz-phone" maxlength="40" inputmode="tel"></div>
+            </div>
+            <div class="field"><label for="biz-impressum" data-i18n="ac.biz.impressum">Impressum</label><textarea id="biz-impressum" maxlength="2000" rows="4"></textarea>
+              <p class="hint" data-i18n="ac.biz.impressumHint">Required to show prices and sell spots.</p></div>
+            <div class="auth-msg" id="biz-msg" role="status" aria-live="polite"></div>
+            <button type="submit" class="btn btn-primary" id="biz-save" data-i18n="common.save">Save</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Editor (new event / new paid course / edit) -->
+    <section class="view view--editor" id="view-editor" hidden>
+      <a class="link-btn back-link" href="#/events" id="ed-back">← <span data-i18n="common.back">Back</span></a>
+      <div class="manager-card editor-card">
+        <h2 id="ed-title">—</h2>
         <div class="edit-banner" id="edit-banner" hidden>
-          <span>Editing <b id="edit-banner-title"></b>. If you change the date or time, everyone who joined gets a notice.</span>
-          <button type="button" class="link-btn" id="edit-stop">Stop editing</button>
+          <span id="edit-banner-text"></span>
+          <a class="link-btn" href="#/events" data-i18n="ed.stop">Stop editing</a>
         </div>
         <form id="event-form" novalidate>
           <div class="field">
-            <label for="ev-sport">Sport</label>
-            <select id="ev-sport" required><option value="">Loading sports…</option></select>
+            <label for="ev-sport" data-i18n="ed.sport">Sport</label>
+            <select id="ev-sport" required><option value="" data-i18n="ed.loadingSports">Loading sports…</option></select>
           </div>
-
           <div class="field">
-            <label for="ev-title">Title <span class="counter" data-for="ev-title"></span></label>
-            <input id="ev-title" type="text" maxlength="20" placeholder="e.g. Morning run" required>
+            <label for="ev-title"><span data-i18n="ed.titleField">Title</span> <span class="counter" data-for="ev-title"></span></label>
+            <input id="ev-title" type="text" maxlength="20" data-i18n-placeholder="ed.titlePh" required>
           </div>
-
           <div class="field">
-            <label for="ev-details">Description <span class="counter" data-for="ev-details"></span></label>
-            <textarea id="ev-details" maxlength="120" rows="3" placeholder="What are you planning? Pace, what to bring, where exactly to meet…" required></textarea>
+            <label for="ev-details"><span data-i18n="ed.details">Description</span> <span class="counter" data-for="ev-details"></span></label>
+            <textarea id="ev-details" maxlength="120" rows="3" data-i18n-placeholder="ed.detailsPh" required></textarea>
           </div>
 
           <div class="field-row">
+            <div class="field"><label for="ev-date" data-i18n="ed.date">Date</label><input id="ev-date" type="date" required></div>
+            <div class="field"><label for="ev-time" data-i18n="ed.time">Start</label><input id="ev-time" type="time" step="300" value="18:00" required></div>
             <div class="field">
-              <label for="ev-date">Date</label>
-              <input id="ev-date" type="date" required>
-            </div>
-            <div class="field">
-              <label for="ev-time">Start</label>
-              <input id="ev-time" type="time" step="300" value="18:00" required>
-            </div>
-            <div class="field">
-              <label for="ev-duration">Duration</label>
+              <label for="ev-duration" data-i18n="ed.duration">Duration</label>
               <select id="ev-duration">
-                <option value="">Not set</option>
-                <option value="30">30 min</option>
-                <option value="45">45 min</option>
-                <option value="60">1 h</option>
-                <option value="90" selected>1.5 h</option>
-                <option value="120">2 h</option>
-                <option value="180">3 h</option>
-                <option value="240">4 h</option>
+                <option value="" data-i18n="ed.notSet">Not set</option>
+                <option value="30">30 min</option><option value="45">45 min</option><option value="60">1 h</option>
+                <option value="90" selected>1,5 h</option><option value="120">2 h</option><option value="180">3 h</option><option value="240">4 h</option>
               </select>
             </div>
           </div>
 
           <fieldset class="field">
-            <legend>Meeting point</legend>
+            <legend data-i18n="ed.place">Meeting point</legend>
             <div class="place-search">
-              <input id="ev-place-q" type="search" placeholder="Search a park, street or sports ground" aria-label="Search a place" autocomplete="off">
-              <button type="button" class="btn btn-outline" id="ev-place-go">Search</button>
+              <input id="ev-place-q" type="search" data-i18n-placeholder="ed.placeSearch" data-i18n-aria-label="ed.placeSearch" autocomplete="off">
+              <button type="button" class="btn btn-outline" id="ev-place-go" data-i18n="ed.search">Search</button>
             </div>
             <ul class="place-results" id="ev-place-results" hidden></ul>
             <div class="map-wrap">
-              <div id="ev-map" class="ev-map" role="application" aria-label="Map: click to set the meeting point"></div>
-              <button type="button" class="map-locate" id="ev-locate" title="Use my location" aria-label="Use my location">
+              <div id="ev-map" class="ev-map" role="application" aria-label="Map"></div>
+              <button type="button" class="map-locate" id="ev-locate" data-i18n-title="ed.locate" data-i18n-aria-label="ed.locate">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="2"/></svg>
               </button>
             </div>
-            <p class="hint" id="ev-place-hint">Click the map to set the meeting point, then drag the pin to fine-tune it. Meeting points are public, so never use a home address.</p>
-            <label class="sr-only" for="ev-venue">Name of the place</label>
-            <input id="ev-venue" type="text" maxlength="40" placeholder="Name of the place (optional), e.g. Stadtpark, north gate">
+            <p class="hint" id="ev-place-hint"></p>
+            <input id="ev-venue" type="text" maxlength="40" data-i18n-placeholder="ed.venuePh" data-i18n-aria-label="ed.venuePh">
           </fieldset>
 
           <div class="field-row field-row--people">
-            <div class="field">
-              <label for="ev-capacity">Group size</label>
-              <input id="ev-capacity" type="number" min="2" max="30" step="1" value="10" inputmode="numeric" required>
-            </div>
-            <div class="field">
-              <label for="ev-audience">Who can join</label>
-              <select id="ev-audience"></select>
-            </div>
-            <div class="field">
-              <label for="ev-level">Level</label>
-              <select id="ev-level"></select>
-            </div>
-          </div>
-
-          <div class="field toggle-field">
-            <label class="check"><input type="checkbox" id="ev-quorum-on"> Only takes place with a minimum number of people</label>
-            <div class="inline-input" id="ev-quorum-box" hidden>
-              <label for="ev-quorum">At least</label>
-              <input id="ev-quorum" type="number" min="2" max="30" step="1" value="4" inputmode="numeric">
-              <span>people</span>
-            </div>
+            <div class="field"><label for="ev-capacity" id="ev-capacity-label">Group size</label><input id="ev-capacity" type="number" min="2" max="30" step="1" value="10" inputmode="numeric" required></div>
+            <div class="field"><label for="ev-audience" data-i18n="ed.audience">Who can join</label><select id="ev-audience"></select></div>
+            <div class="field"><label for="ev-level" data-i18n="ed.level">Level</label><select id="ev-level"></select></div>
           </div>
 
           <div class="field toggle-field" id="price-block">
-            <label class="check"><input type="checkbox" id="ev-cost-on"> Show a price per person <span class="badge-pro">Trainer &amp; club</span></label>
-            <div class="inline-input" id="ev-cost-box" hidden>
-              <label for="ev-cost">Price</label>
-              <input id="ev-cost" type="number" min="0" max="200" step="0.5" value="10" inputmode="decimal">
-              <span>€ per person, paid on site (0 = free)</span>
-            </div>
-            <label class="check check-gap"><input type="checkbox" id="ev-sell-on"> Sell spots through DIPS (Apple Pay or card) <span class="badge-pro">Trainer &amp; club</span></label>
+            <p class="toggle-title" data-i18n="ed.priceBlock">Price</p>
+            <label class="check"><input type="checkbox" id="ev-sell-on"> <span data-i18n="ed.sellOn">Sell spots through DIPS</span> <span class="badge-pro" data-i18n="ed.badgePro">Trainer & club</span></label>
             <div id="ev-sell-box" hidden>
               <div class="inline-input">
-                <label for="ev-slot">Price per spot</label>
-                <input id="ev-slot" type="number" min="3" max="500" step="0.5" value="15" inputmode="decimal">
-                <span>€</span>
+                <label for="ev-slot" data-i18n="ed.slotPrice">Price per spot</label>
+                <input id="ev-slot" type="number" min="3" max="500" step="0.5" value="10" inputmode="decimal"><span>€</span>
               </div>
               <p class="hint" id="ev-slot-share"></p>
+              <p class="hint hint-strong" id="ev-slot-potential"></p>
+            </div>
+            <label class="check check-gap"><input type="checkbox" id="ev-cost-on"> <span data-i18n="ed.costOn">Show a price per person</span> <span class="badge-pro" data-i18n="ed.badgePro">Trainer & club</span></label>
+            <div class="inline-input" id="ev-cost-box" hidden>
+              <label for="ev-cost" data-i18n="ed.priceBlock">Price</label>
+              <input id="ev-cost" type="number" min="0" max="200" step="0.5" value="10" inputmode="decimal">
+              <span data-i18n="ed.costUnit">€ per person, paid on site (0 = free)</span>
             </div>
             <p class="hint" id="price-note" hidden></p>
           </div>
 
+          <div class="field toggle-field">
+            <label class="check"><input type="checkbox" id="ev-quorum-on"> <span data-i18n="ed.quorum">Only takes place with a minimum number of people</span></label>
+            <div class="inline-input" id="ev-quorum-box" hidden>
+              <label for="ev-quorum" data-i18n="ed.atLeast">At least</label>
+              <input id="ev-quorum" type="number" min="2" max="30" step="1" value="4" inputmode="numeric">
+              <span data-i18n="ed.people">people</span>
+            </div>
+          </div>
+
           <div class="field toggle-field" id="repeat-block">
-            <label class="check"><input type="checkbox" id="ev-repeat-on"> Repeat</label>
+            <label class="check"><input type="checkbox" id="ev-repeat-on"> <span data-i18n="ed.repeat">Repeat</span></label>
             <div id="ev-repeat-box" hidden>
               <div class="inline-input">
-                <label for="ev-repeat-mode">Every</label>
+                <label for="ev-repeat-mode" data-i18n="ed.every">Every</label>
                 <select id="ev-repeat-mode">
-                  <option value="weekly">week, on</option>
-                  <option value="daily">day</option>
-                  <option value="monthly">month</option>
+                  <option value="weekly" data-i18n="ed.rep.weekly">week, on</option>
+                  <option value="daily" data-i18n="ed.rep.daily">day</option>
+                  <option value="monthly" data-i18n="ed.rep.monthly">month</option>
                 </select>
               </div>
-              <div class="weekday-chips" id="ev-weekdays" role="group" aria-label="Repeat on">
-                <label><input type="checkbox" value="1"><span>Mo</span></label>
-                <label><input type="checkbox" value="2"><span>Tu</span></label>
-                <label><input type="checkbox" value="3"><span>We</span></label>
-                <label><input type="checkbox" value="4"><span>Th</span></label>
-                <label><input type="checkbox" value="5"><span>Fr</span></label>
-                <label><input type="checkbox" value="6"><span>Sa</span></label>
-                <label><input type="checkbox" value="0"><span>Su</span></label>
-              </div>
+              <div class="weekday-chips" id="ev-weekdays" role="group"></div>
               <div class="inline-input">
-                <label for="ev-until">Until</label>
+                <label for="ev-until" data-i18n="ed.until">Until</label>
                 <input id="ev-until" type="date">
               </div>
               <p class="hint" id="ev-repeat-preview"></p>
@@ -206,40 +306,24 @@ sitemap: false
 
           <div class="auth-msg" id="form-msg" role="status" aria-live="polite"></div>
           <div class="fit-offer" id="fit-offer" hidden></div>
-          <button type="submit" class="btn btn-primary btn-wide" id="create-btn">Create event</button>
+          <button type="submit" class="btn btn-primary btn-wide" id="create-btn">—</button>
         </form>
-      </section>
-
-      <!-- Your events -->
-      <section class="manager-card" aria-labelledby="my-events-title">
-        <div class="card-head">
-          <h2 id="my-events-title">Your upcoming events</h2>
-          <span class="count-pill" id="my-events-count"></span>
-        </div>
-        <ul class="my-events" id="my-events" aria-live="polite">
-          <li class="my-events-empty">Loading…</li>
-        </ul>
-        <p class="hint">Moving an event to a new time or cancelling it notifies everyone who joined. Chats, ratings and attendance work in the DIPS app.</p>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </div>
 </div>
 
 <!--
-  Firebase web access for the DIPS project ("hilsports").
+  Firebase web access for the DIPS project ("hilsports"), web app "DIPS Web".
   Sign-in uses the same accounts as the iOS app; events are written straight to
   Firestore exactly like the app does (see assets/js/dips/event-model.js), so the
   security rules and the server triggers (plan limit, rate limit, notifications)
-  apply unchanged.
+  apply unchanged. Revenue comes from payments/{id} (organiser-readable).
 
-  Firebase console checklist (once):
-   1. Authentication → Sign-in method: Email/Password and Google enabled.
-   2. Authentication → Settings → Authorized domains: apixdenice.github.io
-      (needed for "Continue with Google"; add localhost for local testing).
-   3. Only if App Check is ENFORCED for Cloud Firestore: register a Web app,
-      create a reCAPTCHA Enterprise key for apixdenice.github.io, add it under
-      App Check → Apps, and fill in appId + appCheckSiteKey in
-      assets/js/dips/events-app.js. Without enforcement nothing is needed.
+  Firebase console checklist:
+   1. Authentication → Sign-in method: Email/Password, Google and Apple enabled
+      (Apple needs the web setup: Services ID + key).
+   2. Authentication → Settings → Authorized domains: apixdenice.github.io.
 -->
 <script type="module" src="{{ '/assets/js/dips/events-app.js' | relative_url }}"></script>

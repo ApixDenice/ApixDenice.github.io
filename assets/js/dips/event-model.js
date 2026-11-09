@@ -34,16 +34,16 @@ export const LIMITS = Object.freeze({
 });
 
 export const AUDIENCES = [
-  { value: "all", label: "Open to everyone" },
-  { value: "womenOnly", label: "Women only" },
-  { value: "beginnersOnly", label: "Beginners only" }
+  { value: "all", label: "aud.all" },
+  { value: "womenOnly", label: "aud.womenOnly" },
+  { value: "beginnersOnly", label: "aud.beginnersOnly" }
 ];
 
 export const SKILL_LEVELS = [
-  { value: "any", label: "Any level" },
-  { value: "beginner", label: "Beginner" },
-  { value: "intermediate", label: "Intermediate" },
-  { value: "advanced", label: "Advanced" }
+  { value: "any", label: "lvl.any" },
+  { value: "beginner", label: "lvl.beginner" },
+  { value: "intermediate", label: "lvl.intermediate" },
+  { value: "advanced", label: "lvl.advanced" }
 ];
 
 // ---------------------------------------------------------------------------
@@ -68,8 +68,6 @@ export const PLANS = Object.freeze({
   })
 });
 
-export const ACCOUNT_LABELS = { personal: "Personal", trainer: "Trainer", business: "Club / studio" };
-export const PLAN_LABELS = { free: "Free", plus: "Plus", trainer: "Trainer", business: "Business" };
 
 const toDate = (v) => {
   if (!v) return null;
@@ -196,11 +194,11 @@ export function moneyCapabilities(profile = {}, payments = {}) {
   const canShowPrice = business && impressum;
   const canSellSpots = canShowPrice && profile.payoutsReady === true && payments.enabled === true;
   let reason = null;
-  if (!business) reason = "Prices are for trainer and club accounts.";
-  else if (!impressum) reason = "Add your Impressum to your business profile in the DIPS app to show prices.";
+  if (!business) reason = "money.notBusiness";
+  else if (!impressum) reason = "money.noImpressum";
   let sellReason = reason;
-  if (!sellReason && payments.enabled !== true) sellReason = "Selling spots through DIPS isn't switched on yet.";
-  else if (!sellReason && profile.payoutsReady !== true) sellReason = "Set up payouts in the DIPS app (Konto & Abo) to sell spots.";
+  if (!sellReason && payments.enabled !== true) sellReason = "money.paymentsOff";
+  else if (!sellReason && profile.payoutsReady !== true) sellReason = "money.noPayouts";
   return { canShowPrice, canSellSpots, reason, sellReason };
 }
 
@@ -286,9 +284,9 @@ function addMonthClamped(date) {
 }
 
 export const REPEAT_MODES = [
-  { value: "weekly", label: "Weekly" },
-  { value: "daily", label: "Daily" },
-  { value: "monthly", label: "Monthly" }
+  { value: "weekly", label: "rep.weekly" },
+  { value: "daily", label: "rep.daily" },
+  { value: "monthly", label: "rep.monthly" }
 ];
 
 /**
@@ -343,60 +341,60 @@ const isInt = (v) => Number.isInteger(v);
  * @param {object} f form values (see buildEventDocuments)
  * @param {Date} now
  * @param {{ editing?: boolean, money?: ReturnType<typeof moneyCapabilities> }} [opts]
- * @returns {string[]} human-readable problems; empty when the form can be saved
+ * @returns {string[]} i18n keys of the problems (see i18n.js "v.*" / "money.*"); empty when the form can be saved
  */
 export function validateForm(f, now = new Date(), opts = {}) {
   const problems = [];
   const title = (f.title || "").trim();
   const details = (f.details || "").trim();
-  if (!f.sport) problems.push("Choose a sport.");
-  if (!title) problems.push("Add a title.");
-  else if ([...title].length > LIMITS.titleMax) problems.push(`The title can have at most ${LIMITS.titleMax} characters.`);
-  if (!details) problems.push("Add a short description.");
-  else if ([...details].length > LIMITS.detailsMax) problems.push(`The description can have at most ${LIMITS.detailsMax} characters.`);
-  if (!f.start) problems.push("Pick a date and start time.");
-  else if (f.start <= now) problems.push("The start time is in the past.");
+  if (!f.sport) problems.push("v.sport");
+  if (!title) problems.push("v.title");
+  else if ([...title].length > LIMITS.titleMax) problems.push("v.titleLong");
+  if (!details) problems.push("v.details");
+  else if ([...details].length > LIMITS.detailsMax) problems.push("v.detailsLong");
+  if (!f.start) problems.push("v.start");
+  else if (f.start <= now) problems.push("v.past");
   if (!isInt(f.capacity) || f.capacity < LIMITS.capacityMin || f.capacity > LIMITS.capacityMax) {
-    problems.push(`Group size must be between ${LIMITS.capacityMin} and ${LIMITS.capacityMax}.`);
+    problems.push("v.capacity");
   }
   if (f.minParticipants != null) {
     if (!isInt(f.minParticipants) || f.minParticipants < LIMITS.quorumMin || f.minParticipants > Math.min(30, f.capacity || 0)) {
-      problems.push("The minimum number of people must be at least 2 and not more than the group size.");
+      problems.push("v.quorum");
     }
   }
   if (f.durationMinutes != null) {
     if (!isInt(f.durationMinutes) || f.durationMinutes < LIMITS.durationMin || f.durationMinutes > LIMITS.durationMax) {
-      problems.push("Duration must be between 15 minutes and 8 hours.");
+      problems.push("v.duration");
     }
   }
   if (!opts.editing && (typeof f.latitude !== "number" || typeof f.longitude !== "number"
       || Math.abs(f.latitude) > 90 || Math.abs(f.longitude) > 180)) {
-    problems.push("Set the meeting point on the map.");
+    problems.push("v.place");
   }
-  if (!AUDIENCES.some((a) => a.value === f.audience)) problems.push("Choose who the event is for.");
-  if (!SKILL_LEVELS.some((s) => s.value === f.skillLevel)) problems.push("Choose a level.");
+  if (!AUDIENCES.some((a) => a.value === f.audience)) problems.push("v.audience");
+  if (!SKILL_LEVELS.some((s) => s.value === f.skillLevel)) problems.push("v.level");
 
   const money = opts.money || { canShowPrice: false, canSellSpots: false };
   if (f.costPerPerson != null) {
-    if (!money.canShowPrice) problems.push(money.reason || "Prices are for trainer and club accounts.");
+    if (!money.canShowPrice) problems.push(money.reason || "money.notBusiness");
     else if (!Number.isFinite(f.costPerPerson) || f.costPerPerson < 0 || f.costPerPerson > LIMITS.costMax) {
-      problems.push(`The price must be between 0 and ${LIMITS.costMax} €.`);
+      problems.push("v.cost");
     }
   }
   if (f.priceCents != null) {
-    if (!money.canSellSpots) problems.push(money.sellReason || "You can't sell spots with this account.");
+    if (!money.canSellSpots) problems.push(money.sellReason || "money.notBusiness");
     else if (!isInt(f.priceCents) || f.priceCents < LIMITS.slotMinCents || f.priceCents > LIMITS.slotMaxCents) {
-      problems.push("A spot must cost between 3 € and 500 €.");
+      problems.push("v.slot");
     }
   }
 
   if (f.repeat && !opts.editing) {
     if ((f.repeat.mode || "weekly") === "weekly" && (!f.repeat.weekdays || f.repeat.weekdays.length === 0)) {
-      problems.push("Pick at least one weekday to repeat on.");
+      problems.push("v.weekdays");
     }
-    if (!f.repeat.until) problems.push("Pick the last day of the series.");
+    if (!f.repeat.until) problems.push("v.until");
     else if (f.start && f.repeat.until < new Date(f.start.getFullYear(), f.start.getMonth(), f.start.getDate())) {
-      problems.push("The series ends before it starts.");
+      problems.push("v.untilBefore");
     }
   }
   return problems;

@@ -1,0 +1,30 @@
+---
+layout: default
+title: Payouts — DIPS
+permalink: /dips/zahlungen/
+robots: noindex
+sitemap: false
+---
+<!-- Return page of the Stripe payout onboarding (functions/lib/payments.js ONBOARDING_RETURN_URL). -->
+<div class="dips">
+<div class="events-page">
+  <div class="auth-card" style="text-align:center">
+    <h1 id="z-title" style="font-size:1.5rem">Auszahlungen</h1>
+    <p id="z-text"></p>
+    <p><a class="btn btn-primary" href="dips://">DIPS-App öffnen</a></p>
+    <p class="auth-foot" id="z-en"></p>
+  </div>
+</div>
+</div>
+<script>
+  (function () {
+    var refresh = new URLSearchParams(location.search).get("status") === "refresh";
+    document.getElementById("z-title").textContent = refresh ? "Link abgelaufen" : "Auszahlungen eingerichtet";
+    document.getElementById("z-text").textContent = refresh
+      ? "Der Einrichtungslink ist abgelaufen. Öffne in der DIPS-App wieder Konto & Abo → Auszahlungen einrichten."
+      : "Danke! Stripe prüft deine Angaben. Sobald alles bestätigt ist, kannst du in DIPS Plätze verkaufen. Kehr jetzt zur DIPS-App zurück.";
+    document.getElementById("z-en").textContent = refresh
+      ? "The setup link has expired. In the DIPS app, open Konto & Abo → set up payouts again."
+      : "Thanks! Stripe is checking your details. Once confirmed you can sell spots in DIPS. Return to the DIPS app now.";
+  })();
+</script>
