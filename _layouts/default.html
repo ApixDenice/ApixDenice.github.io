@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en-US" }}">
+<html lang="{{ page.lang | default: site.lang | default: "en-US" }}"{% if page.alt_url %} data-page-lang="{{ page.page_lang }}" data-alt-url="{{ page.alt_url | relative_url }}"{% endif %}>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,10 +16,24 @@
       /* Runs before first paint: flags JS for scroll reveals and decides whether
          the home intro plays. The intro only runs for a fresh entry into the site
          (not reloads, back/forward or internal navigation) and never with reduced
-         motion. No cookies or storage are used. */
+         motion. It also applies the language (DE/EN): the visitor's choice from
+         the header switch (localStorage "dips-lang", shared with the DIPS
+         manager), otherwise the browser language. No cookies are used. */
       (function () {
         var d = document.documentElement;
         d.className += " js";
+        var stored = null;
+        try { stored = localStorage.getItem("dips-lang"); } catch (e) {}
+        if (stored !== "de" && stored !== "en") stored = null;
+        var lang = stored || ((navigator.language || "").toLowerCase().indexOf("de") === 0 ? "de" : "en");
+        var pageLang = d.getAttribute("data-page-lang");
+        if (pageLang) {
+          /* A page that exists once per language (e.g. a privacy policy) */
+          if (stored && stored !== pageLang) { location.replace(d.getAttribute("data-alt-url") + location.hash); }
+          lang = pageLang;
+        }
+        d.className += " lang-" + lang;
+        d.lang = lang;
         {%- if page.intro %}
         try {
           var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -34,6 +48,19 @@
     </script>
 
     {% seo %}
+    <script>
+      (function () {
+        var d = document.documentElement;
+        d.setAttribute("data-title-en", document.title);
+        {%- if page.title_de %}
+        d.setAttribute("data-title-de", {{ page.title_de | append: " | " | append: site.title | jsonify }});
+        {%- elsif page.url == "/" %}
+        d.setAttribute("data-title-de", "ApixDenice | Native Apps für iPhone & Mac");
+        {%- endif %}
+        var de = d.getAttribute("data-title-de");
+        if (d.className.indexOf("lang-de") > -1 && de) document.title = de;
+      })();
+    </script>
 
     <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="32x32">
     <link rel="icon" href="{{ '/assets/brand/favicon.svg' | relative_url }}" type="image/svg+xml">
@@ -42,16 +69,20 @@
     <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
   </head>
   <body class="{% if page.url == '/' %}is-home{% endif %}">
-    <a class="sr-only" href="#main">Skip to content</a>
+    <a class="sr-only" href="#main">{% include t.html en="Skip to content" de="Zum Inhalt springen" %}</a>
     <header class="site-header">
       <nav class="nav" aria-label="Primary">
         <div class="nav-inner">
-          <a href="{{ '/' | relative_url }}" class="brand" aria-label="ApixDenice home">
+          <a href="{{ '/' | relative_url }}" class="brand" aria-label="ApixDenice home" data-de-aria-label="ApixDenice Startseite">
             {% include logo-mark.html id="hdr" %}
             <span class="brand-name">Apix<span>Denice</span></span>
           </a>
 
-          <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">
+          <div class="site-lang" role="group" aria-label="Sprache / Language">
+            <button type="button" data-lang="de" aria-pressed="false">DE</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+
+          <button class="nav-toggle" aria-label="Toggle menu" data-de-aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-menu">
             <span></span><span></span><span></span>
           </button>
 
@@ -65,30 +96,30 @@
                 <li>
                   <a href="{{ '/toomuchfood/' | relative_url }}">
                     <img class="dd-icon" src="{{ '/assets/images/apps/toomuchfood-128.webp' | relative_url }}" alt="" width="38" height="38">
-                    <span><span class="dd-title">Too Much Food</span><span class="dd-sub">Arcade game for iPhone</span></span>
+                    <span><span class="dd-title">Too Much Food</span><span class="dd-sub">{% include t.html en="Arcade game for iPhone" de="Arcade-Spiel fürs iPhone" %}</span></span>
                   </a>
                 </li>
                 <li>
                   <a href="{{ '/office-mom/' | relative_url }}">
                     <img class="dd-icon" src="{{ '/assets/images/apps/office-mom-128.webp' | relative_url }}" alt="" width="38" height="38">
-                    <span><span class="dd-title">Office Mom</span><span class="dd-sub">Healthy desk habits · iPhone &amp; Mac</span></span>
+                    <span><span class="dd-title">Office Mom</span><span class="dd-sub">{% include t.html en="Healthy desk habits · iPhone &amp; Mac" de="Gesund am Schreibtisch · iPhone &amp; Mac" %}</span></span>
                   </a>
                 </li>
                 <li>
                   <a href="{{ '/dips/' | relative_url }}">
                     <img class="dd-icon" src="{{ '/assets/images/apps/dips-128.webp' | relative_url }}" alt="" width="38" height="38">
-                    <span><span class="dd-title">DIPS</span><span class="dd-sub">Social sport events · coming soon</span></span>
+                    <span><span class="dd-title">DIPS</span><span class="dd-sub">{% include t.html en="Social sport events · coming soon" de="Sport-Events in deiner Nähe · bald verfügbar" %}</span></span>
                   </a>
                   <a class="dd-subitem" href="{{ '/dips/events/' | relative_url }}">
                     <span class="dd-subicon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="3" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4M12 13v5M9.5 15.5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-                    <span><span class="dd-title">Manage events</span><span class="dd-sub">Sign in on the web</span></span>
+                    <span><span class="dd-title">{% include t.html en="Manage events" de="Events verwalten" %}</span><span class="dd-sub">{% include t.html en="Sign in on the web" de="Im Web anmelden" %}</span></span>
                   </a>
                 </li>
               </ul>
             </li>
-            <li><a href="{{ '/#about' | relative_url }}" class="nav-link">About</a></li>
-            <li><a href="{{ '/contact/' | relative_url }}" class="nav-link {% if page.url contains '/contact' %}is-active{% endif %}">Contact</a></li>
-            <li><a href="{{ '/contact/' | relative_url }}" class="nav-cta">Get in touch</a></li>
+            <li><a href="{{ '/#about' | relative_url }}" class="nav-link">{% include t.html en="About" de="Über mich" %}</a></li>
+            <li><a href="{{ '/contact/' | relative_url }}" class="nav-link {% if page.url contains '/contact' %}is-active{% endif %}">{% include t.html en="Contact" de="Kontakt" %}</a></li>
+            <li><a href="{{ '/contact/' | relative_url }}" class="nav-cta">{% include t.html en="Get in touch" de="Kontakt aufnehmen" %}</a></li>
           </ul>
         </div>
       </nav>
@@ -101,11 +132,11 @@
     <footer class="site-footer">
       <div class="footer-inner">
         <div class="footer-brand">
-          <a href="{{ '/' | relative_url }}" class="brand" aria-label="ApixDenice home">
+          <a href="{{ '/' | relative_url }}" class="brand" aria-label="ApixDenice home" data-de-aria-label="ApixDenice Startseite">
             {% include logo-mark.html id="ftr" %}
             <span class="brand-name">Apix<span>Denice</span></span>
           </a>
-          <p>Native apps for iPhone &amp; Mac, designed and built by Dennis Hasselbusch.</p>
+          <p>{% include t.html en="Native apps for iPhone &amp; Mac, designed and built by Dennis Hasselbusch." de="Native Apps für iPhone &amp; Mac, gestaltet und entwickelt von Dennis Hasselbusch." %}</p>
         </div>
         <nav class="footer-col" aria-label="Apps">
           <h2>Apps</h2>
@@ -115,19 +146,19 @@
             <li><a href="{{ '/dips/' | relative_url }}">DIPS</a></li>
           </ul>
         </nav>
-        <nav class="footer-col" aria-label="Legal">
-          <h2>Legal</h2>
+        <nav class="footer-col" aria-label="Legal" data-de-aria-label="Rechtliches">
+          <h2>{% include t.html en="Legal" de="Rechtliches" %}</h2>
           <ul>
             <li><a href="{{ '/impressum/' | relative_url }}">Impressum</a></li>
-            <li><a href="{{ '/datenschutz/' | relative_url }}">Datenschutz · Privacy</a></li>
-            <li><a href="{{ '/toomuchfood/privacy/' | relative_url }}">Too Much Food privacy</a></li>
-            <li><a href="{{ '/office-mom/privacy/' | relative_url }}">Office Mom privacy</a></li>
+            <li><a href="{{ '/datenschutz/' | relative_url }}">{% include t.html en="Privacy" de="Datenschutz" %}</a></li>
+            <li><a href="{{ '/toomuchfood/privacy/' | relative_url }}" lang="en">Too Much Food privacy</a><a href="{{ '/toomuchfood/datenschutz/' | relative_url }}" lang="de">Too Much Food Datenschutz</a></li>
+            <li><a href="{{ '/office-mom/privacy/' | relative_url }}">{% include t.html en="Office Mom privacy" de="Office Mom Datenschutz" %}</a></li>
           </ul>
         </nav>
-        <nav class="footer-col" aria-label="Connect">
-          <h2>Connect</h2>
+        <nav class="footer-col" aria-label="Connect" data-de-aria-label="Kontakt">
+          <h2>{% include t.html en="Connect" de="Kontakt" %}</h2>
           <ul>
-            <li><a href="mailto:{{ site.email }}">Email</a></li>
+            <li><a href="mailto:{{ site.email }}">{% include t.html en="Email" de="E-Mail" %}</a></li>
             <li><a href="https://www.linkedin.com/in/dennis-hasselbusch-7512391b5/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             <li><a href="https://github.com/ApixDenice" target="_blank" rel="noopener noreferrer">GitHub</a></li>
           </ul>
@@ -135,7 +166,7 @@
       </div>
       <div class="footer-bottom">
         <p>© {{ 'now' | date: "%Y" }} Dennis Hasselbusch · ApixDenice</p>
-        <p>Made in Germany · No cookies, no tracking</p>
+        <p>{% include t.html en="Made in Germany · No cookies, no tracking" de="Made in Germany · Keine Cookies, kein Tracking" %}</p>
       </div>
     </footer>
 

@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Contact
+title_de: Kontakt
 description: Get in touch with Dennis Hasselbusch (ApixDenice) about Too Much Food, Office Mom, DIPS or a collaboration.
 permalink: /contact/
 redirect_from:
@@ -9,9 +10,10 @@ redirect_from:
 
 <div class="contact-page">
   <div class="contact-header">
-    <span class="eyebrow">Contact</span>
-    <h1>Get in touch</h1>
-    <p>Questions about one of the apps, feedback, or a project you'd like to collaborate on — I'd love to hear from you.</p>
+    <span class="eyebrow">{% include t.html en="Contact" de="Kontakt" %}</span>
+    <h1>{% include t.html en="Get in touch" de="Kontakt aufnehmen" %}</h1>
+    <p lang="en">Questions about one of the apps, feedback, or a project you'd like to collaborate on — I'd love to hear from you.</p>
+    <p lang="de">Fragen zu einer der Apps, Feedback oder ein Projekt, an dem wir zusammenarbeiten könnten – ich freue mich, von dir zu hören.</p>
   </div>
 
   <div class="contact-links">
@@ -20,7 +22,7 @@ redirect_from:
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
       </span>
       <span>
-        <span class="contact-link-label">Email</span>
+        <span class="contact-link-label">{% include t.html en="Email" de="E-Mail" %}</span>
         <span class="contact-link-value">{{ site.email }}</span>
       </span>
       <span class="chev" aria-hidden="true">→</span>
@@ -49,5 +51,6 @@ redirect_from:
     </a>
   </div>
 
-  <p class="contact-note"><strong>App support:</strong> please mention the app name, your device and the iOS or macOS version — that helps me reproduce issues quickly.</p>
+  <p class="contact-note" lang="en"><strong>App support:</strong> please mention the app name, your device and the iOS or macOS version — that helps me reproduce issues quickly.</p>
+  <p class="contact-note" lang="de"><strong>App-Support:</strong> Nenn bitte den Namen der App, dein Gerät und die iOS- oder macOS-Version – so kann ich Probleme schnell nachvollziehen.</p>
 </div>

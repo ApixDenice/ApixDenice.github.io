@@ -3,6 +3,8 @@ layout: default
 title: Too Much Food — Privacy Policy
 description: Privacy policy for the Too Much Food iOS game — what data Google AdMob processes, Game Center leaderboard consent, and your GDPR rights.
 permalink: /toomuchfood/privacy/
+page_lang: en
+alt_url: /toomuchfood/datenschutz/
 ---
 
 <div class="privacy-policy-page">
@@ -10,9 +12,6 @@ permalink: /toomuchfood/privacy/
     <span class="eyebrow">Too Much Food</span>
     <h1>Privacy Policy</h1>
     <p class="last-updated">Last updated: 16 September 2026</p>
-    <p class="privacy-lang-switch">
-      <a href="{{ '/toomuchfood/datenschutz/' | relative_url }}">Diese Seite auf Deutsch →</a>
-    </p>
   </div>
 
   <div class="privacy-content">
@@ -73,7 +72,7 @@ permalink: /toomuchfood/privacy/
         <li>your Game Center nickname if you are signed in to Game Center; otherwise the neutral name “A FRIEND”</li>
       </ul>
       <p>We do not receive, store or have access to this data. The link is created on your device and passed on only by you. The recipient’s app reads the challenge from the link and keeps it on their device only, until it is won, declined or three days have passed. If you do not want your nickname to be included, sign out of Game Center before sending a challenge, or do not send one.</p>
-      <p>If the recipient opens the link without the App installed, a landing page on this website is loaded. The website is hosted by GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA (GitHub Pages). When the page is opened, GitHub processes technical data such as the IP address, browser information and the requested address — which includes the challenge data in the link — to deliver the page and keep its service secure. The page reads the challenge inside the browser and sends nothing to us. Data may be processed in the USA; the safeguards GitHub relies on are described in its <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">privacy statement</a>.</p>
+      <p>If the recipient opens the link without the App installed, a landing page on this website is loaded. The website is hosted by GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA (GitHub Pages). When the page is opened, GitHub processes technical data such as the IP address, browser information and the requested address — which includes the challenge data in the link — to deliver the page and keep its service secure. The page reads the challenge inside the browser and sends nothing to us. If you switch the page language (DE/EN), your browser stores that choice locally (localStorage); it never leaves your device. Data may be processed in the USA; the safeguards GitHub relies on are described in its <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">privacy statement</a>.</p>
     </section>
 
     <section class="privacy-section">

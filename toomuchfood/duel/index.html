@@ -50,30 +50,34 @@
           text-shadow:0 2px 0 rgba(0,0,0,.28); }
   .seek { position:absolute; left:0; right:0; bottom:0; height:4px; background:rgba(0,0,0,.18); }
   .seek i { display:block; height:100%; width:0; background:var(--gold); }
+  .lang { position:fixed; top:max(12px, env(safe-area-inset-top)); right:12px; display:inline-flex; border-radius:999px; overflow:hidden; background:rgba(0,0,0,.16); }
+  .lang button { border:0; background:none; color:#fff; font:800 12px/1 inherit; font-family:inherit; padding:8px 11px; cursor:pointer; opacity:.8; }
+  .lang button.on { background:#fff; color:#2B1B10; opacity:1; }
 </style>
 </head>
 <body>
+<div class="lang" role="group" aria-label="Sprache / Language"><button type="button" data-l="de">DE</button><button type="button" data-l="en">EN</button></div>
 <main>
   <p class="brand">TOO MUCH <b>FOOD</b></p>
-  <p class="kicker">DUEL!</p>
-  <p class="who" id="who">A friend challenges you</p>
+  <p class="kicker" data-t="kicker">DUEL!</p>
+  <p class="who" id="who" data-t="whoGeneric">A friend challenges you</p>
 
   <div class="replay" id="replay">
     <div class="stage">
       <canvas id="canvas" width="800" height="400"></canvas>
-      <div class="tag" id="tag">THEIR RUN</div>
+      <div class="tag" id="tag" data-t="tagGeneric">THEIR RUN</div>
       <div class="live" id="live">0</div>
       <div class="seek"><i id="seek"></i></div>
     </div>
   </div>
 
   <p class="score" id="score">?</p>
-  <p class="sub">TO BEAT · SAME COURSE · RACE THEIR GHOST</p>
+  <p class="sub" data-t="sub">TO BEAT · SAME COURSE · RACE THEIR GHOST</p>
 
-  <a class="btn primary" id="open" href="toomuchfood://duel">Open in Too Much Food</a>
-  <a class="btn install" id="get" href="https://apps.apple.com/app/id6749512460">Get the game — free</a>
+  <a class="btn primary" id="open" href="toomuchfood://duel" data-t="open">Open in Too Much Food</a>
+  <a class="btn install" id="get" href="https://apps.apple.com/app/id6749512460" data-t="get">Get the game — free</a>
 
-  <p class="help" id="help">Don't have it? Tap <b>Get the game</b> — the challenge
+  <p class="help" id="help" data-t-html="help">Don't have it? Tap <b>Get the game</b> — the challenge
     is waiting when you open it.</p>
 </main>
 <script>
@@ -83,6 +87,51 @@
 // The replay is the point of this page. A link that is only a number is a dead
 // end for anyone who does not already have the game; a ten-second replay of the
 // run they are being challenged to beat is the whole pitch.
+// Language: same choice as the rest of the site (localStorage "dips-lang"),
+// otherwise the browser language. Only fixed strings from this file are used.
+var DuelLang = (function () {
+  var T = {
+    en: { kicker: "DUEL!", whoGeneric: "A friend challenges you", who: "{n} challenges you", friend: "A FRIEND",
+          tagGeneric: "THEIR RUN", tag: "{n}'S RUN", sub: "TO BEAT · SAME COURSE · RACE THEIR GHOST",
+          open: "Open in Too Much Food", get: "Get the game — free",
+          help: "Don't have it? Tap <b>Get the game</b> — the challenge is waiting when you open it.",
+          title: "Duel · Too Much Food" },
+    de: { kicker: "DUELL!", whoGeneric: "Jemand fordert dich heraus", who: "{n} fordert dich heraus", friend: "JEMAND",
+          tagGeneric: "IHR LAUF", tag: "LAUF VON {n}", sub: "ZU SCHLAGEN · GLEICHE STRECKE · LAUF GEGEN DEN GEIST",
+          open: "In Too Much Food öffnen", get: "Spiel holen – kostenlos",
+          help: "Noch nicht installiert? Tippe auf <b>Spiel holen</b> – die Herausforderung wartet, wenn du es öffnest.",
+          title: "Duell · Too Much Food" }
+  };
+  var lang, name = null;
+  try { lang = localStorage.getItem("dips-lang"); } catch (e) {}
+  if (lang !== "de" && lang !== "en") lang = (navigator.language || "").toLowerCase().indexOf("de") === 0 ? "de" : "en";
+  function t(k) { return T[lang][k]; }
+  function apply() {
+    document.documentElement.lang = lang;
+    document.title = t("title");
+    document.querySelectorAll("[data-t]").forEach(function (e) { e.textContent = t(e.getAttribute("data-t")); });
+    document.querySelectorAll("[data-t-html]").forEach(function (e) { e.innerHTML = t(e.getAttribute("data-t-html")); });
+    if (name !== null) {
+      var shown = name || t("friend");
+      document.getElementById("who").textContent = t("who").replace("{n}", shown);
+      document.getElementById("tag").textContent = t("tag").replace("{n}", shown);
+    }
+    document.querySelectorAll(".lang button").forEach(function (b) {
+      var on = b.getAttribute("data-l") === lang;
+      b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on));
+    });
+  }
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      lang = b.getAttribute("data-l");
+      try { localStorage.setItem("dips-lang", lang); } catch (e) {}
+      apply();
+    });
+  });
+  apply();
+  return { setName: function (n) { name = n; apply(); } };
+})();
+
 (function () {
   var params = new URLSearchParams(location.search);
   var token = params.get("d");
@@ -162,10 +211,9 @@
       duel = parse(raw);
     } catch (e) { return; }               // keep the generic copy
 
-    var name = (duel.name || "").replace(/[^A-Z0-9 _.\-]/gi, "").slice(0, 14).toUpperCase() || "A FRIEND";
-    document.getElementById("who").textContent = name + " challenges you";
+    var name = (duel.name || "").replace(/[^A-Z0-9 _.\-]/gi, "").slice(0, 14).toUpperCase();
+    DuelLang.setName(name);   // "" → "A FRIEND" / "JEMAND"
     document.getElementById("score").textContent = String(duel.score);
-    document.getElementById("tag").textContent = name + "'S RUN";
     document.getElementById("replay").className = "replay on";
     play(duel);
   }

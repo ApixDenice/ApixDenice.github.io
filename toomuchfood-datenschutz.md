@@ -4,6 +4,8 @@ title: Too Much Food — Datenschutzerklärung
 description: Datenschutzerklärung für das iOS-Spiel Too Much Food — welche Daten Google AdMob verarbeitet, Einwilligung zur Game-Center-Bestenliste und Ihre Rechte nach der DSGVO.
 permalink: /toomuchfood/datenschutz/
 lang: de-DE
+page_lang: de
+alt_url: /toomuchfood/privacy/
 ---
 
 <div class="privacy-policy-page">
@@ -11,9 +13,6 @@ lang: de-DE
     <span class="eyebrow">Too Much Food</span>
     <h1>Datenschutzerklärung</h1>
     <p class="last-updated">Stand: 16. September 2026</p>
-    <p class="privacy-lang-switch">
-      <a href="{{ '/toomuchfood/privacy/' | relative_url }}">Read this page in English →</a>
-    </p>
   </div>
 
   <div class="privacy-content">
@@ -74,7 +73,7 @@ lang: de-DE
         <li>Ihren Game-Center-Nickname, sofern Sie bei Game Center angemeldet sind; andernfalls den neutralen Namen „A FRIEND“</li>
       </ul>
       <p>Wir erhalten diese Daten nicht, speichern sie nicht und haben keinen Zugriff darauf. Der Link wird auf Ihrem Gerät erzeugt und ausschließlich von Ihnen weitergegeben. Die App der empfangenden Person liest die Herausforderung aus dem Link und speichert sie nur auf deren Gerät, bis sie gewonnen, abgelehnt oder nach drei Tagen verfallen ist. Wenn Ihr Nickname nicht enthalten sein soll, melden Sie sich vor dem Senden bei Game Center ab oder verzichten Sie auf das Senden.</p>
-      <p>Öffnet die empfangende Person den Link ohne installierte App, wird eine Landingpage auf dieser Website geladen. Die Website wird von GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA (GitHub Pages) gehostet. Beim Aufruf verarbeitet GitHub technische Daten wie IP-Adresse, Browserinformationen und die aufgerufene Adresse — einschließlich der im Link enthaltenen Herausforderungsdaten —, um die Seite auszuliefern und den Dienst abzusichern. Die Seite liest die Herausforderung im Browser aus und sendet nichts an uns. Eine Verarbeitung in den USA ist möglich; die von GitHub genutzten Garantien sind in dessen <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">Datenschutzerklärung</a> beschrieben.</p>
+      <p>Öffnet die empfangende Person den Link ohne installierte App, wird eine Landingpage auf dieser Website geladen. Die Website wird von GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA (GitHub Pages) gehostet. Beim Aufruf verarbeitet GitHub technische Daten wie IP-Adresse, Browserinformationen und die aufgerufene Adresse — einschließlich der im Link enthaltenen Herausforderungsdaten —, um die Seite auszuliefern und den Dienst abzusichern. Die Seite liest die Herausforderung im Browser aus und sendet nichts an uns. Wechseln Sie die Sprache der Seite (DE/EN), speichert Ihr Browser diese Wahl lokal (localStorage); sie verlässt Ihr Gerät nicht. Eine Verarbeitung in den USA ist möglich; die von GitHub genutzten Garantien sind in dessen <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">Datenschutzerklärung</a> beschrieben.</p>
     </section>
 
     <section class="privacy-section">

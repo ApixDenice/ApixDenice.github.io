@@ -1,4 +1,5 @@
-// ApixDenice — site interactions (no dependencies, no storage, no tracking)
+// ApixDenice — site interactions (no dependencies, no tracking; the only
+// storage is the DE/EN choice in localStorage)
 (function () {
   'use strict';
 
@@ -9,10 +10,57 @@
     initNav();
     initHeaderState();
     initCarousels();
+    initLang();
     initReveal();
     initHeroTilt();
     initIntro();
   });
+
+  /* ---------------- Language (DE / EN) ----------------
+     Texts are in the page twice (lang="en" / lang="de") and CSS shows one.
+     Attributes that can't be doubled carry a German copy in data-de-<attr>.
+     The choice is shared with the DIPS manager (same storage key). */
+  var LANG_KEY = 'dips-lang';
+  var LANG_ATTRS = ['aria-label', 'alt', 'title', 'placeholder'];
+
+  function currentLang() { return root.classList.contains('lang-de') ? 'de' : 'en'; }
+
+  function applyLangAttrs(lang) {
+    LANG_ATTRS.forEach(function (attr) {
+      document.querySelectorAll('[data-de-' + attr + ']').forEach(function (el) {
+        if (!el.hasAttribute('data-en-' + attr)) el.setAttribute('data-en-' + attr, el.getAttribute(attr) || '');
+        el.setAttribute(attr, el.getAttribute('data-' + lang + '-' + attr));
+      });
+    });
+    var title = root.getAttribute('data-title-' + lang);
+    if (title) document.title = title;
+    document.querySelectorAll('button[data-lang]').forEach(function (b) {
+      var on = b.getAttribute('data-lang') === lang;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  function setSiteLang(lang) {
+    try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* storage blocked: this visit only */ }
+    var pageLang = root.getAttribute('data-page-lang');
+    if (pageLang && pageLang !== lang) {
+      location.href = root.getAttribute('data-alt-url') + location.hash;
+      return;
+    }
+    root.classList.remove('lang-de', 'lang-en');
+    root.classList.add('lang-' + lang);
+    root.lang = lang;
+    applyLangAttrs(lang);
+    document.dispatchEvent(new CustomEvent('site:lang', { detail: { lang: lang } }));
+  }
+
+  function initLang() {
+    applyLangAttrs(currentLang());
+    document.querySelectorAll('button[data-lang]').forEach(function (b) {
+      b.addEventListener('click', function () { setSiteLang(b.getAttribute('data-lang')); });
+    });
+  }
 
   /* ---------------- Navigation ---------------- */
   function initNav() {
@@ -108,6 +156,7 @@
           btn.type = 'button';
           btn.className = 'carousel-thumb' + (i === 0 ? ' is-active' : '');
           btn.setAttribute('aria-label', 'Show screenshot ' + (i + 1));
+          btn.setAttribute('data-de-aria-label', 'Screenshot ' + (i + 1) + ' zeigen');
           var im = document.createElement('img');
           im.src = src;
           im.alt = '';
@@ -125,7 +174,10 @@
         index = (next + slides.length) % slides.length;
         slides.forEach(function (s, i) { s.classList.toggle('is-active', i === index); });
         thumbs.forEach(function (t, i) { t.classList.toggle('is-active', i === index); });
-        if (captionEl) captionEl.textContent = slides[index].getAttribute('data-caption') || '';
+        if (captionEl) {
+          var s = slides[index];
+          captionEl.textContent = (currentLang() === 'de' && s.getAttribute('data-caption-de')) || s.getAttribute('data-caption') || '';
+        }
         if (countEl) countEl.textContent = (index + 1) + ' / ' + slides.length;
       }
 
@@ -151,6 +203,9 @@
         }, { passive: true });
       }
 
+      go(0);
+      document.addEventListener('site:lang', function () { go(index); });
+
       carousel.addEventListener('click', function (e) {
         var img = e.target.closest('.carousel-slide img');
         if (img) openLightbox(img.getAttribute('src'), img.getAttribute('alt'));
@@ -168,7 +223,7 @@
     var close = document.createElement('button');
     close.type = 'button';
     close.className = 'lightbox-close';
-    close.setAttribute('aria-label', 'Close');
+    close.setAttribute('aria-label', currentLang() === 'de' ? 'Schließen' : 'Close');
     close.textContent = '×';
     var img = document.createElement('img');
     img.src = src;

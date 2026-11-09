@@ -56,15 +56,23 @@ const TIME_ZONE = "Europe/Berlin";
 const EARLY_ACCESS_MONTHS = 3;
 const ACCOUNT_TYPES = ["personal", "trainer", "business"];
 
+// Port of functions/lib/plans.js PLANS (kept identical by plans.diff.test).
 export const PLANS = Object.freeze({
   personal: Object.freeze({
-    free: { limit: 4, period: "month", seriesMax: 4, paidEvents: false },
-    plus: { limit: 15, period: "month", seriesMax: 26, paidEvents: false }
+    free: { limit: 4, period: "month", seriesMax: 4, paidEvents: false,
+      webManager: false, costSharing: false, highlight: false, attendanceStats: false },
+    plus: { limit: 15, period: "month", seriesMax: 26, paidEvents: false,
+      webManager: true, costSharing: false, highlight: false, attendanceStats: false },
+    pro: { limit: 40, period: "month", seriesMax: 26, paidEvents: false,
+      webManager: true, costSharing: true, highlight: true, attendanceStats: true }
   }),
   business: Object.freeze({
-    free: { limit: 2, period: "week", seriesMax: 26, paidEvents: true },
-    trainer: { limit: 7, period: "week", seriesMax: 26, paidEvents: true },
-    business: { limit: 30, period: "week", seriesMax: 26, paidEvents: true }
+    free: { limit: 2, period: "week", seriesMax: 26, paidEvents: true,
+      webManager: true, costSharing: false, highlight: false, attendanceStats: false },
+    trainer: { limit: 7, period: "week", seriesMax: 26, paidEvents: true,
+      webManager: true, costSharing: false, highlight: false, attendanceStats: true },
+    business: { limit: 30, period: "week", seriesMax: 26, paidEvents: true,
+      webManager: true, costSharing: false, highlight: false, attendanceStats: true }
   })
 });
 
@@ -183,23 +191,36 @@ export function usedThisPeriod(events, limits, now = new Date()) {
 // ---------------------------------------------------------------------------
 
 /**
+ * What an account may do with money (mirrors firestore.rules ownerMayCharge and
+ * plans.enforceLimit): trainer & club accounts with an Impressum may show a
+ * price, and sell spots once payouts are set up; personal Pro may show a cost
+ * share per person (paid on site), but never sell spots.
  * @param {object} profile databaseUserData
  * @param {{ enabled?: boolean }} payments config/payments
- * @returns {{ canShowPrice: boolean, canSellSpots: boolean, reason: string|null, sellReason: string|null }}
+ * @param {ReturnType<typeof effectivePlan>|null} [plan]
+ * @param {Date} [now]
+ * @returns {{ canShowPrice: boolean, canSellSpots: boolean, costShareOnly: boolean, reason: string|null, sellReason: string|null }}
  */
-export function moneyCapabilities(profile = {}, payments = {}) {
+export function moneyCapabilities(profile = {}, payments = {}, plan = null, now = new Date()) {
   const type = accountTypeOf(profile);
   const business = isBusinessType(type);
+  if (!business) {
+    // The rules check the stored plan (not early access), so require both.
+    const expires = toDate(profile.planExpiresAt);
+    const pro = Boolean(plan && plan.limits && plan.limits.costSharing)
+      && profile.plan === "pro" && (!expires || now < expires);
+    return { canShowPrice: pro, canSellSpots: false, costShareOnly: pro,
+      reason: pro ? null : "money.needsPro", sellReason: "money.notBusiness" };
+  }
   const impressum = String((profile.business && profile.business.impressum) || "").trim() !== "";
-  const canShowPrice = business && impressum;
+  const canShowPrice = impressum;
   const canSellSpots = canShowPrice && profile.payoutsReady === true && payments.enabled === true;
   let reason = null;
-  if (!business) reason = "money.notBusiness";
-  else if (!impressum) reason = "money.noImpressum";
+  if (!impressum) reason = "money.noImpressum";
   let sellReason = reason;
   if (!sellReason && payments.enabled !== true) sellReason = "money.paymentsOff";
   else if (!sellReason && profile.payoutsReady !== true) sellReason = "money.noPayouts";
-  return { canShowPrice, canSellSpots, reason, sellReason };
+  return { canShowPrice, canSellSpots, costShareOnly: false, reason, sellReason };
 }
 
 /** EventCost.clamp: 0…200 in 0.50 steps. */
@@ -500,4 +521,26 @@ export function buildEditPayload(f) {
   opt("venueName", sanitizeVenue(f.venueName));
   opt("costPerPerson", shownCost(f));
   return { set, cleared };
+}
+
+/**
+ * Attendance across past events whose attendance was confirmed (same rules as
+ * AttendanceStats in the app). `attendedUids` holds the guests who came — the
+ * organiser is never in it — and `participantUids` includes the organiser.
+ * @param {Array<{attendedUids?: string[], participantUids?: string[]}>} events
+ */
+export function attendanceSummary(events) {
+  let count = 0, guests = 0, attended = 0;
+  const seen = new Set();
+  for (const ev of events) {
+    if (!ev || !Array.isArray(ev.attendedUids) || (ev.id && seen.has(ev.id))) continue;
+    if (ev.id) seen.add(ev.id);
+    const roster = Array.isArray(ev.participantUids) ? ev.participantUids.length : 0;
+    const eventGuests = Math.max(0, roster - 1);
+    count += 1;
+    guests += eventGuests;
+    attended += Math.min(ev.attendedUids.length, eventGuests);
+  }
+  const noShows = Math.max(0, guests - attended);
+  return { events: count, guests, attended, noShows, rate: guests > 0 ? Math.round((attended / guests) * 100) : null };
 }

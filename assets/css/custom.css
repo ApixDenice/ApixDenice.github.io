@@ -900,3 +900,26 @@ html.js .reveal.visible { opacity: 1; transform: none; }
   .dash-who { flex-basis: calc(100% - 60px); }
   .dash-head-actions { width: 100%; justify-content: space-between; }
 }
+
+/* ---------------- Language (DE / EN) ----------------
+   Every translated text exists twice, marked lang="en" / lang="de"; the
+   class on <html> (set before first paint, see the layout) hides the other
+   one. Without JavaScript the page shows English. */
+html:not(.lang-de) body [lang="de"],
+html.lang-de body [lang="en"] { display: none !important; }
+.site-lang { display: inline-flex; margin-left: auto; border: 1px solid var(--border-strong); border-radius: 999px; overflow: hidden; flex: none; }
+.site-lang button { border: 0; background: none; padding: 0.28rem 0.6rem; font: 600 0.78rem/1.2 var(--font); letter-spacing: 0.02em; color: var(--muted); cursor: pointer; }
+.site-lang button:hover { color: var(--ink); }
+.site-lang button.is-active { background: var(--ink); color: #fff; }
+.is-home .site-header:not(.is-scrolled) .site-lang { border-color: rgba(255,255,255,.28); }
+.is-home .site-header:not(.is-scrolled) .site-lang button { color: rgba(255,255,255,.72); }
+.is-home .site-header:not(.is-scrolled) .site-lang button.is-active { background: #fff; color: var(--ink); }
+@media (min-width: 721px) { .site-lang { order: 3; margin-left: 0.25rem; } .nav-menu { margin-left: auto; } }
+.plan-beta { display: flex; gap: 0.85rem; align-items: flex-start; margin: 0.25rem 0 1.25rem; padding: 1rem 1.15rem; border-radius: var(--radius); background: linear-gradient(135deg, #EAF7EE, #F4FBF0); border: 1px solid var(--brand-soft-2, #CDEBD4); }
+.plan-beta p { margin: 0; font-size: 0.95rem; }
+.plan-beta b { color: var(--brand-deep, #046B17); }
+.plan-beta-icon { font-size: 1.5rem; line-height: 1; flex: none; }
+.plan-badge { position: absolute; top: -0.65rem; right: 1rem; padding: 0.15rem 0.6rem; border-radius: 999px; background: var(--brand, #0BA000); color: #fff; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.01em; }
+.ev-tag--tip { background: #EAF7EE; color: #046B17; }
+.upgrade-card .plan-list { margin: 0.25rem 0 1rem; }
+.upgrade-card .eyebrow { display: block; margin-bottom: 0.4rem; }

@@ -1,6 +1,7 @@
 ---
 layout: default
-title: Datenschutzerklärung · Privacy Policy
+title: Privacy Policy
+title_de: Datenschutzerklärung
 description: Datenschutzerklärung für die Website apixdenice.github.io — Hosting über GitHub Pages, keine Cookies, kein Tracking, optionale DIPS-Web-Anmeldung. Privacy policy in English included.
 permalink: /datenschutz/
 redirect_from:
@@ -12,12 +13,12 @@ image: /assets/images/og/default.jpg
 <div class="privacy-policy-page">
   <div class="privacy-header">
     <span class="eyebrow">Website apixdenice.github.io</span>
-    <h1>Datenschutzerklärung</h1>
-    <p class="last-updated">Stand: 8. November 2026</p>
-    <p class="privacy-lang-switch"><a href="#privacy-policy">Privacy policy in English ↓</a></p>
+    <h1>{% include t.html en="Privacy Policy" de="Datenschutzerklärung" %}</h1>
+    <p class="last-updated">{% include t.html en="Last updated: 9 November 2026" de="Stand: 9. November 2026" %}</p>
   </div>
 
   <div class="privacy-content">
+  <div lang="de">
 
     <section class="privacy-section">
       <h2>1. Verantwortlicher</h2>
@@ -34,6 +35,7 @@ image: /assets/images/og/default.jpg
       <h2>2. Das Wichtigste in Kürze</h2>
       <ul>
         <li>Diese Website setzt <strong>keine Cookies</strong> und verwendet <strong>keine Analyse-, Tracking- oder Werbedienste</strong>.</li>
+        <li>Wählst du oben die Sprache (DE/EN), speichert dein Browser diese Wahl im lokalen Speicher (localStorage, Schlüssel „dips-lang“). Die Angabe verlässt dein Gerät nicht und dient nur dazu, die Seite in der gewünschten Sprache anzuzeigen (§ 25 Abs. 2 Nr. 2 TDDDG). Du kannst sie jederzeit über die Browsereinstellungen löschen.</li>
         <li>Schriftarten, Bilder und Skripte werden <strong>vom eigenen Webspace</strong> geladen. Es besteht insbesondere keine Verbindung zu Google Fonts.</li>
         <li>Personenbezogene Daten werden nur verarbeitet, soweit das für die Auslieferung der Website (Hosting), bei Kontakt per E-Mail oder bei Nutzung der optionalen DIPS-Web-Anmeldung erforderlich ist.</li>
       </ul>
@@ -61,7 +63,7 @@ image: /assets/images/og/default.jpg
       <p><strong>Rechtsgrundlage</strong> ist Art. 6 Abs. 1 lit. b DSGVO (Nutzung Ihres DIPS-Kontos). Die Speicherung im Browser ist nach § 25 Abs. 2 Nr. 2 TDDDG unbedingt erforderlich, um die von Ihnen gewünschte Anmeldung bereitzustellen.</p>
       <p>Statt mit E-Mail und Passwort können Sie sich auch <strong>mit Apple</strong> oder <strong>mit Google</strong> anmelden. Dann öffnet sich ein Anmeldefenster des jeweiligen Anbieters (Apple Distribution International Ltd., Hollyhill Industrial Estate, Hollyhill, Cork, Irland, bzw. Google), und Firebase erhält von dort Ihre E-Mail-Adresse (bei Apple auf Wunsch eine anonyme Weiterleitungsadresse), gegebenenfalls Ihren Namen und eine Nutzerkennung. Gibt es zu diesem Konto noch kein DIPS-Konto, wird das dabei automatisch angelegte Anmeldekonto sofort wieder gelöscht.</p>
       <p><strong>Event-Verwaltung:</strong> Nach der Anmeldung lädt die Seite Ihren DIPS-Benutzernamen, die Sportarten und Ihre anstehenden Events aus <strong>Cloud Firestore</strong> (ebenfalls Google Ireland Limited). Wenn Sie ein Event anlegen, werden die eingegebenen Angaben (Sportart, Titel, Beschreibung, Datum und Uhrzeit, Treffpunkt mit Koordinaten, Gruppengröße und weitere Angaben) zusammen mit Ihrem Benutzernamen und Ihrer Nutzerkennung gespeichert und sind – wie in der App – für andere DIPS-Nutzer sichtbar. Es gilt die Datenschutzerklärung der DIPS-App.</p>
-      <p><strong>Karte und Ortssuche:</strong> Für die Wahl des Treffpunkts zeigt die Seite nach der Anmeldung eine Karte. Die Kartensoftware (Leaflet) liegt auf diesem Server; die Kartenbilder lädt Ihr Browser von den Servern der <strong>OpenStreetMap Foundation</strong> (St John’s Innovation Centre, Cowley Road, Cambridge, CB4 0WS, Vereinigtes Königreich). Dabei werden Ihre IP-Adresse, der angezeigte Kartenausschnitt und Browserinformationen übermittelt. Nur wenn Sie auf „Search“ tippen, wird Ihr Suchbegriff an den Suchdienst <strong>Nominatim</strong> der OpenStreetMap Foundation gesendet. Ihren Standort fragt die Seite nur ab, wenn Sie auf das Standort-Symbol tippen; er wird nur im Browser zum Verschieben der Karte genutzt und nicht gespeichert. Für das Vereinigte Königreich besteht ein Angemessenheitsbeschluss der EU-Kommission. Mehr dazu: <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">Datenschutz der OpenStreetMap Foundation</a>.</p>
+      <p><strong>Karte und Ortssuche:</strong> Für die Wahl des Treffpunkts zeigt die Seite nach der Anmeldung eine Karte. Die Kartensoftware (Leaflet) liegt auf diesem Server; die Kartenbilder lädt Ihr Browser von den Servern der <strong>OpenStreetMap Foundation</strong> (St John’s Innovation Centre, Cowley Road, Cambridge, CB4 0WS, Vereinigtes Königreich). Dabei werden Ihre IP-Adresse, der angezeigte Kartenausschnitt und Browserinformationen übermittelt. Nur wenn Sie auf „Suchen“ („Search“) tippen, wird Ihr Suchbegriff an den Suchdienst <strong>Nominatim</strong> der OpenStreetMap Foundation gesendet. Ihren Standort fragt die Seite nur ab, wenn Sie auf das Standort-Symbol tippen; er wird nur im Browser zum Verschieben der Karte genutzt und nicht gespeichert. Für das Vereinigte Königreich besteht ein Angemessenheitsbeschluss der EU-Kommission. Mehr dazu: <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">Datenschutz der OpenStreetMap Foundation</a>.</p>
       <p>Google kann Daten auch in den USA verarbeiten. Grundlage dafür sind das EU-US Data Privacy Framework und Standardvertragsklauseln. Mehr dazu: <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">Datenschutz bei Firebase</a>.</p>
     </section>
 
@@ -87,17 +89,16 @@ image: /assets/images/og/default.jpg
       <p>Wenden Sie sich dafür einfach per E-Mail an mich. Außerdem können Sie sich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO), zum Beispiel beim <a href="https://www.lfd.niedersachsen.de" target="_blank" rel="noopener noreferrer">Landesbeauftragten für den Datenschutz Niedersachsen</a>.</p>
     </section>
 
-    <div class="privacy-divider"><span class="eyebrow">English</span></div>
+  </div>
 
     <section class="privacy-section" id="privacy-policy" lang="en">
-      <h2>Privacy policy (English)</h2>
-      <p class="last-updated">Last updated: 8 November 2026. In case of doubt, the German version above prevails.</p>
+      <p class="last-updated">In case of doubt, the German version (switch to DE above) prevails.</p>
 
       <h3>1. Controller</h3>
       <p>Dennis Hasselbusch (ApixDenice), Gartenstraße 22, 38268 Lengede, Germany · <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
 
       <h3>2. In short</h3>
-      <p>This website sets <strong>no cookies</strong> and uses <strong>no analytics, tracking or advertising</strong>. Fonts, images and scripts are served from this website itself, so there is no connection to Google Fonts. Personal data is only processed for hosting, when you email me, or when you use the optional DIPS web sign-in.</p>
+      <p>This website sets <strong>no cookies</strong> and uses <strong>no analytics, tracking or advertising</strong>. Fonts, images and scripts are served from this website itself, so there is no connection to Google Fonts. Personal data is only processed for hosting, when you email me, or when you use the optional DIPS web sign-in. If you pick a language (DE/EN) at the top, your browser keeps that choice in local storage (localStorage, key “dips-lang”). It never leaves your device and is only used to show the site in your language (Section 25(2) no. 2 TDDDG); you can delete it in your browser settings at any time.</p>
 
       <h3>3. Hosting (GitHub Pages)</h3>
       <p>The site is hosted by GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. When you visit, GitHub processes technical data such as your <strong>IP address</strong>, time of access, requested URL, referrer and browser information to deliver the pages and keep the service secure. I have no access to these logs. Legal basis: Art. 6(1)(f) GDPR (secure and reliable operation of the website). Data may be transferred to the USA. GitHub relies on the EU-US Data Privacy Framework and Standard Contractual Clauses (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub privacy statement</a>).</p>

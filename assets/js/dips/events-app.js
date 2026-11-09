@@ -26,7 +26,7 @@ import {
   LIMITS, AUDIENCES, SKILL_LEVELS,
   validateForm, buildEventDocuments, buildEditPayload, localDateTime, repeatOccurrences,
   effectivePlan, datesThatFit, fittingDates, usedThisPeriod, plannedDates,
-  moneyCapabilities, clampSlotCents, isBusinessType
+  moneyCapabilities, clampSlotCents, isBusinessType, attendanceSummary
 } from "./event-model.js";
 import { organiserShare, normalise, summarise, rangeOf, byMonth, byCourse, netByEvent } from "./revenue-model.js";
 import { t, getLang, setLang, locale, applyStatic } from "./i18n.js";
@@ -231,9 +231,11 @@ function initSignIn() {
     }
   });
 
-  $("logout-btn").addEventListener("click", async () => {
-    try { const { auth, authMod } = await loadFirebase(); await authMod.signOut(auth); } catch (e) {}
-  });
+  for (const id of ["logout-btn", "up-logout"]) {
+    $(id).addEventListener("click", async () => {
+      try { const { auth, authMod } = await loadFirebase(); await authMod.signOut(auth); } catch (e) {}
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -296,10 +298,15 @@ async function enterDashboard(user) {
     state.payments = (paymentsCfg && paymentsCfg.exists() && paymentsCfg.data()) || {};
     state.doneEvents = done ? done.docs.map((d) => ({ id: d.id, ...d.data() })).map((e) => ({ ...e, when: toJsDate(e.date), date: toJsDate(e.date) })) : [];
     state.plan = effectivePlan(state.profile, state.planConfig, new Date());
-    state.money = moneyCapabilities(state.profile, state.payments);
+    state.money = moneyCapabilities(state.profile, state.payments, state.plan);
     state.username = String(state.profile.username || "");
 
     $("auth-card").hidden = true;
+    if (!state.plan.limits.webManager) {
+      // Personal Free: the web manager is part of Plus / Pro (plans.js webManager).
+      $("upgrade-card").hidden = false;
+      return;
+    }
     $("events-hero").hidden = true;
     $("dash").hidden = false;
     $("events-page").classList.add("is-manager");
@@ -320,6 +327,7 @@ function leaveDashboard() {
   state.unsubs.forEach((u) => u()); state.unsubs = [];
   Object.assign(state, { user: null, username: "", profile: {}, events: [], liveAll: [], doneEvents: [], payRows: [], plan: null, editing: null });
   $("dash").hidden = true;
+  $("upgrade-card").hidden = true;
   $("auth-card").hidden = false;
   $("events-hero").hidden = false;
   $("events-page").classList.remove("is-manager");
@@ -449,6 +457,24 @@ function kpi(label, value, sub = null, accent = false) {
     h("span", { class: "kpi-label" }, label), h("b", { class: "kpi-value" }, value), sub ? h("span", { class: "kpi-sub" }, sub) : null);
 }
 
+/** Past own events (live and archived), for attendance statistics. */
+function pastEvents() {
+  const now = Date.now();
+  return [...state.liveAll, ...state.doneEvents].filter((e) => e.when && e.when.getTime() <= now);
+}
+
+function attendanceKpi() {
+  if (!state.plan.limits.attendanceStats) {
+    return kpi(t("ov.kpi.attendance"), "–", h("a", { href: PLANS_URL }, t("ov.att.locked")));
+  }
+  const a = attendanceSummary(pastEvents());
+  if (!a.events) return kpi(t("ov.kpi.attendance"), "–", t("ov.att.none"));
+  const el = kpi(t("ov.kpi.attendance"), a.rate === null ? "–" : `${a.rate} %`,
+    t("ov.att.sub", { attended: a.attended, guests: a.guests, noShows: a.noShows }));
+  el.title = t("ov.att.foot", { n: a.events });
+  return el;
+}
+
 function renderOverview() {
   $("ov-hello").textContent = t("ov.hello", { name: state.username || "" });
   const upcoming = state.events;
@@ -460,13 +486,14 @@ function renderOverview() {
     kpi(t("ov.kpi.upcoming"), String(upcoming.length)),
     kpi(t("ov.kpi.signups"), String(signups)),
     kpi(t("ov.kpi.fill"), cap ? `${Math.round((filled / cap) * 100)} %` : "–"),
-    kpi(t("ov.kpi.revenueMonth"), isBusiness() || state.payRows.length ? euro(month.netCents) : "–", null, true)
+    kpi(t("ov.kpi.revenueMonth"), isBusiness() || state.payRows.length ? euro(month.netCents) : "–", null, true),
+    attendanceKpi()
   );
   const next = upcoming.slice(0, 4);
   $("ov-next").replaceChildren(...(next.length ? next.map((ev) => compactRow(ev)) : [h("li", { class: "my-events-empty" }, t("ov.nextEmpty"))]));
 
   const todo = [];
-  if (!isBusiness()) todo.push(h("li", {}, t("ov.todo.personal"), " ", h("a", { href: PLANS_URL }, t("ed.seePlans"))));
+  if (!isBusiness() && !state.money.costShareOnly) todo.push(h("li", {}, t("ov.todo.personal"), " ", h("a", { href: PLANS_URL }, t("ed.seePlans"))));
   else if (state.money.reason === "money.noImpressum") todo.push(h("li", {}, h("a", { href: "#/account" }, t("ov.todo.impressum"))));
   else if (!state.money.canSellSpots && state.money.sellReason === "money.noPayouts") todo.push(h("li", {}, t("ov.todo.payouts")));
   const full = upcoming.filter((ev) => typeof ev.participant === "number" && goingOf(ev) >= ev.participant).length;
@@ -585,7 +612,9 @@ function eventRow(ev) {
   return h("li", { class: "ev-row" },
     dateTile(ev.when),
     h("div", { class: "ev-main" },
-      h("p", { class: "ev-title" }, String(ev.title || "—"), ev.paidSlots ? h("span", { class: "ev-tag ev-tag--paid" }, t("ev.paid")) : null),
+      h("p", { class: "ev-title" }, String(ev.title || "—"),
+        ev.paidSlots ? h("span", { class: "ev-tag ev-tag--paid" }, t("ev.paid")) : null,
+        ev.highlighted === true ? h("span", { class: "ev-tag ev-tag--tip" }, t("ev.highlighted")) : null),
       h("p", { class: "ev-meta" }, `${String(ev.sportsArt || "")} · ${fmtDate(ev.when)}, ${fmtTime(ev.when)}` + (ev.venueName ? ` · ${String(ev.venueName)}` : "")),
       goingLine(ev),
       actionBar(ev, { cancelIds: [ev.id], cancelLabel: t("ev.cancel"), confirmNote: joinedNote([ev]) })));
@@ -707,6 +736,15 @@ function renderAccount() {
     [t("ac.plan"), t("plan." + p.plan) + (p.source === "earlyAccess" ? ` (${t("plan.early")})` : "")],
     [t("ac.usage"), u.text]
   ];
+  const L = p.limits;
+  const features = [
+    L.webManager && "ac.f.web",
+    L.paidEvents && "ac.f.paid",
+    L.costSharing && "ac.f.costSharing",
+    L.highlight && "ac.f.highlight",
+    L.attendanceStats && "ac.f.attendance"
+  ].filter(Boolean).map((k) => t(k));
+  facts.push([t("ac.features"), features.length ? features.join(" · ") : t("ac.f.none")]);
   if (isBusiness()) facts.push([t("ac.payouts"), t(state.profile.payoutsReady ? "ac.payouts.ok" : "ac.payouts.missing")]);
   $("ac-facts").replaceChildren(...facts.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, v)]));
   const form = $("biz-form");
@@ -747,7 +785,7 @@ function initBusinessForm() {
       const { db, fs } = state;
       await fs.updateDoc(fs.doc(db, "databaseUserData", state.user.uid), { business });
       state.profile = { ...state.profile, business };
-      state.money = moneyCapabilities(state.profile, state.payments);
+      state.money = moneyCapabilities(state.profile, state.payments, state.plan);
       showMsg(msg, t("ac.biz.saved"), "info");
       renderHeader();
     } catch (err) {
@@ -867,12 +905,12 @@ function applyMoneyUi() {
   if (!m.canShowPrice && !editing) { costOn.checked = false; $("ev-cost-box").hidden = true; }
   if (!m.canSellSpots && !editing) { sellOn.checked = false; $("ev-sell-box").hidden = true; }
   const note = $("price-note");
-  const key = !m.canShowPrice ? m.reason : !m.canSellSpots ? m.sellReason : null;
+  const key = !m.canShowPrice ? m.reason : m.costShareOnly ? "money.costShareOnly" : !m.canSellSpots ? m.sellReason : null;
   note.hidden = !key || !!editing;
   note.replaceChildren();
   if (key && !editing) {
     note.append(t(key) + " ");
-    if (key === "money.notBusiness") note.append(h("a", { href: PLANS_URL }, t("ed.seePlans")));
+    if (key === "money.notBusiness" || key === "money.needsPro") note.append(h("a", { href: PLANS_URL }, t("ed.seePlans")));
     if (key === "money.noImpressum") note.append(h("a", { href: "#/account" }, t("ac.biz")));
   }
   $("price-block").classList.toggle("is-locked", !m.canShowPrice);

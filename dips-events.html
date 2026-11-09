@@ -1,6 +1,7 @@
 ---
 layout: default
 title: DIPS for organisers — Manage events, courses and revenue
+title_de: DIPS für Veranstaltende – Events, Kurse und Einnahmen verwalten
 description: Sign in with your DIPS account to manage events, paid courses, revenue and your business profile from the web.
 permalink: /dips/events/
 robots: noindex
@@ -12,9 +13,6 @@ sitemap: false
 
   <!-- ============ Signed out ============ -->
   <div class="events-hero reveal" id="events-hero">
-    <div class="lang-switch lang-switch--hero" role="group" aria-label="Language / Sprache">
-      <button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button>
-    </div>
     <span class="eyebrow" data-i18n="hero.eyebrow">DIPS · Organiser dashboard</span>
     <h1 data-i18n="hero.title">Run your sessions from the web</h1>
     <p data-i18n="hero.lead">Plan single sessions and whole course series, sell spots and keep an eye on your revenue.</p>
@@ -52,6 +50,20 @@ sitemap: false
     <p class="auth-privacy"><span data-i18n="auth.privacy">Sign-in is handled by Google Firebase Authentication. Details in the</span> <a href="{{ '/datenschutz/#firebase' | relative_url }}" data-i18n="auth.privacyLink">privacy policy</a>.</p>
   </div>
 
+  <!-- ============ Signed in with personal Free: no web manager ============ -->
+  <div class="auth-card upgrade-card" id="upgrade-card" hidden>
+    <span class="eyebrow" data-i18n="up.eyebrow">DIPS · Web manager</span>
+    <h2 data-i18n="up.title">The web manager comes with Plus</h2>
+    <p class="sub" data-i18n="up.text">You're signed in with a personal Free account. Managing events on the web is included in Plus and Pro, and in every trainer and club plan.</p>
+    <ul class="plan-list">
+      <li data-i18n="up.l1">Plus: 15 events a month, whole series and the web manager</li>
+      <li data-i18n="up.l2">Pro: 40 events, cost sharing, highlighted events, attendance statistics</li>
+    </ul>
+    <p><a class="btn btn-primary" href="{{ '/dips/#plans' | relative_url }}" data-i18n="up.plans">See the plans</a></p>
+    <p class="auth-foot" data-i18n="up.how">Upgrade in the DIPS app under Konto &amp; Abo, then sign in here again.</p>
+    <p class="auth-forgot"><button class="link-btn" id="up-logout" type="button" data-i18n="common.signOut">Sign out</button></p>
+  </div>
+
   <!-- ============ Signed in: organiser dashboard ============ -->
   <div class="dash" id="dash" hidden>
     <header class="dash-head">
@@ -62,9 +74,6 @@ sitemap: false
         <span class="plan-usage" id="plan-usage"></span>
       </div>
       <div class="dash-head-actions">
-        <div class="lang-switch" role="group" aria-label="Language / Sprache">
-          <button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button>
-        </div>
         <button class="link-btn" id="logout-btn" type="button" data-i18n="common.signOut">Sign out</button>
       </div>
     </header>

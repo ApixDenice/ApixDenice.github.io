@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Page not found
+title_de: Seite nicht gefunden
 permalink: /404.html
 sitemap: false
 robots: noindex
@@ -9,11 +10,11 @@ robots: noindex
 <div class="error-page">
   <div class="error-content">
     <p class="error-code grad-text">404</p>
-    <h1>Page not found</h1>
-    <p>The page you're looking for doesn't exist or has been moved.</p>
+    <h1>{% include t.html en="Page not found" de="Seite nicht gefunden" %}</h1>
+    <p>{% include t.html en="The page you're looking for doesn't exist or has been moved." de="Die Seite, die du suchst, gibt es nicht oder sie ist umgezogen." %}</p>
     <div class="cta-button-row">
-      <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-large">Go home</a>
-      <a href="{{ '/#apps' | relative_url }}" class="btn btn-outline btn-large">See the apps</a>
+      <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-large">{% include t.html en="Go home" de="Zur Startseite" %}</a>
+      <a href="{{ '/#apps' | relative_url }}" class="btn btn-outline btn-large">{% include t.html en="See the apps" de="Zu den Apps" %}</a>
     </div>
   </div>
 </div>

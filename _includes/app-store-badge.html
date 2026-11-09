@@ -7,13 +7,15 @@
 {%- if include.platform == "mac" -%}
   {%- assign badge_path = "/assets/badges/download-on-the-mac-app-store.svg" -%}
   {%- assign badge_label = "Download on the Mac App Store" -%}
+  {%- assign badge_label_de = "Laden im Mac App Store" -%}
 {%- else -%}
   {%- assign badge_path = "/assets/badges/download-on-the-app-store.svg" -%}
   {%- assign badge_label = "Download on the App Store" -%}
+  {%- assign badge_label_de = "Laden im App Store" -%}
 {%- endif -%}
 {%- assign badge_file = site.static_files | where: "path", badge_path | first -%}
 {%- if badge_file -%}
-<a class="store-badge store-badge--{{ include.size | default: 'md' }}" href="{{ include.url }}" target="_blank" rel="noopener noreferrer"><img src="{{ badge_path | relative_url }}" alt="{{ badge_label }}" width="{% if include.platform == 'mac' %}156{% else %}120{% endif %}" height="40"></a>
+<a class="store-badge store-badge--{{ include.size | default: 'md' }}" href="{{ include.url }}" target="_blank" rel="noopener noreferrer"><img src="{{ badge_path | relative_url }}" alt="{{ badge_label }}" data-de-alt="{{ badge_label_de }}" width="{% if include.platform == 'mac' %}156{% else %}120{% endif %}" height="40"></a>
 {%- else -%}
-<a class="btn btn-primary{% if include.size == 'lg' %} btn-large{% endif %}" href="{{ include.url }}" target="_blank" rel="noopener noreferrer">{{ badge_label }}</a>
+<a class="btn btn-primary{% if include.size == 'lg' %} btn-large{% endif %}" href="{{ include.url }}" target="_blank" rel="noopener noreferrer"><span lang="en">{{ badge_label }}</span><span lang="de">{{ badge_label_de }}</span></a>
 {%- endif -%}
