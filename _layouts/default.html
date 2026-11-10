@@ -1,7 +1,21 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en-US" }}"{% if page.alt_url %} data-page-lang="{{ page.page_lang }}" data-alt-url="{{ page.alt_url | relative_url }}"{% endif %}>
+<html lang="{{ page.lang | default: site.lang | default: "en-US" }}"{% if page.alt_url %} data-page-lang="{{ page.page_lang }}" data-alt-url="{{ page.alt_url | relative_url }}"{% endif %}{% if page.intro %} data-intro{% endif %}{% if page.title_de %} data-title-de="{{ page.title_de | append: " | " | append: site.title | escape }}"{% elsif page.url == "/" %} data-title-de="ApixDenice | Native Apps für iPhone &amp; Mac"{% endif %}>
   <head>
     <meta charset="UTF-8">
+    {%- comment -%}
+      Content Security Policy. GitHub Pages can't send HTTP headers, so it is set
+      here; it must stay above every <script>. No inline JavaScript is allowed:
+      all scripts are files on this site. Only the DIPS organiser dashboard
+      (front matter csp: firebase) may additionally talk to Firebase / Google
+      sign-in and OpenStreetMap. frame-ancestors can't be set in <meta>; boot.js
+      blocks framing instead.
+    {%- endcomment %}
+    {%- if page.csp == "firebase" %}
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; connect-src 'self' https://*.googleapis.com https://apis.google.com https://nominatim.openstreetmap.org; frame-src https://hilsports.firebaseapp.com https://apis.google.com https://accounts.google.com https://appleid.apple.com; img-src 'self' data: https://tile.openstreetmap.org; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+    {%- else %}
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+    {%- endif %}
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0B0C10">
     {%- if page.robots %}
@@ -12,55 +26,9 @@
     <meta name="apple-itunes-app" content="app-id={{ page.app_store_id }}">
     {%- endif %}
 
-    <script>
-      /* Runs before first paint: flags JS for scroll reveals and decides whether
-         the home intro plays. The intro only runs for a fresh entry into the site
-         (not reloads, back/forward or internal navigation) and never with reduced
-         motion. It also applies the language (DE/EN): the visitor's choice from
-         the header switch (localStorage "dips-lang", shared with the DIPS
-         manager), otherwise the browser language. No cookies are used. */
-      (function () {
-        var d = document.documentElement;
-        d.className += " js";
-        var stored = null;
-        try { stored = localStorage.getItem("dips-lang"); } catch (e) {}
-        if (stored !== "de" && stored !== "en") stored = null;
-        var lang = stored || ((navigator.language || "").toLowerCase().indexOf("de") === 0 ? "de" : "en");
-        var pageLang = d.getAttribute("data-page-lang");
-        if (pageLang) {
-          /* A page that exists once per language (e.g. a privacy policy) */
-          if (stored && stored !== pageLang) { location.replace(d.getAttribute("data-alt-url") + location.hash); }
-          lang = pageLang;
-        }
-        d.className += " lang-" + lang;
-        d.lang = lang;
-        {%- if page.intro %}
-        try {
-          var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          var nav = performance.getEntriesByType ? performance.getEntriesByType("navigation")[0] : null;
-          var fresh = !nav || nav.type === "navigate";
-          var internal = false;
-          if (document.referrer) { internal = new URL(document.referrer).host === location.host; }
-          if (!reduce && fresh && !internal && location.hash === "") { d.className += " intro"; }
-        } catch (e) {}
-        {%- endif %}
-      })();
-    </script>
 
     {% seo %}
-    <script>
-      (function () {
-        var d = document.documentElement;
-        d.setAttribute("data-title-en", document.title);
-        {%- if page.title_de %}
-        d.setAttribute("data-title-de", {{ page.title_de | append: " | " | append: site.title | jsonify }});
-        {%- elsif page.url == "/" %}
-        d.setAttribute("data-title-de", "ApixDenice | Native Apps für iPhone & Mac");
-        {%- endif %}
-        var de = d.getAttribute("data-title-de");
-        if (d.className.indexOf("lang-de") > -1 && de) document.title = de;
-      })();
-    </script>
+    <script src="{{ '/assets/js/boot.js' | relative_url }}"></script>
 
     <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="32x32">
     <link rel="icon" href="{{ '/assets/brand/favicon.svg' | relative_url }}" type="image/svg+xml">
